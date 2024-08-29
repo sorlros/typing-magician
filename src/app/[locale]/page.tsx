@@ -1,10 +1,15 @@
-const MainPage = ({ params }: { params: { locale: string }}) => {
-  const { locale } = params;
+import Header from "../components/header";
+
+const MainPage = ({locale}: {locale: string}) => {
+  
+  const validLocales = ["ko", "en"];
+  if (!validLocales.includes(locale)) {
+    return <div>Invalid locale</div>;
+  }
 
   return (
     <div>
-      <h1>{locale === "ko" ? "안녕하세요" : "Hello"}</h1>
-      {/* 페이지 콘텐츠 */}
+      <Header />
     </div>
   )
 }
