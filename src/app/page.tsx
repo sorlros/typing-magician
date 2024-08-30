@@ -1,9 +1,7 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import MainPage from "./[locale]/page";
 import { useEffect, useState } from "react";
-import { LocaleProps } from "./libs/types";
+import LocalePage from "./[locale]/page";
 
 export default function Home() {  
   const [locale, setLocale] = useState<string>("ko");
@@ -12,15 +10,13 @@ export default function Home() {
     const fetchLocale = async () => {
       const response = await fetch("/api/get-locale");
       const data = await response.json();
-      setLocale(data.locale);
+      setLocale(data.locale as string);
     };
 
     fetchLocale();
   }, []);
   
   return (
-    <>
-      <MainPage locale={locale} />
-    </>
+    <LocalePage locale={locale} />
   );
 }

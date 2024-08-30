@@ -1,6 +1,6 @@
 const LocalePageLayout = ({children}: {children: React.ReactNode}) => {
   return (
-    <div className="flex w-full min-h-screen bg-neutral-800 items-center justify-center">
+    <div className="flex w-full min-h-screen bg-slate-800">
       {children}
     </div>
   )
