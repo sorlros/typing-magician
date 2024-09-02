@@ -10,3 +10,14 @@ export type LangType = {
     [key: string]: string;
   };
 };
+
+export interface DotsProps {
+  typingSpeed: number;
+}
+
+export interface FileContent {
+  file: string;
+  content: string;
+}
+
+export type FileContentArray = FileContent[];

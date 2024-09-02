@@ -1,6 +1,7 @@
 import ClientComponentPage from "./client-page";
 import i18n from "../../../i18n";
 import LocalePageLayout from "./layout";
+import { FileContentArray } from "../libs/types";
 
 type LangType = {
   header: {
@@ -28,10 +29,12 @@ export default async function LocalePage ({locale}: {locale: string}) {
   i18n.addResourceBundle(locale, 'translation', lang, true, true);
   i18n.changeLanguage(locale);
 
+  const content = await fetchTextFromPublic();
+
   return (
     <LocalePageLayout>
       <div className="w-full h-full px-16 py-6">
-        <ClientComponentPage lang={lang}/>
+        <ClientComponentPage lang={lang} content={content} />
       </div>
     </LocalePageLayout>
   )
@@ -45,5 +48,15 @@ async function fetchLangFromServer(locale: string): Promise<LangType> {
   }
 
   const data: LangType = await response.json();
+  return data;
+}
+
+async function fetchTextFromPublic(): Promise<FileContentArray> {
+  const response = await fetch(`http://localhost:3000/api/get-text`);
+
+  if (!response.ok) {
+    throw new Error("get-text fetch 오류");
+  }
+  const data: FileContentArray = await response.json();
   return data;
 }
