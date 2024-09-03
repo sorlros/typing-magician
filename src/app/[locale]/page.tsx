@@ -26,7 +26,7 @@ export default async function LocalePage ({locale}: {locale: string}) {
 
   const lang = await fetchLangFromServer(locale);
 
-  i18n.addResourceBundle(locale, 'translation', lang, true, true);
+  i18n.addResourceBundle(locale, "translation", lang, true, true);
   i18n.changeLanguage(locale);
 
   const content = await fetchTextFromPublic();

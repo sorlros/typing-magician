@@ -5,7 +5,9 @@ interface TypingAreaProps {
 
 const TypingArea = ({ visibleText, specialCharacters }: TypingAreaProps) => {
   return (
-    
+    <div>
+      
+    </div> 
   )
 }
 

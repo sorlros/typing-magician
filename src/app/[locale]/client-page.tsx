@@ -3,7 +3,7 @@
 import React, { useEffect } from "react"
 import Header from "./components/header";
 import { FileContentArray, LangType } from "../libs/types";
-import DotsComponent from "./components/dots-component";
+import GameComponent from "./components/game-component";
 
 interface PageProps {
   lang: LangType;
@@ -14,12 +14,13 @@ const ClientComponentPage = ({ lang, content }: PageProps) => {
 
   useEffect(() => {
     console.log("lang", lang);
-  }, [])
+    console.log("content", content);
+  }, []);
 
   return (
     <div className="px-32">
       <Header lang={lang}/>
-      <DotsComponent />
+      <GameComponent />
     </div>
   )
 }
