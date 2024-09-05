@@ -1,12 +1,16 @@
+import { FileContentArray } from "@/app/libs/types";
+
 interface TypingAreaProps {
-  visibleText: string;
-  specialCharacters: string[];
+  text: FileContentArray;
 }
 
-const TypingArea = ({ visibleText, specialCharacters }: TypingAreaProps) => {
+const TypingArea = ({ text }: TypingAreaProps) => {
+  console.log("text", text)
   return (
     <div>
-      
+      <div>
+        asdasd
+      </div>
     </div> 
   )
 }

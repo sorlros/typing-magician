@@ -29,12 +29,12 @@ export default async function LocalePage ({locale}: {locale: string}) {
   i18n.addResourceBundle(locale, "translation", lang, true, true);
   i18n.changeLanguage(locale);
 
-  const content = await fetchTextFromPublic();
+  const text = await fetchTextFromPublic();
 
   return (
     <LocalePageLayout>
-      <div className="w-full h-full px-16 py-6">
-        <ClientComponentPage lang={lang} content={content} />
+      <div className="w-full h-full px-16 py-2">
+        <ClientComponentPage lang={lang} text={text} />
       </div>
     </LocalePageLayout>
   )
