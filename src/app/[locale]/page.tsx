@@ -1,7 +1,7 @@
 import ClientComponentPage from "./client-page";
 import i18n from "../../../i18n";
 import LocalePageLayout from "./layout";
-import { FileContentArray } from "../libs/types";
+import { FileContentArray, TextItem } from "../libs/types";
 
 type LangType = {
   header: {
@@ -51,12 +51,12 @@ async function fetchLangFromServer(locale: string): Promise<LangType> {
   return data;
 }
 
-async function fetchTextFromPublic(): Promise<FileContentArray> {
+async function fetchTextFromPublic(): Promise<TextItem[]> {
   const response = await fetch(`http://localhost:3000/api/get-text`);
 
   if (!response.ok) {
     throw new Error("get-text fetch 오류");
   }
-  const data: FileContentArray = await response.json();
+  const data: TextItem[] = await response.json();
   return data;
 }

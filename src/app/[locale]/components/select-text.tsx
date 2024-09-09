@@ -1,10 +1,10 @@
 "use client";
 
-import { FileContentArray } from "@/app/libs/types";
+import { TextItem } from "@/app/libs/types";
 import SelectComponent from "./ui/select";
 
 interface SelectTextProps {
-  text: FileContentArray;
+  text: TextItem[];
 }
 
 const SelectText = ({ text }: SelectTextProps) => {

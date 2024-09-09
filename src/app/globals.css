@@ -67,3 +67,47 @@
     @apply bg-background text-foreground;
   }
 }
+
+.typing-area {
+  position: relative;
+  width: 100%;
+  font-family: monospace;
+  font-size: 1.2rem;
+}
+
+.text-display {
+  white-space: pre-wrap;
+  color: #333; /* 기본 어두운 회색 */
+}
+
+.text-display .correct {
+  color: #fff; /* 정확한 입력 시 하얀색 */
+}
+
+.text-display .incorrect {
+  color: #333; /* 기본 어두운 회색 (혹은 다른 색상) */
+}
+
+.text-display .cursor {
+  display: inline-block;
+  width: 1px;
+  height: 1.2em;
+  background-color: #fff; /* 커서 색상 */
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hidden-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: -1; /* 숨겨진 입력 필드 */
+}

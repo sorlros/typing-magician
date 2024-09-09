@@ -1,4 +1,4 @@
-import { FileContentArray } from "@/app/libs/types";
+import { TextItem } from "@/app/libs/types";
 import {
   Select,
   SelectContent,
@@ -6,22 +6,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useTextStore } from "@/store/use-text-store";
+import { useId } from "react";
 
 interface SelectProps {
-  text: FileContentArray;
+  text: TextItem[];
 }
 
 const SelectComponent = ({ text }: SelectProps) => {
+  const id = useId();
+  const { setText } = useTextStore();
+
+  const handleChangeText = (selectedTitle: string) => {
+    const selectedText = text.find((content) => content.title === selectedTitle);
+    if (selectedText) {
+      setText({
+        title: selectedText.title,
+        content: selectedText.content,
+      });
+    }
+  }
+
   return (
-    <Select>
+    <Select onValueChange={handleChangeText}>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="문서를 선택하세요." />
       </SelectTrigger>
       <SelectContent>
         {
           text.map((content) => (
-            <SelectItem value={content.file} key={content.file}>
-              {content.file}
+            <SelectItem value={content.title} key={`${id}-${content.title}`}>
+              {content.title}
             </SelectItem>
           ))
         }

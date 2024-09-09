@@ -2,28 +2,35 @@
 
 import React, { useEffect } from "react"
 import Header from "./components/header";
-import { FileContentArray, LangType } from "../libs/types";
+import { FileContentArray, LangType, TextItem } from "../libs/types";
 import GameComponent from "./components/game-component";
 import TypingArea from "./components/typing-area/typing-area";
 import SelectText from "./components/select-text";
+import { useTextStore } from "@/store/use-text-store";
 
 interface PageProps {
   lang: LangType;
-  text: FileContentArray;
+  text: TextItem[];
 }
 
-const ClientComponentPage = ({ lang, text }: PageProps) => {
+const ClientComponentPage = ({ lang, text: literature }: PageProps) => {
+  const { setText, typedText, setTypedText } = useTextStore((state) => ({
+    setText: state.setText,
+    typedText: state.typedText,
+    setTypedText: state.setTypedText,
+  }));
+
 
   useEffect(() => {
-    console.log("lang", lang);
-  }, []);
+    setText(literature[0])
+  }, [literature, setText]);
 
   return (
-    <div className="px-32">
+    <div className="px-60">
       <Header lang={lang}/>
-      <SelectText text={text} />
       <GameComponent />
-      <TypingArea text={text}/>
+      <TypingArea />
+      <SelectText text={literature} />
     </div>
   )
 }

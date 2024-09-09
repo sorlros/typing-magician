@@ -20,4 +20,9 @@ export interface FileContent {
   content: string;
 }
 
+export interface TextItem {
+  title: string;
+  content: string;
+}
+
 export type FileContentArray = FileContent[];
