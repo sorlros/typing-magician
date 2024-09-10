@@ -18,6 +18,15 @@ export const useTextStore = create<TextStore>((set) => ({
     content: "",
   },
   typedText: "",
-  setText: (text: TextItem) => set({ text }),
+  setText: (text: TextItem) => {
+    const cleanContent = text.content.replace(/\s+/g, ' ');
+    
+    set({
+      text: {
+        ...text,
+        content: cleanContent,
+      }
+    });
+  },
   setTypedText: (typedText: string) => set({ typedText })
 }))
