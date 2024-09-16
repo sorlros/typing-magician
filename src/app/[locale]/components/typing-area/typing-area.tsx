@@ -1,5 +1,5 @@
-import { FileContentArray, TextItem } from "@/app/libs/types";
 import { useTextStore } from "@/store/use-text-store";
+import { useTypingStore } from "@/store/use-typing-store";
 import { useEffect, useRef, useState } from "react";
 
 const TypingArea = () => {
@@ -8,6 +8,8 @@ const TypingArea = () => {
     typedText: state.typedText,
     setTypedText: state.setTypedText,
   }));
+
+  const { cpm, wpm, updatedTypingSpeed, resetTyping } = useTypingStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
@@ -24,6 +26,7 @@ const TypingArea = () => {
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
     const userInput = e.target.value;
     setTypedText(userInput);
+    updatedTypingSpeed(userInput.length + totalTypedLength);
     
     if (userInput.length > visibleContent.length) {
       const nextStartIndex = totalTypedLength + userInput.length;
@@ -47,6 +50,11 @@ const TypingArea = () => {
       inputRef.current.focus();
     }
   }, []);
+
+  useEffect(() => {
+    console.log("wpm", wpm);
+    console.log("cpm", cpm);
+  }, [wpm, cpm])
 
   const renderText = () => {
     return (
@@ -77,6 +85,9 @@ const TypingArea = () => {
   
   return (
     <div>
+      <div className="flex w-full h-[50px] items-center">
+        asd
+      </div>
       <div className="bg-black p-4 rounded-lg w-full h-[210px] overflow-hidden font-mono text-lg text-left leading-relaxed px-4 py-6">
         <div>{renderText()}</div>
         <input
