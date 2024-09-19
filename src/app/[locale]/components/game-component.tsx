@@ -9,7 +9,7 @@ const GameComponent = () => {
         <Background />
       </div>
       
-      <div className="w-full height-[200px] absolute left-10 bottom-5 z-50">
+      <div className="w-full height-[200px] absolute left-0 top-0 z-50">
         <Character />
       </div>
     </div>

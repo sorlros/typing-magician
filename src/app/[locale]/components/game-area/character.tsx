@@ -8,11 +8,11 @@ import { useCharacterStore } from "@/store/use-character-store";
 
 
 
-const character = () => {
+const Character = () => {
   const [frame, setFrame] = useState(0); // 현재 프레임 인덱스
-  const [image, setImage] = useState(0);
+  // const [image, setImage] = useState(0);
 
-  const typingSpeed = useTypingStore(state => state.typingSpeed);
+  const typingSpeed = useTypingStore(state => state.cpm);
 
     const { totalFrames, frameWidth, frameHeight, frameDuration, characterImage, updateCharacterSettings } = useCharacterStore(state => ({
       totalFrames: state.totalFrames,
@@ -26,7 +26,7 @@ const character = () => {
   useEffect(() => {
     // 타이핑 속도가 변경될 때 상태 업데이트 호출
     updateCharacterSettings();
-  }, [typingSpeed, updateCharacterSettings]);
+  }, [typingSpeed]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,21 +34,24 @@ const character = () => {
     }, frameDuration);
 
     return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 해제
-  }, []);
+  }, [frameDuration, totalFrames]);
   
   return (
     <>
-      <div
-        style={{
-          width: `${frameWidth}px`,
-          height: `${frameHeight}px`,
-          backgroundImage: `${characterImage}`,
-          backgroundPosition: `-${frame * frameWidth}px 0px`, // 프레임에 따라 위치 변경
-          backgroundSize: `1400px`, // 전체 스프라이트 시트 크기
-        }}
-      />
+      <div className="flex w-full h-full relative">
+        <div
+          className="absolute left-10 top-0 bottom-0 right-10"
+          style={{  
+            width: `${frameWidth}px`,
+            height: `${frameHeight}px`,
+            backgroundImage: `${characterImage}`,
+            backgroundPosition: `-${frame * frameWidth}px 0px`, // 프레임에 따라 위치 변경
+            backgroundSize: `${frameWidth * totalFrames}px 200px`, // 전체 스프라이트 시트 크기
+          }}
+        />
+      </div>
     </>
   )
 }
 
-export default character;
+export default Character;

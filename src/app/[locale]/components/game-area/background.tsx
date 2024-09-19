@@ -1,39 +1,43 @@
 "use client";
 
 import anime from 'animejs';
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from 'next/image';
 import { useTypingStore } from '@/store/use-typing-store';
 
 const Background = () => {
-  const AnimeRef = useRef<HTMLDivElement | null>(null);
-  const typingSpeed = useTypingStore(state => state.typingSpeed);
+  const animeRef = useRef<HTMLDivElement | null>(null);
+  const typingSpeed = useTypingStore(state => state.cpm);
+  const animationRef = useRef<any>(null);
+  const [currentTranslateX, setCurrentTranslateX] = useState(0);
 
   useEffect(() => {
-    if (AnimeRef.current) {
-      const animation = anime({
-        targets: AnimeRef.current,
-        translateX: [0, -700], // 왼쪽으로 이동, 음수로 설정
-        duration: 3000,
-        easing: 'linear', // 부드럽게 반복
-        loop: true, // 무한 반복
+    if (animeRef.current) {
+      const newTranslateX = typingSpeed === 0 ? currentTranslateX : currentTranslateX - (typingSpeed / 10); // 예시로 속도에 따라 이동 거리 조정
+      animationRef.current = anime({
+        targets: animeRef.current,
+        translateX: [0, newTranslateX], // 현재 위치에서 새로운 위치로 이동
+        easing: "linear",
+        duration: typingSpeed === 0 ? Infinity : 10000,
+        loop: false,
       });
-
-      return () => {
-        animation.pause();
-      };
+  
+      // 애니메이션이 끝날 때마다 위치 업데이트
+      animationRef.current.finished.then(() => {
+        setCurrentTranslateX(newTranslateX); // 새로운 위치로 업데이트
+      });
     }
-  }, [typingSpeed]);
+  }, [animeRef, currentTranslateX, typingSpeed]);
 
   return (
     <div className="w-full h-full overflow-hidden">
-      <div ref={AnimeRef} className="flex w-[2100px] h-[200px]"> {/* 2개의 이미지를 나란히 배치 */}
+      <div ref={animeRef} className="flex w-[2100px] h-[200px]">
         <Image 
           src={`/game_images/background/PNG/Battleground1/Bright/Battleground1.png`}
           alt="background-1"
           width={700}
           height={200}
-          className="w-[700px] h-[200px]" // 각각의 이미지 크기를 설정
+          className="w-[700px] h-[200px]"
         />
         <Image 
           src={`/game_images/background/PNG/Battleground1/Bright/Battleground1.png`}

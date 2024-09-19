@@ -51,10 +51,10 @@ const TypingArea = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("wpm", wpm);
-    console.log("cpm", cpm);
-  }, [wpm, cpm])
+  // useEffect(() => {
+  //   console.log("wpm", wpm);
+  //   console.log("cpm", cpm);
+  // }, [wpm, cpm])
 
   const renderText = () => {
     return (

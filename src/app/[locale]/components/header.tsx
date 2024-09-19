@@ -23,8 +23,8 @@ const Header = ({lang}: HeaderProps) => {
 
   return (
     <div className="flex w-full h-[120px] justify-between text-white items-center">
-      <div className={cn(`flex justify-start w-[120px] text-xl`, handjet.className)}>
-        <Link href="/">{t("header.Type_Pulse")}</Link>
+      <div className={cn(`flex justify-start w-[120px] text-2xl`, handjet.className)}>
+        <Link href="/">{t("header.typing_magician")}</Link>
       </div>
 
       <div className={cn(`flex justify-end space-x-6 text-xl`, handjet.className)}>
