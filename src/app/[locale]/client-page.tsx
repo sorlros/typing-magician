@@ -20,7 +20,6 @@ const ClientComponentPage = ({ lang, text: literature }: PageProps) => {
     setTypedText: state.setTypedText,
   }));
 
-
   useEffect(() => {
     setText(literature[0])
   }, [literature, setText]);

@@ -1,6 +1,7 @@
 import { useTextStore } from "@/store/use-text-store";
 import { useTypingStore } from "@/store/use-typing-store";
-import { useEffect, useRef, useState } from "react";
+import { debounce } from "lodash";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const TypingArea = () => {
   const { text, typedText, setTypedText } = useTextStore((state) => ({
@@ -10,7 +11,6 @@ const TypingArea = () => {
   }));
 
   const { cpm, wpm, updatedTypingSpeed, resetTyping } = useTypingStore();
-
   const inputRef = useRef<HTMLInputElement>(null);
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
 
@@ -18,15 +18,30 @@ const TypingArea = () => {
   const [totalTypedLength, setTotalTypedLength] = useState(0);
 
   const MAX_VISIBLE_CHARS = 250;
+  const debouncedUpdateTypingSpeed = useCallback(debounce(() => updatedTypingSpeed(), 200), []);
 
   useEffect(() => {
     setVisibleContent(text.content.slice(0, MAX_VISIBLE_CHARS));
   }, [text]);
+  
+  useCallback(() => {
+    updatedTypingSpeed(typed as number);
+  }, [])
 
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
+    
+
     const userInput = e.target.value;
     setTypedText(userInput);
-    updatedTypingSpeed(userInput.length + totalTypedLength);
+    // updatedTypingSpeed(userInput.length + totalTypedLength);
+    // updatedTypingSpeed(userInput.length);
+    const completedChars = userInput.split("").filter(char => {
+      return char.charCodeAt(0) >= 0xAC00 && char.charCodeAt(0) <= 0xD7A3;
+  }).length;
+
+  if (completedChars > 0 && completedChars !== typedText.length) {
+      updatedTypingSpeed(completedChars);
+  }
     
     if (userInput.length > visibleContent.length) {
       const nextStartIndex = totalTypedLength + userInput.length;
@@ -50,11 +65,6 @@ const TypingArea = () => {
       inputRef.current.focus();
     }
   }, []);
-
-  // useEffect(() => {
-  //   console.log("wpm", wpm);
-  //   console.log("cpm", cpm);
-  // }, [wpm, cpm])
 
   const renderText = () => {
     return (
