@@ -18,15 +18,11 @@ const TypingArea = () => {
   const [totalTypedLength, setTotalTypedLength] = useState(0);
 
   const MAX_VISIBLE_CHARS = 250;
-  const debouncedUpdateTypingSpeed = useCallback(debounce(() => updatedTypingSpeed(), 200), []);
+  // const debouncedUpdateTypingSpeed = useCallback(debounce(() => updatedTypingSpeed(), 200), []);
 
   useEffect(() => {
     setVisibleContent(text.content.slice(0, MAX_VISIBLE_CHARS));
   }, [text]);
-  
-  useCallback(() => {
-    updatedTypingSpeed(typed as number);
-  }, [])
 
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
     

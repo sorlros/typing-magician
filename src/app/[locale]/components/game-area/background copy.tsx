@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import Image from 'next/image';
 import { useTypingStore } from '@/store/use-typing-store';
 
-const Background = () => {
+const BackgroundCopy = () => {
   const backgroundRef = useRef<HTMLDivElement | null>(null);
-  const [animationDuration, setAnimationDuration] = useState(20);
+  const [animationDuration, setAnimationDuration] = useState<number | null>(null);
 
   const typingSpeed = useTypingStore(state => state.cpm);
   const decreaseCPM = useTypingStore(state => state.decreaseCPM);
@@ -12,7 +12,7 @@ const Background = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       decreaseCPM();
-    }, 1000);
+    }, 1000); // 1초마다 CPM 감소
 
     return () => clearInterval(interval);
   }, [decreaseCPM]);
@@ -23,8 +23,8 @@ const Background = () => {
       if (speed > 300) return 15;
       if (speed > 200) return 20;
       if (speed > 100) return 25;
-      if (speed > 0) return 30;
-      return 35;
+      if (speed > 0) return 35;
+      return null;
     };
 
     setAnimationDuration(getAnimationDuration(typingSpeed));
@@ -51,7 +51,9 @@ const Background = () => {
         ref={backgroundRef} 
         className="flex w-[2100px] h-[200px] animate-scroll"
         style={{
-          animation: `scrollBackground ${animationDuration}s linear infinite`
+          animation: animationDuration 
+            ? `scrollBackground ${animationDuration}s ease infinite` 
+            : 'none'
         }}
       >
         {backgroundImages()}
@@ -60,4 +62,4 @@ const Background = () => {
   );
 };
 
-export default Background;
+export default BackgroundCopy;

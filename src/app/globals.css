@@ -122,26 +122,11 @@
   animation: shake 0.4s ease-in-out;
 }
 
-.game-background-container {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-}
-
-.game-background {
-  width: 200%;
-  height: 100%;
-  background-image: url('/game_images/background/PNG/Battleground1/Bright/Battleground1.png');
-  background-repeat: repeat-x;
-  background-size: auto 100%;
-  animation: slideGameBackground 50s linear infinite;
-}
-
-@keyframes slideGameBackground {
-  from {
+@keyframes scrollBackground {
+  0% {
     transform: translateX(0);
   }
-  to {
-    transform: translateX(-50%);
+  100% {
+    transform: translateX(-2100px);
   }
 }
