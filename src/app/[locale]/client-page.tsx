@@ -7,6 +7,7 @@ import GameComponent from "./components/game-component";
 import TypingArea from "./components/typing-area/typing-area";
 import SelectText from "./components/select-text";
 import { useTextStore } from "@/store/use-text-store";
+import HpAndSkills from "./components/hp-skills-area/hp-skills-area";
 
 interface PageProps {
   lang: LangType;
@@ -28,6 +29,7 @@ const ClientComponentPage = ({ lang, text: literature }: PageProps) => {
     <div className="px-60">
       <Header lang={lang}/>
       <GameComponent />
+      <HpAndSkills />
       <TypingArea />
       <SelectText text={literature} />
     </div>

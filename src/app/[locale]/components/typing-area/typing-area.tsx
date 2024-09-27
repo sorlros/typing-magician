@@ -11,6 +11,8 @@ const TypingArea = () => {
   }));
 
   const { cpm, wpm, updatedTypingSpeed, resetTyping } = useTypingStore();
+  const { setText } = useTextStore();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
 
@@ -24,9 +26,12 @@ const TypingArea = () => {
     setVisibleContent(text.content.slice(0, MAX_VISIBLE_CHARS));
   }, [text]);
 
-  const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
-    
+  // useEffect(() => {
+  //   resetTyping();
+  //   setVisibleContent("");
+  // }, [text]);
 
+  const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
     const userInput = e.target.value;
     setTypedText(userInput);
     // updatedTypingSpeed(userInput.length + totalTypedLength);
@@ -91,9 +96,6 @@ const TypingArea = () => {
   
   return (
     <div>
-      <div className="flex w-full h-[50px] items-center">
-        asd
-      </div>
       <div className="bg-black p-4 rounded-lg w-full h-[210px] overflow-hidden font-mono text-lg text-left leading-relaxed px-4 py-6">
         <div>{renderText()}</div>
         <input

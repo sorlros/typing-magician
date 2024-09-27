@@ -7,7 +7,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useTextStore } from "@/store/use-text-store";
-import { useId } from "react";
+import { useTypingStore } from "@/store/use-typing-store";
+import { useEffect, useId } from "react";
 
 interface SelectProps {
   text: TextItem[];
@@ -16,6 +17,7 @@ interface SelectProps {
 const SelectComponent = ({ text }: SelectProps) => {
   const id = useId();
   const { setText } = useTextStore();
+  const { resetTyping } = useTypingStore();
 
   const handleChangeText = (selectedTitle: string) => {
     const selectedText = text.find((content) => content.title === selectedTitle);
@@ -26,6 +28,10 @@ const SelectComponent = ({ text }: SelectProps) => {
       });
     }
   }
+
+  // useEffect(() => {
+  //   resetTyping();
+  // }, [setText])
 
   return (
     <Select onValueChange={handleChangeText}>
