@@ -12,6 +12,10 @@ const Background = () => {
   const [currentSpeedLevel, setCurrentSpeedLevel] = useState(0);
 
   useEffect(() => {
+    console.log("typingSpeed", typingSpeed);
+  }, [typingSpeed]);
+
+  useEffect(() => {
     const getSpeedLevel = (speed: number) => {
       if (speed > 400) return 5;
       if (speed > 300) return 4;

@@ -5,6 +5,8 @@ import { DotsProps } from "../../../libs/types";
 import { useEffect, useState } from "react";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useCharacterStore } from "@/store/use-character-store";
+import HpAndMp from "../hp-mp-ui/hp-mp";
+
 
 
 
@@ -39,6 +41,9 @@ const Character = () => {
   return (
     <>
       <div className="flex w-full h-full relative">
+        <div className="absolute top-12 left-[70px] z-50">
+          <HpAndMp />
+        </div>
         <div
           className="absolute left-10 top-0 bottom-0 right-10"
           style={{  

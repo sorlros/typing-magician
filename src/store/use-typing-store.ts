@@ -36,12 +36,6 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     const updatedWPM = Math.round((totalTypedCharacters / 5) / elapsedTime);
     const updatedCPM = Math.round(totalTypedCharacters / elapsedTime);
 
-    // console.log("Typed Characters:", typedCharacters);
-    // console.log("New Typed Characters:", newTypedCharacters);
-    // console.log("Elapsed Time:", elapsedTime);
-    // console.log("Updated CPM:", updatedCPM);
-
-
     set({
       typedCharacters: totalTypedCharacters,
       wpm: updatedWPM,
