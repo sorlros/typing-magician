@@ -10,7 +10,7 @@ const TypingArea = () => {
     setTypedText: state.setTypedText,
   }));
 
-  const { cpm, wpm, updatedTypingSpeed, resetTyping } = useTypingStore();
+  const { cpm, wpm, updatedTypingSpeed, resetTyping, decreaseCPM, typedCharacters } = useTypingStore();
   const { setText } = useTextStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -18,6 +18,8 @@ const TypingArea = () => {
 
   const [visibleContent, setVisibleContent] = useState("");
   const [totalTypedLength, setTotalTypedLength] = useState(0);
+  const [isTyping, setIsTyping] = useState(false);
+  const [lastTypedTime, setLastTypedTime] = useState<number | null>(null);
 
   const MAX_VISIBLE_CHARS = 250;
   // const debouncedUpdateTypingSpeed = useCallback(debounce(() => updatedTypingSpeed(), 200), []);
@@ -26,36 +28,52 @@ const TypingArea = () => {
     setVisibleContent(text.content.slice(0, MAX_VISIBLE_CHARS));
   }, [text]);
 
-  // useEffect(() => {
-  //   resetTyping();
-  //   setVisibleContent("");
-  // }, [text]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const currentTime = Date.now();
+      const timeSinceLastTyping = lastTypedTime ? (currentTime - lastTypedTime) / 1000 : 0;
+
+      if (!isTyping && timeSinceLastTyping > 1) {
+        // 타이핑이 없고, 1초 이상이 지나면 CPM 감소
+        decreaseCPM();
+      }
+    }, 1000); // 1초마다 체크
+
+    return () => clearInterval(interval);
+  }, [isTyping, lastTypedTime, decreaseCPM]);
+
+
+  useEffect(() => {
+    console.log("typedCharacters", typedCharacters)
+  }, [typedCharacters ]);
 
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTimeout(() => {
+      setIsTyping(false);
+    }, 1500);
+  
+    setIsTyping(true);
+    setLastTypedTime(Date.now());
     const userInput = e.target.value;
-    setTypedText(userInput);
-    // updatedTypingSpeed(userInput.length + totalTypedLength);
-    // updatedTypingSpeed(userInput.length);
-    const completedChars = userInput.split("").filter(char => {
-      return char.charCodeAt(0) >= 0xAC00 && char.charCodeAt(0) <= 0xD7A3;
-  }).length;
+    const newlyTypedChars = userInput.length - typedText.length;
 
-  if (completedChars > 0 && completedChars !== typedText.length) {
-      updatedTypingSpeed(completedChars);
-  }
-    
+    setTypedText(userInput);
+  
+    if (newlyTypedChars > 0) {
+      updatedTypingSpeed(newlyTypedChars); // 여기서 추가된 문자 수만큼 업데이트
+    }
+  
     if (userInput.length > visibleContent.length) {
       const nextStartIndex = totalTypedLength + userInput.length;
       const nextEndIndex = nextStartIndex + MAX_VISIBLE_CHARS;
       
       let nextVisibleContent = text.content.slice(nextStartIndex, nextEndIndex);
-
-      // 첫 문자가 공백이면 공백을 제거
+  
       if (nextVisibleContent.charAt(0) === " ") {
         nextVisibleContent = nextVisibleContent.trimStart();
       }
-
-      setTypedText("");
+  
+      setTypedText(""); 
       setVisibleContent(nextVisibleContent);
       setTotalTypedLength(nextStartIndex);
     }

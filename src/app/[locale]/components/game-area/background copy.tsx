@@ -10,11 +10,7 @@ const Background = () => {
   const typingSpeed = useTypingStore(state => state.cpm);
 
   const [currentSpeedLevel, setCurrentSpeedLevel] = useState(0);
-
-  useEffect(() => {
-    console.log("typingSpeed", typingSpeed);
-  }, [typingSpeed]);
-
+  
   useEffect(() => {
     const getSpeedLevel = (speed: number) => {
       if (speed > 400) return 5;

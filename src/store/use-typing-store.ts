@@ -32,9 +32,11 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     // 최소 1초 이상 경과한 경우에만 계산
     if (elapsedTime < 1) return;
 
+    const minutesElapsed = elapsedTime / 60;
     const totalTypedCharacters = typedCharacters + newTypedCharacters;
-    const updatedWPM = Math.round((totalTypedCharacters / 5) / elapsedTime);
-    const updatedCPM = Math.round(totalTypedCharacters / elapsedTime);
+    
+    const updatedWPM = Math.round((totalTypedCharacters / 5) / minutesElapsed); // 단어당 5글자 기준
+    const updatedCPM = Math.round(totalTypedCharacters / minutesElapsed); 
 
     set({
       typedCharacters: totalTypedCharacters,
