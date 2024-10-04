@@ -16,13 +16,14 @@ const Monster = () => {
 
   const typingSpeed = useTypingStore(state => state.cpm);
 
-  const { totalFrames, frameWidth, frameHeight, frameDuration, monster, updateMonsterSettings } = useMonsterStore(state => ({
+  const { totalFrames, frameWidth, frameHeight, frameDuration, monster, updateMonsterSettings, monsterCondition } = useMonsterStore(state => ({
     monster: state.monster,
     totalFrames: state.totalFrames,
     frameWidth: state.frameWidth,
     frameHeight: state.frameHeight,
     frameDuration: state.frameDuration,
-    updateMonsterSettings: state.updateMonsterSettings
+    updateMonsterSettings: state.updateMonsterSettings,
+    monsterCondition: state.monsterCondition
   }));
 
   useEffect(() => {
@@ -32,6 +33,10 @@ const Monster = () => {
 
     return () => clearInterval(interval);
   }, [frameDuration, totalFrames]);
+
+  useEffect(() => {
+    updateMonsterSettings();
+  }, [typedCharacters, monsterCondition, updateMonsterSettings]);
 
   useEffect(() => {
     if (monster.monsterNumber !== 0) {
@@ -46,13 +51,13 @@ const Monster = () => {
           <HpAndMp />
         </div> */}
         <div
-          className={`absolute inset-0 ${hidden ? "hidden" : "block"}`}
+          className={`absolute right-10 transform scale-x-[-1] ${hidden ? "hidden" : "block"}`}
           style={{  
             width: `${frameWidth}px`,
             height: `${frameHeight}px`,
             backgroundImage: `${monster.monsterImage}`,
-            backgroundPosition: `-${frame * frameWidth + 300}px 0px`, // 프레임에 따라 위치 변경
-            backgroundSize: `${frameWidth * totalFrames}px 200px`, // 전체 스프라이트 시트 크기
+            backgroundPosition: `-${frame * frameWidth}px 0px`,
+            backgroundSize: `${frameWidth * totalFrames}px 200px`,
           }}
         />
       </div>

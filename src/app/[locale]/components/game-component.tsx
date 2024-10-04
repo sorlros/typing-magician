@@ -12,11 +12,11 @@ const GameComponent = () => {
         <BackgroundCopy />
       </div>
       
-      <div className="w-full height-[200px] absolute left-0 top-0 z-50">
+      <div className="w-full height-[200px] absolute left-10 top-0 z-50">
         <Character />
       </div>
 
-      <div className="w-full h-full absolute right-[-100px] top-0 z-50">
+      <div className="w-full h-full absolute right-10 top-0 z-50">
         <Monster />
       </div>
     </div>
