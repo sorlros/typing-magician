@@ -10,7 +10,7 @@ import { useMonsterStore } from "@/store/use-monster-store";
 
 const Monster = () => {
   const [frame, setFrame] = useState(0); // 현재 프레임 인덱스
-  const [hidden, setHidden] = useState(true);
+  const [hidden, setHidden] = useState<boolean>(true);
 
   const { typedCharacters } = useTypingStore();
 
@@ -36,13 +36,24 @@ const Monster = () => {
 
   useEffect(() => {
     updateMonsterSettings();
-  }, [typedCharacters, monsterCondition, updateMonsterSettings]);
+  }, [typedCharacters, updateMonsterSettings]);
 
   useEffect(() => {
-    if (monster.monsterNumber !== 0) {
+    if (typedCharacters > 99) {
       setHidden(false);
     }
-  }, [monster.monsterNumber])
+  }, [typedCharacters]);
+
+  useEffect(() => {
+    if (monsterCondition.isDying) {
+      // 몬스터 사망 시 로직 (예: 사라지거나, 죽는 애니메이션 실행)
+      setHidden(true);
+    }
+  }, [monsterCondition]);
+
+  if (hidden || !monster.monsterImage) {
+    return null;
+  }
   
   return (
     <>
@@ -51,10 +62,11 @@ const Monster = () => {
           <HpAndMp />
         </div> */}
         <div
-          className={`absolute right-10 transform scale-x-[-1] ${hidden ? "hidden" : "block"}`}
+          className="absolute transform translate scale-x-[-1] transition-right duration-2000 ease-in-out"
           style={{  
             width: `${frameWidth}px`,
             height: `${frameHeight}px`,
+            right: hidden ? "0" : "10px",  // hidden 값에 따라 위치 변경
             backgroundImage: `${monster.monsterImage}`,
             backgroundPosition: `-${frame * frameWidth}px 0px`,
             backgroundSize: `${frameWidth * totalFrames}px 200px`,
