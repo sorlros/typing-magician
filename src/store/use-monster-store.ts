@@ -1,16 +1,11 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
+import useSituationStore from "./use-situation-store";
 
 type MonsterDetails = {
   monsterNumber: number;
   monsterImage: string;
   monsterHP: number;
-}
-
-type MonsterCondition = {
-  inCombat: boolean;
-  isDying: boolean;
-  isHurt: boolean;
 }
 
 interface MonsterState {
@@ -19,7 +14,6 @@ interface MonsterState {
   frameWidth: number; // 각 프레임의 너비 (px)
   frameHeight: number; // 각 프레임의 높이 (px)
   frameDuration: number;
-  monsterCondition: MonsterCondition;
   updateMonsterSettings: () => void;
 }
 
@@ -33,18 +27,11 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
   frameWidth: 200,
   frameHeight: 200,
   frameDuration: 300,
-
-  monsterCondition: {
-    inCombat: false,
-    isDying: false,
-    isHurt: false,
-  },
-
   updateMonsterSettings: () => {
     const typedCharacters = useTypingStore.getState().typedCharacters;
-    const { monsterCondition } = get();
+    const { inUsual ,inCombat, isHurt, isDying } = useSituationStore.getState();
 
-    let action: "Idle" | "Hurt" | "Dead" | "Attack";
+    let action: "Idle" | "Hurt" | "Dead" | "Attack" = "Idle";
     let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior";
     let totalFrames: number;
 
@@ -56,14 +43,14 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
       monsterType = "Skeleton_Archer";
     }
 
-    if (!monsterCondition.inCombat) {
-      action = "Idle";
-    } else if (monsterCondition.isHurt) {
-      action = "Hurt";
-    } else if (monsterCondition.isDying) {
+    if (isDying) {
       action = "Dead";
-    } else {
+    } else if (isHurt) {
+      action = "Hurt";
+    } else if (inCombat) {
       action = "Attack";
+    } else if (inUsual) {
+      action = "Idle";
     }
   
     const framesMap = {
@@ -86,6 +73,6 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
       frameDuration: 100,
     });
 
-    console.log('Updated monster settings:', { typedCharacters, monsterType, action }); // 디버깅용 로그 추가
+    console.log('Updated monster settings:', { typedCharacters, monsterType, action });
   }
 }))
