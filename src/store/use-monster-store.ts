@@ -31,7 +31,7 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
     const typedCharacters = useTypingStore.getState().typedCharacters;
     const { inUsual ,inCombat, isHurt, isDying } = useSituationStore.getState();
 
-    let action: "Idle" | "Hurt" | "Dead" | "Attack" = "Idle";
+    let action: "Idle" | "Hurt" | "Dead" | "Attack_1" = "Idle";
     let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior";
     let totalFrames: number;
 
@@ -48,15 +48,15 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
     } else if (isHurt) {
       action = "Hurt";
     } else if (inCombat) {
-      action = "Attack";
+      action = "Attack_1";
     } else if (inUsual) {
       action = "Idle";
     }
   
     const framesMap = {
-      Skeleton_Archer: { Idle: 7, Hurt: 2, Dead: 5, Attack: 5 },
-      Skeleton_Spearman: { Idle: 7, Hurt: 3, Dead: 5, Attack: 4 },
-      Skeleton_Warrior: { Idle: 7, Hurt: 2, Dead: 4, Attack: 5 },
+      Skeleton_Archer: { Idle: 7, Hurt: 2, Dead: 5, Attack_1: 5 },
+      Skeleton_Spearman: { Idle: 7, Hurt: 3, Dead: 5, Attack_1: 4 },
+      Skeleton_Warrior: { Idle: 7, Hurt: 2, Dead: 4, Attack_1: 5 },
     };
 
     totalFrames = framesMap[monsterType][action];

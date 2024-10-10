@@ -50,7 +50,11 @@ const Monster = () => {
   useEffect(() => {
     if (typedCharacters > 99) {
       setHidden(false);
-      setPosition("70%");
+      setTimeout(() => {
+        setPosition("70%");
+        setSituations("inCombat");
+        console.log("inUsual, inCombat, isDying, isHurt", inUsual, inCombat, isDying, isHurt)
+      }, 100);
     }
   }, [typedCharacters]);
 
@@ -67,13 +71,19 @@ const Monster = () => {
   
   return (
     <>
-      <div className="flex w-full h-full relative">
+      <div className="flex w-full h-full"
+        style={{
+          position: "absolute",
+          left: position,
+          transition: "left 3s ease",
+        }}
+      >
         {/* <div className="absolute top-12 left-[70px] z-50">
           <HpAndMp />
         </div> */}
         
         <div
-          className={`absolute transform translate scale-x-[-1] ${position === "70%" ? "transition-all duration-3000 left-[70%]" : ""}`}
+          className={`absolute transform translate scale-x-[-1]`}
           style={{  
             width: `${frameWidth}px`,
             height: `${frameHeight}px`,

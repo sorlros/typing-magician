@@ -16,7 +16,7 @@ const GameComponent = () => {
         <Character />
       </div>
 
-      <div className="w-full h-full absolute right-10 top-0 z-50">
+      <div className="w-full h-full absolute inset-0 z-50">
         <Monster />
       </div>
     </div>

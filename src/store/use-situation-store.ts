@@ -5,7 +5,7 @@ interface SituationStore {
   inCombat: boolean;
   isDying: boolean;
   isHurt: boolean;
-  setSituations: () => void;
+  setSituations: (value: string) => void;
 }
 
 const useSituationStore = create<SituationStore>((set, get) => ({
@@ -13,31 +13,29 @@ const useSituationStore = create<SituationStore>((set, get) => ({
   inCombat: false,
   isDying: false,
   isHurt: false,
-  setSituations: () => {
-    const { inUsual, inCombat, isDying, isHurt } = get();
-
-    if (inUsual) {
+  setSituations: (value) => {
+    if (value === "inUsual") {
       set({
         inUsual: true,
         inCombat: false,
         isDying: false,
         isHurt: false,
       })
-    } else if (inCombat) {
+    } else if (value === "inCombat") {
       set({
         inUsual: false,
         inCombat: true,
         isDying: false,
         isHurt: false,
       })
-    } else if (isHurt) {
+    } else if (value === "isHurt") {
       set({
         inUsual: false,
         inCombat: true,
         isDying: false,
         isHurt: true,
       })
-    } else if (isDying) {
+    } else if (value === "isDying") {
       set({
         inUsual: false,
         inCombat: true,
