@@ -52,11 +52,15 @@ const Monster = () => {
       setHidden(false);
       setTimeout(() => {
         setPosition("70%");
-        setSituations("inCombat");
-        console.log("inUsual, inCombat, isDying, isHurt", inUsual, inCombat, isDying, isHurt)
+        // setSituations("inCombat");
+        // console.log("inUsual, inCombat, isDying, isHurt", inUsual, inCombat, isDying, isHurt)
       }, 100);
     }
   }, [typedCharacters]);
+
+  const handleTransitionEnd = () => {
+    setSituations("inCombat");
+  }
 
   // useEffect(() => {
   //   if (monsterCondition.isDying) {
@@ -77,6 +81,7 @@ const Monster = () => {
           left: position,
           transition: "left 3s ease",
         }}
+        onTransitionEnd={handleTransitionEnd}
       >
         {/* <div className="absolute top-12 left-[70px] z-50">
           <HpAndMp />

@@ -2,17 +2,20 @@ import anime from 'animejs';
 import { useEffect, useRef, useState } from "react";
 import Image from 'next/image';
 import { useTypingStore } from '@/store/use-typing-store';
+import useSituationStore from '@/store/use-situation-store';
 
 const Background = () => {
   const animeRef = useRef<HTMLDivElement | null>(null);
   const animationRef = useRef<anime.AnimeInstance | null>(null);
 
   const typingSpeed = useTypingStore(state => state.cpm);
+  const situation = useSituationStore();
 
   const [currentSpeedLevel, setCurrentSpeedLevel] = useState(0);
   
   useEffect(() => {
-    const getSpeedLevel = (speed: number) => {
+    console.log("situation", situation.inCombat);
+    const getSpeedLevel = (speed: number): number => {
       if (speed > 400) return 5;
       if (speed > 300) return 4;
       if (speed > 200) return 3;
@@ -28,8 +31,8 @@ const Background = () => {
       if (!animationRef.current) {
         animationRef.current = anime({
           targets: animeRef.current,
-          translateX: ['0%', '-100%'], // 왼쪽으로 이동
-          easing: 'linear',
+          translateX: ["0%", "-100%"], // 왼쪽으로 이동
+          easing: "linear",
           duration: 20000, // 기본 속도 설정, 나중에 조정
           loop: true, // 반복
           autoplay: false, // 자동 실행 방지
@@ -40,6 +43,7 @@ const Background = () => {
       if (newSpeedLevel !== currentSpeedLevel) {
         setCurrentSpeedLevel(newSpeedLevel);
 
+       
         if (newSpeedLevel > 0) {
           // 속도가 0보다 크면 애니메이션 재생 및 속도 조정
           const newDuration = 20000 / newSpeedLevel; // 속도에 따른 duration 재조정
@@ -53,7 +57,8 @@ const Background = () => {
         }
       }
     }
-  }, [typingSpeed, currentSpeedLevel]);
+    
+  }, [typingSpeed, currentSpeedLevel, situation.inCombat]);
 
   const backgroundImages = () => (
     <>
