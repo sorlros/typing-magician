@@ -70,7 +70,7 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
       totalFrames,
       frameWidth: 200,
       frameHeight: 200,
-      frameDuration: 100,
+      frameDuration: 400,
     });
 
     console.log('Updated monster settings:', { typedCharacters, monsterType, action });

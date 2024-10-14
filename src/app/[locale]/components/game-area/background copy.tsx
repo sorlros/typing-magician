@@ -12,9 +12,8 @@ const Background = () => {
   const situation = useSituationStore();
 
   const [currentSpeedLevel, setCurrentSpeedLevel] = useState(0);
-  
+
   useEffect(() => {
-    console.log("situation", situation.inCombat);
     const getSpeedLevel = (speed: number): number => {
       if (speed > 400) return 5;
       if (speed > 300) return 4;
@@ -33,32 +32,34 @@ const Background = () => {
           targets: animeRef.current,
           translateX: ["0%", "-100%"], // 왼쪽으로 이동
           easing: "linear",
-          duration: 20000, // 기본 속도 설정, 나중에 조정
-          loop: true, // 반복
-          autoplay: false, // 자동 실행 방지
+          duration: 20000,
+          loop: true,
+          autoplay: false,
         });
       }
 
-      // 새로운 속도 레벨을 반영
-      if (newSpeedLevel !== currentSpeedLevel) {
-        setCurrentSpeedLevel(newSpeedLevel);
+      if (situation.inCombat) {
+        animationRef.current.pause();
+      } else {
+        if (newSpeedLevel !== currentSpeedLevel) {
+          setCurrentSpeedLevel(newSpeedLevel);
 
-       
-        if (newSpeedLevel > 0) {
-          // 속도가 0보다 크면 애니메이션 재생 및 속도 조정
-          const newDuration = 20000 / newSpeedLevel; // 속도에 따른 duration 재조정
-          animationRef.current.duration = newDuration;
-
-          // 타이핑 속도가 증가하면 애니메이션 재개
-          animationRef.current.play();
-        } else {
-          // 속도가 0이면 애니메이션 멈춤
-          animationRef.current.pause();
+          if (newSpeedLevel > 0) {
+            const newDuration = 20000 / newSpeedLevel; 
+            animationRef.current.duration = newDuration;
+            animationRef.current.play();
+          } else {
+            animationRef.current.pause();
+          }
         }
       }
     }
-    
+
   }, [typingSpeed, currentSpeedLevel, situation.inCombat]);
+
+  useEffect(() => {
+    console.log("typingSpeed", typingSpeed);
+  }, [typingSpeed])
 
   const backgroundImages = () => (
     <>

@@ -7,12 +7,8 @@ import { useTypingStore } from "@/store/use-typing-store";
 import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
 
-
-
-
 const Character = () => {
-  const [frame, setFrame] = useState(0); // 현재 프레임 인덱스
-  // const [image, setImage] = useState(0);
+  const [frame, setFrame] = useState(0);
 
   const typingSpeed = useTypingStore(state => state.cpm);
 

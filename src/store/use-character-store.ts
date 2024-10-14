@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
+import useSituationStore from "./use-situation-store";
 
 interface CharacterState {
   // typingSpeed: number; // WPM (Words per minute)
@@ -12,7 +13,6 @@ interface CharacterState {
 }
 
 export const useCharacterStore = create<CharacterState>((set, get) => ({
-  // typingSpeed: 0, // 기본값 설정
   totalFrames: 7,
   frameWidth: 200,
   frameHeight: 200,
@@ -20,8 +20,33 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
   characterImage: `url("/game_images/character-wizard/Fire vizard/Idle.png")`,
   updateCharacterSettings: () => {
     const typingSpeed = useTypingStore.getState().cpm;
+    const { inCombat, isDying, isHurt } = useSituationStore.getState();
 
-    if (typingSpeed > 200) {
+    if (isDying) {
+      set({
+        totalFrames: 6,
+        frameWidth: 200,
+        frameHeight: 200,
+        frameDuration: 300,
+        characterImage: `url("/game_images/character-wizard/Fire vizard/Dead.png")`,
+      });
+    } else if (isHurt) {
+      set({
+        totalFrames: 3,
+        frameWidth: 200,
+        frameHeight: 200,
+        frameDuration: 200,
+        characterImage: `url("/game_images/character-wizard/Fire vizard/Hurt.png")`,
+      });
+    } else if (inCombat) {
+      set({
+        totalFrames: 14,
+        frameWidth: 200,
+        frameHeight: 200,
+        frameDuration: 30000 / typingSpeed,
+        characterImage: `url("/game_images/character-wizard/Fire vizard/Flame_jet.png")`,
+      });
+    } else if (typingSpeed > 200) {
       set({
         totalFrames: 8,
         frameWidth: 200,
