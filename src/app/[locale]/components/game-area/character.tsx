@@ -6,19 +6,25 @@ import { useEffect, useState } from "react";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
+import useSituationStore from "@/store/use-situation-store";
 
 const Character = () => {
   const [frame, setFrame] = useState(0);
 
   const typingSpeed = useTypingStore(state => state.cpm);
 
-    const { totalFrames, frameWidth, frameHeight, frameDuration, characterImage, updateCharacterSettings } = useCharacterStore(state => ({
+  const { totalFrames, frameWidth, frameHeight, frameDuration, characterImage, updateCharacterSettings, reduceHp } = useCharacterStore(state => ({
       totalFrames: state.totalFrames,
       frameWidth: state.frameWidth,
       frameHeight: state.frameHeight,
       frameDuration: state.frameDuration,
       characterImage: state.characterImage,
-      updateCharacterSettings: state.updateCharacterSettings
+      updateCharacterSettings: state.updateCharacterSettings,
+      reduceHp: state.reduceHp,
+  }));
+
+  const { setSituations } = useSituationStore(state => ({
+    setSituations: state.setSituations
   }));
 
   useEffect(() => {
@@ -28,10 +34,10 @@ const Character = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFrame((prevFrame) => (prevFrame + 1) % totalFrames); // 다음 프레임으로 이동, 마지막 프레임 이후 첫 프레임으로
+      setFrame((prevFrame) => (prevFrame + 1) % totalFrames);
     }, frameDuration);
 
-    return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 해제
+    return () => clearInterval(interval); 
   }, [frameDuration, totalFrames]);
   
   return (

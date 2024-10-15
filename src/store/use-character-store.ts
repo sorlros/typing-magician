@@ -3,13 +3,14 @@ import { useTypingStore } from "./use-typing-store";
 import useSituationStore from "./use-situation-store";
 
 interface CharacterState {
-  // typingSpeed: number; // WPM (Words per minute)
   totalFrames: number; // 스프라이트 시트에 있는 총 프레임 수
   frameWidth: number; // 각 프레임의 너비 (px)
   frameHeight: number; // 각 프레임의 높이 (px)
   frameDuration: number;
   characterImage: string;
+  hp: number;
   updateCharacterSettings: () => void;
+  reduceHp: (amount: number) => void;
 }
 
 export const useCharacterStore = create<CharacterState>((set, get) => ({
@@ -18,6 +19,7 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
   frameHeight: 200,
   frameDuration: 300,
   characterImage: `url("/game_images/character-wizard/Fire vizard/Idle.png")`,
+  hp: 100,
   updateCharacterSettings: () => {
     const typingSpeed = useTypingStore.getState().cpm;
     const { inCombat, isDying, isHurt } = useSituationStore.getState();
@@ -71,5 +73,21 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
         characterImage: `url("/game_images/character-wizard/Fire vizard/Idle.png")`,
       });
     }
+  },
+
+  reduceHp: (amount) => {
+    set((state) => {
+      const newHp = Math.max(state.hp - amount, 0);
+      return {
+        hp: newHp,
+        ...(newHp <= 0 && {
+          totalFrames: 6,
+          frameWidth: 200,
+          frameHeight: 200,
+          frameDuration: 300,
+          characterImage: `url("/game_images/character-wizard/Fire vizard/Dead.png")`,
+        })
+      }
+    })
   }
 }))

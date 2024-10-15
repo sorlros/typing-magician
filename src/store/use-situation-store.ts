@@ -21,6 +21,7 @@ const useSituationStore = create<SituationStore>((set, get) => ({
         isDying: false,
         isHurt: false,
       })
+      // inCombat시 출혈상태 설정 로직 구상, 추가변수로 프레임의 값을 받아오는 것을 고려
     } else if (value === "inCombat") {
       set({
         inUsual: false,
