@@ -2,14 +2,14 @@ import anime from 'animejs';
 import { useEffect, useRef, useState } from "react";
 import Image from 'next/image';
 import { useTypingStore } from '@/store/use-typing-store';
-import useSituationStore from '@/store/use-situation-store';
+import useCharacterSituationStore from '@/store/use-character-situation-store';
 
 const Background = () => {
   const animeRef = useRef<HTMLDivElement | null>(null);
   const animationRef = useRef<anime.AnimeInstance | null>(null);
 
   const typingSpeed = useTypingStore(state => state.cpm);
-  const situation = useSituationStore();
+  const situation = useCharacterSituationStore();
 
   const [currentSpeedLevel, setCurrentSpeedLevel] = useState(0);
 
@@ -39,7 +39,24 @@ const Background = () => {
       }
 
       if (situation.inCombat) {
-        animationRef.current.pause();
+        if (animationRef.current) {
+          // 애니메이션을 서서히 멈추도록 설정
+          anime({
+            targets: animeRef.current,
+            easing: "easeOutQuad", // 서서히 멈추는 이징 함수
+            update: () => {
+              if (animationRef.current) {
+                animationRef.current.duration += 10000; // 속도 점차 줄이기
+              }
+            },
+            complete: () => {
+              if (animationRef.current) {
+                animationRef.current.pause(); // 2초 후 완전히 멈춤
+              }
+            },
+            duration: 2000, // 2초에 걸쳐 애니메이션이 멈추도록 설정
+          });
+        }
       } else {
         if (newSpeedLevel !== currentSpeedLevel) {
           setCurrentSpeedLevel(newSpeedLevel);

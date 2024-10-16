@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
-import useSituationStore from "./use-situation-store";
+import useMonsterSituationStore from "./use-character-situation-store";
 
 type MonsterDetails = {
   monsterNumber: number;
@@ -29,7 +29,7 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
   frameDuration: 300,
   updateMonsterSettings: () => {
     const typedCharacters = useTypingStore.getState().typedCharacters;
-    const { inUsual ,inCombat, isHurt, isDying } = useSituationStore.getState();
+    const { inUsual ,inCombat, isHurt, isDying } = useMonsterSituationStore.getState();
 
     let action: "Idle" | "Hurt" | "Dead" | "Attack_1" = "Idle";
     let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior";
@@ -70,7 +70,7 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
       totalFrames,
       frameWidth: 200,
       frameHeight: 200,
-      frameDuration: 400,
+      frameDuration: 200,
     });
 
     console.log('Updated monster settings:', { typedCharacters, monsterType, action });

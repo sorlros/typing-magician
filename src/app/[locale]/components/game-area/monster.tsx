@@ -7,7 +7,8 @@ import { useTypingStore } from "@/store/use-typing-store";
 import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
 import { useMonsterStore } from "@/store/use-monster-store";
-import useSituationStore from "@/store/use-situation-store";
+import useMonsterSituationStore from "@/store/use-monster-situation-store";
+import useCharacterSituationStore from "@/store/use-character-situation-store";
 
 const Monster = () => {
   const [frame, setFrame] = useState(0); // 현재 프레임 인덱스
@@ -27,19 +28,32 @@ const Monster = () => {
     updateMonsterSettings: state.updateMonsterSettings,
   }));
 
-  const { inUsual, inCombat, isDying, isHurt, setSituations } = useSituationStore(state => ({
+  const { inUsual, inCombat, isDying, isHurt, setMonsterSituations } = useMonsterSituationStore(state => ({
     inUsual: state.inUsual,
     inCombat: state.inCombat,
     isDying: state.isDying,
     isHurt: state.isHurt,
-    setSituations: state.setSituations
+    setMonsterSituations: state.setMonsterSituations
+  }))
+
+  const { setCharacterSituations } = useCharacterSituationStore(state => ({
+    setCharacterSituations: state.setCharacterSituations
   }))
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFrame((prevFrame) => (prevFrame + 1) % totalFrames); // 다음 프레임으로 이동, 마지막 프레임 이후 첫 프레임으로
+      setFrame((prevFrame) => {
+        const nextFrame = (prevFrame + 1) % totalFrames;
+        
+        if (nextFrame === 0 && inCombat) {
+          console.log('마지막 프레임에 도달했습니다!');
+          setMonsterSituations("isHurt");
+        }
+  
+        return nextFrame;
+      });
     }, frameDuration);
-
+  
     return () => clearInterval(interval);
   }, [frameDuration, totalFrames]);
 
@@ -59,7 +73,8 @@ const Monster = () => {
   }, [typedCharacters]);
 
   const handleTransitionEnd = () => {
-    setSituations("inCombat");
+    setCharacterSituations("inCombat");
+    setCharacterSituations("inCombat");
   }
 
   // useEffect(() => {

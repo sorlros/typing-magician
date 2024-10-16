@@ -5,15 +5,15 @@ interface SituationStore {
   inCombat: boolean;
   isDying: boolean;
   isHurt: boolean;
-  setSituations: (value: string) => void;
+  setMonsterSituations: (value: string) => void;
 }
 
-const useSituationStore = create<SituationStore>((set, get) => ({
+const useMonsterSituationStore = create<SituationStore>((set, get) => ({
   inUsual: true,
   inCombat: false,
   isDying: false,
   isHurt: false,
-  setSituations: (value) => {
+  setMonsterSituations: (value) => {
     if (value === "inUsual") {
       set({
         inUsual: true,
@@ -47,4 +47,4 @@ const useSituationStore = create<SituationStore>((set, get) => ({
   }
 }))
 
-export default useSituationStore;
+export default useMonsterSituationStore;

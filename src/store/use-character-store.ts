@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
-import useSituationStore from "./use-situation-store";
+import useCharacterSituationStore from "./use-character-situation-store";
 
 interface CharacterState {
   totalFrames: number; // 스프라이트 시트에 있는 총 프레임 수
@@ -22,7 +22,7 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
   hp: 100,
   updateCharacterSettings: () => {
     const typingSpeed = useTypingStore.getState().cpm;
-    const { inCombat, isDying, isHurt } = useSituationStore.getState();
+    const { inCombat, isDying, isHurt } = useCharacterSituationStore.getState();
 
     if (isDying) {
       set({
@@ -40,7 +40,7 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
         frameDuration: 200,
         characterImage: `url("/game_images/character-wizard/Fire vizard/Hurt.png")`,
       });
-    } else if (inCombat) {
+    } else if (inCombat && typingSpeed !== 0) {
       set({
         totalFrames: 14,
         frameWidth: 200,

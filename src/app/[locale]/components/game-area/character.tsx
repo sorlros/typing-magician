@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
-import useSituationStore from "@/store/use-situation-store";
+import useCharacterSituationStore from "@/store/use-character-situation-store";
 
 const Character = () => {
   const [frame, setFrame] = useState(0);
@@ -23,8 +23,8 @@ const Character = () => {
       reduceHp: state.reduceHp,
   }));
 
-  const { setSituations } = useSituationStore(state => ({
-    setSituations: state.setSituations
+  const { setCharacterSituations } = useCharacterSituationStore(state => ({
+    setCharacterSituations: state.setCharacterSituations
   }));
 
   useEffect(() => {
