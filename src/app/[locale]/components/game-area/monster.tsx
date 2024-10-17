@@ -65,7 +65,7 @@ const Monster = () => {
     if (typedCharacters > 99) {
       setHidden(false);
       setTimeout(() => {
-        setPosition("70%");
+        setPosition("50%");
         // setSituations("inCombat");
         // console.log("inUsual, inCombat, isDying, isHurt", inUsual, inCombat, isDying, isHurt)
       }, 100);
@@ -74,7 +74,7 @@ const Monster = () => {
 
   const handleTransitionEnd = () => {
     setCharacterSituations("inCombat");
-    setCharacterSituations("inCombat");
+    setMonsterSituations("inCombat");
   }
 
   // useEffect(() => {
@@ -104,7 +104,7 @@ const Monster = () => {
         
         <div
           className={`absolute transform translate scale-x-[-1]`}
-          style={{  
+          style={{ 
             width: `${frameWidth}px`,
             height: `${frameHeight}px`,
             backgroundImage: `${monster.monsterImage}`,
