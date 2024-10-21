@@ -29,25 +29,28 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
   frameDuration: 300,
   updateMonsterSettings: () => {
     const typedCharacters = useTypingStore.getState().typedCharacters;
+    const monster = useMonsterStore.getState().monster;
     const { inUsual ,inCombat, isHurt, isDying } = useMonsterSituationStore.getState();
 
     let action: "Idle" | "Hurt" | "Dead" | "Attack_1" = "Idle";
     let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior";
     let totalFrames: number;
-
-    if (typedCharacters >= 300) {
-      monsterType = "Skeleton_Warrior";
-    } else if (typedCharacters >= 200) {
-      monsterType = "Skeleton_Spearman";
-    } else {
+    
+    if (monster.monsterNumber === 0) {
       monsterType = "Skeleton_Archer";
+    } else if (monster.monsterNumber === 1) {
+      monsterType = "Skeleton_Spearman";
+    } else if (monster.monsterNumber === 2) {
+      monsterType = "Skeleton_Warrior";
+    } else {
+      monsterType = "Skeleton_Archer"; // 기본 값
     }
 
     if (isDying) {
       action = "Dead";
-    } else if (isHurt) {
+    } else if (isHurt && inCombat && !inUsual) {
       action = "Hurt";
-    } else if (inCombat) {
+    } else if (!isHurt && inCombat && !inUsual) {
       action = "Attack_1";
     } else if (inUsual) {
       action = "Idle";
@@ -63,7 +66,7 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
 
     set({
       monster: {
-        monsterNumber: typedCharacters >= 300 ? 3 : (typedCharacters >= 200 ? 2 : 1),
+        monsterNumber: typedCharacters >= 300 ? 2 : (typedCharacters >= 200 ? 1 : 0),
         monsterImage: `url("/game_images/skeleton/${monsterType}/${action}.png")`,
         monsterHP: 100,
       },

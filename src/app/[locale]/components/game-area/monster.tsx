@@ -28,53 +28,43 @@ const Monster = () => {
     updateMonsterSettings: state.updateMonsterSettings,
   }));
 
-  const { inUsual, inCombat, isDying, isHurt, setMonsterSituations } = useMonsterSituationStore(state => ({
-    inUsual: state.inUsual,
-    inCombat: state.inCombat,
-    isDying: state.isDying,
-    isHurt: state.isHurt,
-    setMonsterSituations: state.setMonsterSituations
-  }))
-
-  const { setCharacterSituations } = useCharacterSituationStore(state => ({
-    setCharacterSituations: state.setCharacterSituations
-  }))
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFrame((prevFrame) => {
-        const nextFrame = (prevFrame + 1) % totalFrames;
-        
-        if (nextFrame === 0 && inCombat) {
-          console.log('마지막 프레임에 도달했습니다!');
-          setMonsterSituations("isHurt");
-        }
-  
-        return nextFrame;
-      });
-    }, frameDuration);
-  
-    return () => clearInterval(interval);
-  }, [frameDuration, totalFrames]);
+  const monsterSituation = useMonsterSituationStore();
+  const characterSituation = useCharacterSituationStore();
 
   useEffect(() => {
     updateMonsterSettings();
   }, [typedCharacters, updateMonsterSettings]);
 
   useEffect(() => {
+    console.log("SSSSS", monsterSituation)
+    const interval = setInterval(() => {
+      setFrame((prevFrame) => {
+        // console.log("111", monsterSituation.isHurt)
+        const nextFrame = (prevFrame + 1) % totalFrames;
+        
+        if (nextFrame === 0 && monsterSituation.inCombat) {
+          console.log('마지막 프레임에 도달했습니다!');
+          monsterSituation.setMonsterSituations("isHurt");
+        }
+        return nextFrame;
+      });
+    }, frameDuration);
+  
+    return () => clearInterval(interval);
+  }, [frameDuration, totalFrames, monsterSituation]);
+
+  useEffect(() => {
     if (typedCharacters > 99) {
       setHidden(false);
       setTimeout(() => {
         setPosition("50%");
-        // setSituations("inCombat");
-        // console.log("inUsual, inCombat, isDying, isHurt", inUsual, inCombat, isDying, isHurt)
       }, 100);
     }
   }, [typedCharacters]);
 
   const handleTransitionEnd = () => {
-    setCharacterSituations("inCombat");
-    setMonsterSituations("inCombat");
+    characterSituation.setCharacterSituations("inCombat");
+    monsterSituation.setMonsterSituations("inCombat");
   }
 
   // useEffect(() => {
