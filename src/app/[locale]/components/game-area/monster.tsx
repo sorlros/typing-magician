@@ -35,6 +35,8 @@ const Monster = () => {
     updateMonsterSettings();
   }, [typedCharacters, updateMonsterSettings]);
 
+
+  // 컨셉 변경. 한 문장혹은 짧은 글을 모두 타이핑해야 스킬 혹은 공격이 시전되며 모션이 발동되게 변경할 것.
   useEffect(() => {
     console.log("SSSSS", monsterSituation)
     const interval = setInterval(() => {
