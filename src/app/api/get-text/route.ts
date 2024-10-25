@@ -10,15 +10,22 @@ export async function GET(req: NextRequest, res: NextResponse) {
   const dirPath = path.join(process.cwd(), "public", "text");
 
   try {
-    const titles = fs.readdirSync(dirPath).filter(title => title.endsWith(".txt"));
-    const fileContents = await Promise.all(titles.map(async (title) => {
-      const filePath = path.join(dirPath, title);
-      const content = await fs.promises.readFile(filePath, "utf8");
-      
-      return { title, content };
-    }));
+    const titles = fs.readdirSync(dirPath).filter(title => title === "shorts.txt");
+
+    if (titles.length === 0) {
+      return NextResponse.json({ error: "shorts.txt 파일을 찾을 수 없습니다."}, {status: 404});
+    }
+
+    const filePath = path.join(dirPath, "shorts.txt");
+    const content = await fs.promises.readFile(filePath, "utf8");
+    // const titles = fs.readdirSync(dirPath).filter(title => title.endsWith(".txt"));
+    // const fileContents = await Promise.all(titles.map(async (title) => {
+    //   const filePath = path.join(dirPath, title);
+    //   const content = await fs.promises.readFile(filePath, "utf8");
+    //   return { title, content };
+    // }));
     
-    const response = NextResponse.json(fileContents);
+    const response = NextResponse.json(content);
 
     response.headers.set("Access-Control-Allow-Origin", "*"); // 또는 특정 도메인
     response.headers.set("Access-Control-Allow-Methods", "GET");

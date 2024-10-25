@@ -51,12 +51,12 @@ async function fetchLangFromServer(locale: string): Promise<LangType> {
   return data;
 }
 
-async function fetchTextFromPublic(): Promise<TextItem[]> {
+async function fetchTextFromPublic(): Promise<string> {
   const response = await fetch(`http://localhost:3000/api/get-text`);
 
   if (!response.ok) {
     throw new Error("get-text fetch 오류");
   }
-  const data: TextItem[] = await response.json();
+  const data: string = await response.json();
   return data;
 }

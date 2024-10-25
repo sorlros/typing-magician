@@ -11,26 +11,28 @@ import HpAndSkills from "./components/hp-mp-ui/hp-mp";
 
 interface PageProps {
   lang: LangType;
-  text: TextItem[];
+  text: string;
 }
 
-const ClientComponentPage = ({ lang, text: literature }: PageProps) => {
-  const { setText, typedText, setTypedText } = useTextStore((state) => ({
+const ClientComponentPage = ({ lang, text: phrase }: PageProps) => {
+  const { text, setText, typedText, setTypedText } = useTextStore((state) => ({
+    text: state.text,
     setText: state.setText,
     typedText: state.typedText,
     setTypedText: state.setTypedText,
   }));
 
   useEffect(() => {
-    setText(literature[0])
-  }, [literature, setText]);
+    setText(phrase);
+    console.log("text", text);
+  }, [phrase, setText]);
 
   return (
     <div className="px-60">
       <Header lang={lang}/>
       <GameComponent />
       <TypingArea />
-      <SelectText text={literature} />
+      {/* <SelectText text={literature} /> */}
     </div>
   )
 }
