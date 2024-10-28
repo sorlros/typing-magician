@@ -5,7 +5,7 @@ interface TextStore {
     contents: string[]
   };
   typedText: string;
-  setText: (texts: string) => void;
+  setText: (texts: string[]) => void;
   setTypedText: (typedText: string) => void;
 }
 
@@ -16,12 +16,12 @@ export const useTextStore = create<TextStore>((set) => ({
   },
   typedText: "",
   setText: (texts) => {
-    const separateText = texts.split('"').filter((text, index) => index % 2 !== 0);
-    // const contentList = contents.map((content) => ([{content}]));
+    // const separateText = texts.split('"').filter((text, index) => index % 2 !== 0);
+    // // const contentList = contents.map((content) => ([{content}]));
 
     set({
       text: {
-        contents: separateText.map(content => content.trim()).filter(content => content.length > 0)
+        contents: texts
       }
     })
 

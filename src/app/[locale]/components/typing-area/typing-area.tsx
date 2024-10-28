@@ -4,14 +4,14 @@ import { debounce } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const TypingArea = () => {
-  const { text, typedText, setTypedText } = useTextStore((state) => ({
-    text: state.text,
-    typedText: state.typedText,
-    setTypedText: state.setTypedText,
-  }));
+  // const { text, typedText, setTypedText } = useTextStore((state) => ({
+  //   text: state.text,
+  //   typedText: state.typedText,
+  //   setTypedText: state.setTypedText,
+  // }));
 
   const { cpm, wpm, updatedTypingSpeed, resetTyping, decreaseCPM, typedCharacters } = useTypingStore();
-  const { setText } = useTextStore();
+  const { text, setText, typedText, setTypedText } = useTextStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
@@ -25,7 +25,8 @@ const TypingArea = () => {
   // const debouncedUpdateTypingSpeed = useCallback(debounce(() => updatedTypingSpeed(), 200), []);
 
   useEffect(() => {
-    setVisibleContent(text.content.slice(0, MAX_VISIBLE_CHARS));
+    // setVisibleContent(text.content.slice(0, MAX_VISIBLE_CHARS));
+    setVisibleContent(text[0]);
   }, [text]);
 
   useEffect(() => {

@@ -15,6 +15,10 @@ interface PageProps {
 }
 
 const ClientComponentPage = ({ lang, text: phrase }: PageProps) => {
+  const separateText = (text: string) => {
+    return text.split(/"\s*"/).map(item => item.replace(/"/g, "").trim());
+  }
+
   const { text, setText, typedText, setTypedText } = useTextStore((state) => ({
     text: state.text,
     setText: state.setText,
@@ -23,8 +27,8 @@ const ClientComponentPage = ({ lang, text: phrase }: PageProps) => {
   }));
 
   useEffect(() => {
-    setText(phrase);
-    console.log("text", text);
+    const mapText = separateText(phrase);
+    setText(mapText);
   }, [phrase, setText]);
 
   return (
