@@ -9,7 +9,7 @@ interface TextStore {
   setTypedText: (typedText: string) => void;
 }
 
-export const useTextStore = create<TextStore>((set) => ({
+export const useTextStore = create<TextStore>((set, get) => ({
   text: {
     // title: "",
     contents: [""],
@@ -18,6 +18,7 @@ export const useTextStore = create<TextStore>((set) => ({
   setText: (texts) => {
     // const separateText = texts.split('"').filter((text, index) => index % 2 !== 0);
     // // const contentList = contents.map((content) => ([{content}]));
+    const { text } = get();
 
     set({
       text: {
@@ -33,6 +34,9 @@ export const useTextStore = create<TextStore>((set) => ({
     //     content: contentList,
     //   }
     // });
+    console.log("after setText", text)
+    console.log("typeof setText", typeof text)
+    console.log("setText 01", text.contents[0])
   },
   setTypedText: (typedText: string) => set({ typedText })
 }))
