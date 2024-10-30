@@ -46,7 +46,9 @@ const Monster = () => {
         
         if (nextFrame === 0 && monsterSituation.inCombat) {
           console.log('마지막 프레임에 도달했습니다!');
-          monsterSituation.setMonsterSituations("isHurt");
+          setTimeout(() => {
+            monsterSituation.setMonsterSituations("isDying");
+          }, 150);
         }
         return nextFrame;
       });

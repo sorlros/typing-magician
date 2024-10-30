@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import { DotsProps } from "../../../libs/types";
 import { useEffect, useState } from "react";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useCharacterStore } from "@/store/use-character-store";

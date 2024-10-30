@@ -4,12 +4,6 @@ import { debounce } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const TypingArea = () => {
-  // const { text, typedText, setTypedText } = useTextStore((state) => ({
-  //   text: state.text,
-  //   typedText: state.typedText,
-  //   setTypedText: state.setTypedText,
-  // }));
-
   const { cpm, wpm, updatedTypingSpeed, resetTyping, decreaseCPM, typedCharacters } = useTypingStore();
   const { text, setText, typedText, setTypedText } = useTextStore();
 
@@ -19,15 +13,10 @@ const TypingArea = () => {
   const [visibleContent, setVisibleContent] = useState<string>("");
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  const [totalTypedLength, setTotalTypedLength] = useState<number>(0);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [lastTypedTime, setLastTypedTime] = useState<number | null>(null);
 
-  // const MAX_VISIBLE_CHARS = 250;
-  // const debouncedUpdateTypingSpeed = useCallback(debounce(() => updatedTypingSpeed(), 200), []);
-
   useEffect(() => {
-    // setVisibleContent(text.content.slice(0, MAX_VISIBLE_CHARS));
     setVisibleContent(text.contents[currentIndex]);
   }, [text]);
 
@@ -67,23 +56,12 @@ const TypingArea = () => {
     }
   
     if (userInput.length > visibleContent.length) {
-      // const nextStartIndex = totalTypedLength + userInput.length;
-      // const nextEndIndex = nextStartIndex + MAX_VISIBLE_CHARS;
-      
-      // let nextVisibleContent = text.content.slice(nextStartIndex, nextEndIndex);
-  
-      // if (nextVisibleContent.charAt(0) === " ") {
-      //   nextVisibleContent = nextVisibleContent.trimStart();
-      // }
-  
       setTypedText("");
       setCurrentIndex((prevIndex) => {
         const nextIndex = prevIndex + 1;
         setVisibleContent(text.contents[nextIndex]);
         return nextIndex;
       });
-      // setVisibleContent(text.contents[currentIndex]);
-      // setTotalTypedLength(nextStartIndex);
     }
   };
 
