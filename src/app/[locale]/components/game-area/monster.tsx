@@ -38,24 +38,23 @@ const Monster = () => {
 
   // 컨셉 변경. 한 문장혹은 짧은 글을 모두 타이핑해야 스킬 혹은 공격이 시전되며 모션이 발동되게 변경할 것.
   useEffect(() => {
-    console.log("SSSSS", monsterSituation)
     const interval = setInterval(() => {
       setFrame((prevFrame) => {
         // console.log("111", monsterSituation.isHurt)
         const nextFrame = (prevFrame + 1) % totalFrames;
         
-        if (nextFrame === 0 && monsterSituation.inCombat) {
-          console.log('마지막 프레임에 도달했습니다!');
-          setTimeout(() => {
-            monsterSituation.setMonsterSituations("isDying");
-          }, 150);
-        }
+        // if (nextFrame === 0 && monsterSituation.inCombat) {
+        //   console.log('마지막 프레임에 도달했습니다!');
+        //   setTimeout(() => {
+        //     monsterSituation.setMonsterSituations("isDying");
+        //   }, 150);
+        // }
         return nextFrame;
       });
     }, frameDuration);
   
     return () => clearInterval(interval);
-  }, [frameDuration, totalFrames, monsterSituation]);
+  }, [frameDuration, totalFrames]);
 
   useEffect(() => {
     if (typedCharacters > 99) {

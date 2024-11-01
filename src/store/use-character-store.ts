@@ -42,11 +42,11 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
       });
     } else if (inCombat && typingSpeed !== 0) {
       set({
-        totalFrames: 14,
+        totalFrames: 4,
         frameWidth: 200,
         frameHeight: 200,
         frameDuration: 30000 / typingSpeed,
-        characterImage: `url("/game_images/character-wizard/Fire vizard/Flame_jet.png")`,
+        characterImage: `url("/game_images/character-wizard/Fire vizard/Attack_2.png")`,
       });
     } else if (typingSpeed > 200) {
       set({
