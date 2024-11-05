@@ -8,6 +8,8 @@ import TypingArea from "./components/typing-area/typing-area";
 import SelectText from "./components/select-text";
 import { useTextStore } from "@/store/use-text-store";
 import HpAndSkills from "./components/hp-mp-ui/hp-mp";
+import ChoiceModal from "./components/modal/choice-modal";
+import ItemList from "./components/game-area/item/item-list";
 
 interface PageProps {
   lang: LangType;
@@ -36,6 +38,8 @@ const ClientComponentPage = ({ lang, text: phrase }: PageProps) => {
       <Header lang={lang}/>
       <GameComponent />
       <TypingArea />
+      <ChoiceModal />
+      <ItemList />
       {/* <SelectText text={literature} /> */}
     </div>
   )
