@@ -5,9 +5,11 @@ interface TypingState {
   typedCharacters: number;
   wpm: number; // WPM (Words per minute)
   cpm: number;
-  updatedTypingSpeed: (newTypedCharacters: number) => void;
+  correctCharacters: number;
+  updatedTypingSpeed: (newTypedCharacters: number, correctChars: number) => void;
   decreaseCPM: () => void;
   resetTyping: () => void;
+  typeAccuracy: () => number;
 }
 
 export const useTypingStore = create<TypingState>((set, get) => ({
@@ -15,13 +17,15 @@ export const useTypingStore = create<TypingState>((set, get) => ({
   typedCharacters: 0,
   wpm: 0,
   cpm: 0,
-  updatedTypingSpeed: (newTypedCharacters: number) => {
-    const { startTime, typedCharacters } = get();
+  correctCharacters: 0,
+  updatedTypingSpeed: (newTypedCharacters: number, correctChars: number) => {
+    const { startTime, typedCharacters, correctCharacters } = get();
 
     if (startTime === null) {
       set({
         startTime: Date.now(),
         typedCharacters: newTypedCharacters,
+        correctCharacters: correctChars,
       });
       return;
     }
@@ -34,12 +38,14 @@ export const useTypingStore = create<TypingState>((set, get) => ({
 
     const minutesElapsed = elapsedTime / 60;
     const totalTypedCharacters = typedCharacters + newTypedCharacters;
+    const totalCorrectCharacters = correctCharacters + correctChars; // ?
     
     const updatedWPM = Math.round((totalTypedCharacters / 5) / minutesElapsed); // 단어당 5글자 기준
     const updatedCPM = Math.round(totalTypedCharacters / minutesElapsed); 
 
     set({
       typedCharacters: totalTypedCharacters,
+      correctCharacters: totalCorrectCharacters,
       wpm: updatedWPM,
       cpm: updatedCPM,
     });
@@ -54,8 +60,19 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     set({
       startTime: null,
       typedCharacters: 0,
+      correctCharacters: 0,
       wpm: 0,
       cpm: 0,
     });
+  },
+  typeAccuracy: () => {
+    const { typedCharacters, correctCharacters } = get();
+
+    console.log("총 타이핑수", typedCharacters);
+    console.log("올바르게 타아핑된 수", correctCharacters);
+
+    return typedCharacters > 0
+      ? Math.round((correctCharacters / typedCharacters) * 100)
+      : 100;
   }
 }));

@@ -4,8 +4,8 @@ import { debounce } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const TypingArea = () => {
-  const { cpm, wpm, updatedTypingSpeed, resetTyping, decreaseCPM, typedCharacters } = useTypingStore();
-  const { text, setText, typedText, setTypedText } = useTextStore();
+  const { updatedTypingSpeed, resetTyping, decreaseCPM, typeAccuracy, typedCharacters } = useTypingStore();
+  const { text, typedText, setTypedText } = useTextStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
@@ -15,6 +15,8 @@ const TypingArea = () => {
 
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [lastTypedTime, setLastTypedTime] = useState<number | null>(null);
+
+  const accuracy = typeAccuracy();
 
   useEffect(() => {
     setVisibleContent(text.contents[currentIndex]);
@@ -49,10 +51,17 @@ const TypingArea = () => {
     const userInput = e.target.value;
     const newlyTypedChars = userInput.length - typedText.length;
 
+    let correctChars = 0;
+    userInput.split("").forEach((char, index) => {
+      if (char === text.contents[currentIndex][index]) {
+        correctChars += 1;
+      }
+    });  // ?
+
     setTypedText(userInput);
   
     if (newlyTypedChars > 0) {
-      updatedTypingSpeed(newlyTypedChars); // 여기서 추가된 문자 수만큼 업데이트
+      updatedTypingSpeed(newlyTypedChars, correctChars); // 여기서 추가된 문자 수만큼 업데이트
     }
   
     if (userInput.length > visibleContent.length) {
@@ -102,6 +111,7 @@ const TypingArea = () => {
     <div>
       <div className="bg-black p-4 rounded-lg w-full h-[210px] overflow-hidden font-mono text-lg text-left leading-relaxed px-4 py-6">
         <div>{renderText()}</div>
+        <div className="text-white">{accuracy} %</div>
         <input
           ref={inputRef}
           type="text"

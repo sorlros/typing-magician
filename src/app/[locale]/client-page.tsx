@@ -39,7 +39,7 @@ const ClientComponentPage = ({ lang, text: phrase }: PageProps) => {
       <GameComponent />
       <TypingArea />
       <ChoiceModal />
-      <ItemList />
+      {/* <ItemList /> */}
       {/* <SelectText text={literature} /> */}
     </div>
   )
