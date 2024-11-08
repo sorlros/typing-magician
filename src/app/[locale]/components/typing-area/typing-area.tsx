@@ -4,7 +4,7 @@ import { debounce } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const TypingArea = () => {
-  const { updatedTypingSpeed, resetTyping, decreaseCPM, typeAccuracy, typedCharacters } = useTypingStore();
+  const { updatedTypingSpeed, resetTyping, decreaseCPM, typeAccuracy, correctCharacters, typedCharacters } = useTypingStore();
   const { text, typedText, setTypedText } = useTextStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -37,9 +37,9 @@ const TypingArea = () => {
   }, [isTyping, lastTypedTime, decreaseCPM]);
 
 
-  useEffect(() => {
-    console.log("typedCharacters", typedCharacters)
-  }, [typedCharacters ]);
+  // useEffect(() => {
+  //   console.log("typedCharacters", typedCharacters)
+  // }, [typedCharacters ]);
 
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTimeout(() => {
@@ -52,11 +52,12 @@ const TypingArea = () => {
     const newlyTypedChars = userInput.length - typedText.length;
 
     let correctChars = 0;
+
     userInput.split("").forEach((char, index) => {
       if (char === text.contents[currentIndex][index]) {
-        correctChars += 1;
+        correctChars += 1; 
       }
-    });  // ?
+    });
 
     setTypedText(userInput);
   

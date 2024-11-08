@@ -38,7 +38,9 @@ export const useTypingStore = create<TypingState>((set, get) => ({
 
     const minutesElapsed = elapsedTime / 60;
     const totalTypedCharacters = typedCharacters + newTypedCharacters;
-    const totalCorrectCharacters = correctCharacters + correctChars; // ?
+    console.log("기존", correctCharacters);
+    console.log("새로운 ", correctChars);
+    const totalCorrectCharacters =  correctCharacters + correctChars; // ?
     
     const updatedWPM = Math.round((totalTypedCharacters / 5) / minutesElapsed); // 단어당 5글자 기준
     const updatedCPM = Math.round(totalTypedCharacters / minutesElapsed); 
