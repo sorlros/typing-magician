@@ -4,7 +4,7 @@ import { debounce } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const TypingArea = () => {
-  const { updatedTypingSpeed, resetTyping, decreaseCPM, typeAccuracy, correctCharacters, typedCharacters } = useTypingStore();
+  const { updatedTypingSpeed, resetTyping, decreaseCPM, addCorrectCharacters, correctCharacters, typedCharacters, accuracy } = useTypingStore();
   const { text, typedText, setTypedText } = useTextStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -16,8 +16,6 @@ const TypingArea = () => {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [lastTypedTime, setLastTypedTime] = useState<number | null>(null);
 
-  const accuracy = typeAccuracy();
-
   useEffect(() => {
     setVisibleContent(text.contents[currentIndex]);
   }, [text]);
@@ -28,18 +26,12 @@ const TypingArea = () => {
       const timeSinceLastTyping = lastTypedTime ? (currentTime - lastTypedTime) / 1000 : 0;
 
       if (!isTyping && timeSinceLastTyping > 1) {
-        // 타이핑이 없고, 1초 이상이 지나면 CPM 감소
         decreaseCPM();
       }
-    }, 1000); // 1초마다 체크
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [isTyping, lastTypedTime, decreaseCPM]);
-
-
-  // useEffect(() => {
-  //   console.log("typedCharacters", typedCharacters)
-  // }, [typedCharacters ]);
 
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTimeout(() => {
@@ -51,22 +43,20 @@ const TypingArea = () => {
     const userInput = e.target.value;
     const newlyTypedChars = userInput.length - typedText.length;
 
-    let correctChars = 0;
-
-    userInput.split("").forEach((char, index) => {
-      if (char === text.contents[currentIndex][index]) {
-        correctChars += 1; 
-      }
-    });
-
     setTypedText(userInput);
-  
-    if (newlyTypedChars > 0) {
-      updatedTypingSpeed(newlyTypedChars, correctChars); // 여기서 추가된 문자 수만큼 업데이트
+
+    if (
+      newlyTypedChars > 0 &&
+      userInput[userInput.length - 1] === text.contents[currentIndex][userInput.length - 1]
+    ) {
+      updatedTypingSpeed(newlyTypedChars); // 타이핑 속도 및 정확도 업데이트
+      addCorrectCharacters(); // 올바르게 입력한 문자 수 업데이트
+      console.log("correctCharacters, typedCharacters", correctCharacters, typedCharacters);
     }
-  
+
     if (userInput.length > visibleContent.length) {
       setTypedText("");
+      
       setCurrentIndex((prevIndex) => {
         const nextIndex = prevIndex + 1;
         setVisibleContent(text.contents[nextIndex]);

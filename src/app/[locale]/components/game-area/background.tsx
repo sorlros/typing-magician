@@ -74,9 +74,9 @@ const Background = () => {
 
   }, [typingSpeed, currentSpeedLevel, situation.inCombat]);
 
-  useEffect(() => {
-    console.log("typingSpeed", typingSpeed);
-  }, [typingSpeed])
+  // useEffect(() => {
+  //   console.log("typingSpeed", typingSpeed);
+  // }, [typingSpeed])
 
   const backgroundImages = () => (
     <>
