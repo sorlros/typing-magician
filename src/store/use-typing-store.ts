@@ -51,7 +51,8 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     // 정확도 계산
     const updatedAccuracy = totalTypedCharacters > 0
       ? Math.round((totalCorrectCharacters / totalTypedCharacters) * 100)
-      : 100;
+      : 0;
+    
 
     const updatedWPM = Math.round((totalTypedCharacters / 5) / minutesElapsed); // 단어당 5글자 기준
     const updatedCPM = Math.round(totalTypedCharacters / minutesElapsed);
@@ -62,6 +63,8 @@ export const useTypingStore = create<TypingState>((set, get) => ({
       cpm: updatedCPM,
       accuracy: updatedAccuracy, // 최신 정확도 업데이트
     });
+
+    console.log("typedCharacters",typedCharacters);
   },
   decreaseCPM: () => {
     const { cpm } = get();

@@ -42,6 +42,7 @@ const TypingArea = () => {
     setLastTypedTime(Date.now());
     const userInput = e.target.value;
     const newlyTypedChars = userInput.length - typedText.length;
+    console.log("newlyTypedChars", newlyTypedChars);
 
     setTypedText(userInput);
 
@@ -51,7 +52,7 @@ const TypingArea = () => {
     ) {
       updatedTypingSpeed(newlyTypedChars); // 타이핑 속도 및 정확도 업데이트
       addCorrectCharacters(); // 올바르게 입력한 문자 수 업데이트
-      console.log("correctCharacters, typedCharacters", correctCharacters, typedCharacters);
+      // console.log("correctCharacters, typedCharacters", correctCharacters, typedCharacters);
     }
 
     if (userInput.length > visibleContent.length) {
@@ -64,6 +65,10 @@ const TypingArea = () => {
       });
     }
   };
+
+  useEffect(() => {
+
+  }, [])
 
   useEffect(() => {
     if (inputRef.current) {
