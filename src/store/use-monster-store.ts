@@ -76,6 +76,6 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
       frameDuration: 200,
     });
 
-    console.log('Updated monster settings:', { typedCharacters, monsterType, action });
+    // console.log('Updated monster settings:', { typedCharacters, monsterType, action });
   }
 }))

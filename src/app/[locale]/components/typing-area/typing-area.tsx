@@ -1,7 +1,6 @@
 import { useTextStore } from "@/store/use-text-store";
 import { useTypingStore } from "@/store/use-typing-store";
-import { debounce } from "lodash";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const TypingArea = () => {
   const { updatedTypingSpeed, resetTyping, decreaseCPM, addCorrectCharacters, correctCharacters, typedCharacters, accuracy } = useTypingStore();
@@ -9,17 +8,18 @@ const TypingArea = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
-
   const [visibleContent, setVisibleContent] = useState<string>("");
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [lastTypedTime, setLastTypedTime] = useState<number | null>(null);
 
+  // 타이핑할 텍스트 설정
   useEffect(() => {
     setVisibleContent(text.contents[currentIndex]);
-  }, [text]);
+  }, [text, currentIndex]);
 
+  // 타이핑 속도 감소 관리
   useEffect(() => {
     const interval = setInterval(() => {
       const currentTime = Date.now();
@@ -33,42 +33,39 @@ const TypingArea = () => {
     return () => clearInterval(interval);
   }, [isTyping, lastTypedTime, decreaseCPM]);
 
+  // 타이핑 상태 관리
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTimeout(() => {
-      setIsTyping(false);
-    }, 1500);
-  
     setIsTyping(true);
     setLastTypedTime(Date.now());
-    const userInput = e.target.value;
-    const newlyTypedChars = userInput.length - typedText.length;
-    console.log("newlyTypedChars", newlyTypedChars);
+    setTypedText(e.target.value);
+  };
 
-    setTypedText(userInput);
+  // typedText가 변경될 때마다 문자 비교 및 상태 업데이트
+  useEffect(() => {
+    if (typedText.length > 0) {
+      const newlyTypedChar = typedText[typedText.length - 1];
+      const targetChar = visibleContent[typedText.length - 1];
 
-    if (
-      newlyTypedChars > 0 &&
-      userInput[userInput.length - 1] === text.contents[currentIndex][userInput.length - 1]
-    ) {
-      updatedTypingSpeed(newlyTypedChars); // 타이핑 속도 및 정확도 업데이트
-      addCorrectCharacters(); // 올바르게 입력한 문자 수 업데이트
-      // console.log("correctCharacters, typedCharacters", correctCharacters, typedCharacters);
+      if (newlyTypedChar === targetChar) {
+        updatedTypingSpeed(1);  // 타이핑 속도 및 정확도 업데이트
+        addCorrectCharacters(); // 올바르게 입력한 문자 수 업데이트
+      } else {
+        // 틀린 글자 애니메이션 처리
+        setShakingIndex(typedText.length - 1);
+        setTimeout(() => setShakingIndex(null), 500);
+      }
     }
 
-    if (userInput.length > visibleContent.length) {
+    // 다음 문장으로 넘어가기
+    if (typedText.length >= visibleContent.length) {
       setTypedText("");
-      
       setCurrentIndex((prevIndex) => {
         const nextIndex = prevIndex + 1;
-        setVisibleContent(text.contents[nextIndex]);
+        setVisibleContent(text.contents[nextIndex] || ""); // 다음 내용 설정
         return nextIndex;
       });
     }
-  };
-
-  useEffect(() => {
-
-  }, [])
+  }, [typedText, visibleContent, updatedTypingSpeed, addCorrectCharacters]);
 
   useEffect(() => {
     if (inputRef.current) {
