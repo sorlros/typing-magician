@@ -3,69 +3,53 @@ import { useTypingStore } from "@/store/use-typing-store";
 import { useEffect, useRef, useState } from "react";
 
 const TypingArea = () => {
-  const { updatedTypingSpeed, resetTyping, decreaseCPM, addCorrectCharacters, correctCharacters, typedCharacters, accuracy } = useTypingStore();
+  const { updatedTypingSpeed, resetTyping, decreaseCPM, addCorrectCharacters, accuracy } = useTypingStore();
   const { text, typedText, setTypedText } = useTextStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const [shakingIndex, setShakingIndex] = useState<number | null>(null);
   const [visibleContent, setVisibleContent] = useState<string>("");
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [shakingIndex, setShakingIndex] = useState<number | null>(null);
 
-  const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [lastTypedTime, setLastTypedTime] = useState<number | null>(null);
-
-  // 타이핑할 텍스트 설정
+  // 현재 타이핑할 텍스트 설정
   useEffect(() => {
     setVisibleContent(text.contents[currentIndex]);
   }, [text, currentIndex]);
 
-  // 타이핑 속도 감소 관리
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const currentTime = Date.now();
-      const timeSinceLastTyping = lastTypedTime ? (currentTime - lastTypedTime) / 1000 : 0;
-
-      if (!isTyping && timeSinceLastTyping > 1) {
-        decreaseCPM();
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isTyping, lastTypedTime, decreaseCPM]);
-
-  // 타이핑 상태 관리
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsTyping(true);
-    setLastTypedTime(Date.now());
-    setTypedText(e.target.value);
-  };
+    const newText = e.target.value;
 
-  // typedText가 변경될 때마다 문자 비교 및 상태 업데이트
-  useEffect(() => {
-    if (typedText.length > 0) {
-      const newlyTypedChar = typedText[typedText.length - 1];
-      const targetChar = visibleContent[typedText.length - 1];
+    // 수정할 점
+    // 한글 입력시 자소별로 문자를 구분해 틀린경우 빨간색으로 표현할 것
+    // 자소 별로 맞게 입력하고 있을때는 정상 색상 표현
+    
+    // 커서가 이동했을 때 이전 문자를 확인하는 로직
+    if (newText.length > typedText.length) {
+      const prevCharIndex = newText.length - 2; // 바로 이전 문자 인덱스
+      const prevCharTyped = newText[prevCharIndex];
+      const prevCharCorrect = visibleContent[prevCharIndex];
 
-      if (newlyTypedChar === targetChar) {
-        updatedTypingSpeed(1);  // 타이핑 속도 및 정확도 업데이트
-        addCorrectCharacters(); // 올바르게 입력한 문자 수 업데이트
+      if (prevCharTyped === prevCharCorrect) {
+        addCorrectCharacters();
+        updatedTypingSpeed(1);
       } else {
-        // 틀린 글자 애니메이션 처리
-        setShakingIndex(typedText.length - 1);
-        setTimeout(() => setShakingIndex(null), 500);
+        setShakingIndex(prevCharIndex); // 틀린 문자에 애니메이션 효과
+        setTimeout(() => setShakingIndex(null), 200);
       }
     }
 
+    setTypedText(newText);
+
     // 다음 문장으로 넘어가기
-    if (typedText.length >= visibleContent.length) {
+    if (newText.length >= visibleContent.length) {
       setTypedText("");
       setCurrentIndex((prevIndex) => {
         const nextIndex = prevIndex + 1;
-        setVisibleContent(text.contents[nextIndex] || ""); // 다음 내용 설정
+        setVisibleContent(text.contents[nextIndex] || "");
         return nextIndex;
       });
     }
-  }, [typedText, visibleContent, updatedTypingSpeed, addCorrectCharacters]);
+  };
 
   useEffect(() => {
     if (inputRef.current) {
@@ -99,7 +83,7 @@ const TypingArea = () => {
       </>
     );
   };
-  
+
   return (
     <div>
       <div className="bg-black p-4 rounded-lg w-full h-[210px] overflow-hidden font-mono text-lg text-left leading-relaxed px-4 py-6">
