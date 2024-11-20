@@ -27,72 +27,64 @@ const TypingArea = () => {
     setDecomposedText(decomposed)
   }, [text, currentIndex]);
 
+
+  // 입력 한 문자 자소별, 입력 할 문자 자소별 비교하기
+  const isPartiallyEqual = (typedArray: string[][], correctArray: string[][]): boolean => {
+    if (typedArray.length > correctArray.length) {
+      return false;
+    }
+  
+    return typedArray.every((typedChar, index) => {
+      const correctChar = correctArray[index];
+
+      return typedChar.every((char, charIndex) => char === correctChar[charIndex]);
+    });
+  };
+
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.target.value;
 
     const decomposedNewText = newText.split("").map(decomposeKorean);
+
+    /// 해당 로직을 자소 별로 구분 할 시 의도치않은 결과 발생 우려
+    /// 음절 별로 구분할지 수정 할 것
+
     setDecomposedTyped(decomposedNewText);
-    // console.log("자소별 입력된 문자", decomposedNewText);
-
-    // 수정할 점
-    // 한글 입력시 자소별로 문자를 구분해 틀린경우 빨간색으로 표현할 것
-    // 자소 별로 맞게 입력하고 있을때는 정상 색상 표현
-
-    // 커서가 이동했을 때 이전 문자를 확인하는 로직
-
-    // if (newText.length > typedText.length) {
-    //   const prevCharIndex = newText.length - 2; // 바로 이전 문자 인덱스
-    //   const prevCharTyped = newText[prevCharIndex];
-    //   const prevCharCorrect = visibleContent[prevCharIndex];
-
-    //   if (prevCharTyped === prevCharCorrect) {
-    //     addCorrectCharacters();
-    //     updatedTypingSpeed(1);
-    //   } else {
-    //     setShakingIndex(prevCharIndex); // 틀린 문자에 애니메이션 효과
-    //     setTimeout(() => setShakingIndex(null), 200);
-    //   }
-    // }
+    
     const lastIndex = decomposedNewText.length - 1;
 
     if (lastIndex >= 0) {
       const lastTypedChar = decomposedNewText[lastIndex];
       const lastCorrectChar = decomposedText[lastIndex];
   
-      // 두 자소 배열을 비교
-      const isCorrect = lastTypedChar.every((char, index) => char === lastCorrectChar[index]);
-      
-      // 한 음절이 끝나기전 "바다"를 입력할때 "바"까지는 일치, "받" "ㅏ"를 치기전에는 불일치가 발생하는 로직 수정
+      // 현재 입력된 자소가 목표 자소의 일부와 일치하는지 확인
+      const isPartialMatch = lastTypedChar.every(
+        (char, index) => char === lastCorrectChar[index]
+      );
 
-      if (isCorrect) {
-        console.log("일치");
+      // 완전히 일치했는지 확인
+      const isFullMatch =
+        lastTypedChar.length === lastCorrectChar.length &&
+        lastTypedChar.every((char, index) => char === lastCorrectChar[index]);
+
+      if (isFullMatch) {
+        // 완전 일치
+        console.log("완전 일치");
         addCorrectCharacters();
         updatedTypingSpeed(1);
+      } else if (isPartialMatch) {
+        // 부분 일치
+        console.log("부분 일치");
+        // 부분 일치는 별도 처리가 필요하지 않음
       } else {
+        // 불일치
         console.log("불일치");
         setShakingIndex(lastIndex); // 틀린 자소에 애니메이션 효과
         setTimeout(() => setShakingIndex(null), 200);
       }
-    }
+    } 
 
-  // if (lastIndex >= 0) {
-  //   const lastTypedChar = decomposedNewText[lastIndex];
-  //   console.log("마지막 입력된 자소", lastTypedChar);
-  //   const lastCorrectChar = decomposedText[lastIndex];
-  //   console.log("실제 입력해야 할 마지막 자소", lastCorrectChar);
-
-  //   // 마지막 자소가 맞는지 확인
-  //   if (lastTypedChar === lastCorrectChar) {
-  //     console.log("일치함");
-  //     addCorrectCharacters();
-  //     updatedTypingSpeed(1);
-  //   } else {
-  //     setShakingIndex(lastIndex); // 틀린 자소에 애니메이션 효과
-  //     setTimeout(() => setShakingIndex(null), 200);
-  //   }
-  // }
-
-  setTypedText(newText);
+    setTypedText(newText);
 
     // 다음 문장으로 넘어가기
     if (newText.length >= visibleContent.length) {
@@ -113,9 +105,32 @@ const TypingArea = () => {
   }, []);
 
   const renderText = () => {
+    const decomposedTyped = typedText.split("").map(decomposeKorean);
+    const decomposedContent = decomposedText;
+
+    const decomposedContentMap = decomposedContent.map((correctCharArray, index) => {
+      const typedCharArray = decomposedTyped[index] || [];
+      const isCorrect = isPartiallyEqual([typedCharArray], [correctCharArray]);
+
+      const color = isCorrect ? "text-white" : "text-red-500";
+      const isShaking = shakingIndex === index ? "shake" : "";
+
+      return {
+        displayedChar: typedText[index],
+        color,
+        isShaking,
+      };
+    })
+
     return (
       <>
-        {typedText.split("").map((char, index) => {
+        {decomposedContentMap.map(({ displayedChar, color, isShaking }, index) => (
+          <span key={index} className={`${color} ${isShaking}`}>
+            {displayedChar}
+          </span>
+        ))}
+
+        {/* {typedText.split("").map((char, index) => {
           const correctChar = visibleContent[index];
           const isCorrect = char === correctChar;
           const color = isCorrect ? "text-white" : "text-red-500";
@@ -126,7 +141,7 @@ const TypingArea = () => {
               {char}
             </span>
           );
-        })}
+        })} */}
 
         <span className="text-white animate-blink border-r-2" />
 
