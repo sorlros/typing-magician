@@ -9,13 +9,11 @@ const TypingArea = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [visibleContent, setVisibleContent] = useState<string>("");
-  // const [decomposedContent, setDecomposedContent] = useState<string[][]>([]);
+
   const [decomposedTyped, setDecomposedTyped] = useState<string[][]>([]);
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
-
-  // setDecomposedText(text.contents[0]);
 
   // 현재 타이핑할 텍스트 설정
   useEffect(() => {
@@ -45,10 +43,6 @@ const TypingArea = () => {
     const newText = e.target.value;
 
     const decomposedNewText = newText.split("").map(decomposeKorean);
-
-    /// 해당 로직을 자소 별로 구분 할 시 의도치않은 결과 발생 우려
-    /// 음절 별로 구분할지 수정 할 것
-
     setDecomposedTyped(decomposedNewText);
     
     const lastIndex = decomposedNewText.length - 1;
@@ -69,22 +63,24 @@ const TypingArea = () => {
 
       if (isFullMatch) {
         // 완전 일치
-        console.log("완전 일치");
+        // console.log("완전 일치");
         addCorrectCharacters();
         updatedTypingSpeed(1);
       } else if (isPartialMatch) {
         // 부분 일치
-        console.log("부분 일치");
-        // 부분 일치는 별도 처리가 필요하지 않음
+        // 아무 동작도 하지 않음
+        void 0;
       } else {
         // 불일치
-        console.log("불일치");
+        // console.log("불일치");
         setShakingIndex(lastIndex); // 틀린 자소에 애니메이션 효과
-        setTimeout(() => setShakingIndex(null), 200);
+        setTimeout(() => setShakingIndex(null), 150);
       }
     } 
 
     setTypedText(newText);
+
+    /// 정확도 로직 개선하기
 
     // 다음 문장으로 넘어가기
     if (newText.length >= visibleContent.length) {

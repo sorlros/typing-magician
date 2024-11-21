@@ -28,7 +28,7 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     }));
   },
   updatedTypingSpeed: (newTypedCharacters: number) => {
-    const { startTime, typedCharacters, correctCharacters } = get();
+    const { startTime, typedCharacters, correctCharacters, accuracy } = get();
 
     if (startTime === null) {
       set({
@@ -55,7 +55,8 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     
 
     const updatedWPM = Math.round((totalTypedCharacters / 5) / minutesElapsed); // 단어당 5글자 기준
-    const updatedCPM = Math.round(totalTypedCharacters / minutesElapsed);
+    const roundedAccuracy = parseFloat((accuracy / 100).toFixed(2));
+    const updatedCPM = Math.round((totalTypedCharacters / minutesElapsed) * roundedAccuracy);
 
     set({
       typedCharacters: totalTypedCharacters,
