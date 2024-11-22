@@ -3,12 +3,13 @@ import { create } from "zustand";
 interface TypingState {
   startTime: number | null;
   typedCharacters: number;
-  totalTypedCharacters: number;
+  // totalTypedCharacters: number;
   wpm: number; // WPM (Words per minute)
   cpm: number;
   correctCharacters: number;
   accuracy: number;
-  addCorrectCharacters: () => void;
+  setCorrectCharacters: (correct: number) => void;
+  setTypedCharacters: (char: number) => void;
   updatedTypingSpeed: (newTypedCharacters: number) => void;
   decreaseCPM: () => void;
   resetTyping: () => void;
@@ -17,23 +18,34 @@ interface TypingState {
 export const useTypingStore = create<TypingState>((set, get) => ({
   startTime: null,
   typedCharacters: 0,
-  totalTypedCharacters: 0,
+  // totalTypedCharacters: 0,
   wpm: 0,
   cpm: 0,
   correctCharacters: 0,
   accuracy: 100,
-  addCorrectCharacters: () => {
-    set((state) => ({
-      correctCharacters: state.correctCharacters + 1,
+  setCorrectCharacters: (correct: number) => {
+    set(() => ({
+      correctCharacters: correct
     }));
+
+    console.log("correctCharacters", correct);
   },
-  updatedTypingSpeed: (newTypedCharacters: number) => {
+  setTypedCharacters: (char: number) => {
+    set(() => ({
+      typedCharacters: char
+    }))
+
+    console.log("typedCharacters", char);
+  },
+  
+  // updatedTypingSpeed문 발동위치 개선할 것
+  updatedTypingSpeed: () => {
     const { startTime, typedCharacters, correctCharacters, accuracy } = get();
 
     if (startTime === null) {
       set({
         startTime: Date.now(),
-        typedCharacters: newTypedCharacters,
+        // typedCharacters: Math.max(0, newTypedCharacters), 
       });
       return;
     }
@@ -45,22 +57,23 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     if (elapsedTime < 1) return;
 
     const minutesElapsed = elapsedTime / 60;
-    const totalTypedCharacters = typedCharacters + newTypedCharacters;
+    // const totalTypedCharacters = Math.max(0, typedCharacters + newTypedCharacters); // 음수 방지
     const totalCorrectCharacters = correctCharacters;
 
     // 정확도 계산
-    const updatedAccuracy = totalTypedCharacters > 0
-      ? Math.round((totalCorrectCharacters / totalTypedCharacters) * 100)
+    const updatedAccuracy = typedCharacters > 0
+      ? Math.round((totalCorrectCharacters / typedCharacters) * 100)
       : 0;
     
+    // console.log("totalCorrectCharacters, totalTypedCharacters", totalCorrectCharacters, totalTypedCharacters)
 
-    const updatedWPM = Math.round((totalTypedCharacters / 5) / minutesElapsed); // 단어당 5글자 기준
-    const roundedAccuracy = parseFloat((accuracy / 100).toFixed(2));
-    const updatedCPM = Math.round((totalTypedCharacters / minutesElapsed) * roundedAccuracy);
+    // const updatedWPM = Math.round((totalTypedCharacters / 5) / minutesElapsed); // 단어당 5글자 기준
+    const roundedAccuracy = parseFloat((updatedAccuracy / 100).toFixed(2));
+    const updatedCPM = Math.round((typedCharacters / minutesElapsed) * roundedAccuracy);
 
     set({
-      typedCharacters: totalTypedCharacters,
-      wpm: updatedWPM,
+      // typedCharacters: totalTypedCharacters,
+      // wpm: updatedWPM,
       cpm: updatedCPM,
       accuracy: updatedAccuracy, // 최신 정확도 업데이트
     });
@@ -77,7 +90,6 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     set({
       startTime: null,
       typedCharacters: 0,
-      totalTypedCharacters: 0,
       correctCharacters: 0,
       wpm: 0,
       cpm: 0,
