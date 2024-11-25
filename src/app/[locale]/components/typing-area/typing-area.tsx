@@ -4,16 +4,22 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import decomposeKorean from "./decompose-korean";
 
 const TypingArea = () => {
-  const { updatedTypingSpeed, resetTyping, decreaseCPM, accuracy, setCorrectCharacters, setTypedCharacters } = useTypingStore();
+  const { updatedTypingSpeed, resetTyping, decreaseCPM, setAccuracy, accuracy, correctCharacters, setCorrectCharacters, setTypedCharacters, typedCharacters } = useTypingStore();
   const { text, typedText, decomposedText, setTypedText, setDecomposedText } = useTextStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const [visibleContent, setVisibleContent] = useState<string>("");
 
+  const [visibleContent, setVisibleContent] = useState<string>("");
   const [decomposedTyped, setDecomposedTyped] = useState<string[][]>([]);
+
+  const [realTimeAccuracy, setRealTimeAccuracy] = useState<number>(0);
+  const [typingSpeed, setTypingSpeed] = useState<number>(0);
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
+
+  const lastTypedTime = useRef(Date.now()); // 마지막 타이핑 시간 추적
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // 현재 타이핑할 텍스트 설정
   useEffect(() => {
@@ -21,30 +27,42 @@ const TypingArea = () => {
     setVisibleContent(currentText);
 
     const decomposed = currentText.split("").map(decomposeKorean);
-    console.log("분리된 컨텐츠", decomposed);
+    // console.log("분리된 컨텐츠", decomposed);
     setDecomposedText(decomposed)
   }, [text, currentIndex]);
 
-  // const correctCharacters = useCallback((decomposedNewText: string[][]) => {
-  //   let totalMatches = 0;
+  useEffect(() => {
+    if (typedCharacters > 0) {
+        const typingAccuracy = setAccuracy()
+        setRealTimeAccuracy(typingAccuracy);
+    }
+  }, [typedCharacters, correctCharacters, setAccuracy])
 
-  //   for (let i = 0; i < decomposedNewText.length; i++) {
-  //     const typedChar = decomposedNewText[i];
-  //     const correctChar = decomposedText[i];
-
-  //     if (!correctChar) break;
-
-  //     const isFullMatch =
-  //       typedChar.length === correctChar.length &&
-  //       typedChar.every((char, index) => char === correctChar[index]);
-
-  //     if (isFullMatch) {
-  //       totalMatches++;
-  //     }  
-  //   }
-
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const speed = updatedTypingSpeed();
+      setTypingSpeed(speed);
+    }, 100); // 100ms마다 타이핑 속도 갱신
   
-  // }, [decomposedNewText])
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const handleDecreaseCPM = () => {
+      const currentTime = Date.now();
+      const timeSinceLastTyped = currentTime - lastTypedTime.current;
+
+      if (timeSinceLastTyped >= 1500) {
+        decreaseCPM(); // 타이핑이 멈춘 지 1.5초가 지나면 CPM 감소
+      }
+    };
+    // 1초마다 확인
+    timerRef.current = setInterval(handleDecreaseCPM, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current); // 타이머 클리어
+    };
+  }, [typedCharacters, decreaseCPM]);
 
   const calculateTotalMatches = useCallback((newText: string) => {
     let totalMatches = 0;
@@ -69,7 +87,7 @@ const TypingArea = () => {
     // 커서가 위치한 곳까지의 텍스트 개수를 계산
     const typedCharacterCount = cursorPosition;
     setTypedCharacters(typedCharacterCount);
-    console.log("커서 위치 기준으로 타이핑한 문자 수:", typedCharacterCount);
+    // console.log("커서 위치 기준으로 타이핑한 문자 수:", typedCharacterCount);
     
 
     setTypedText(newText);
@@ -77,51 +95,11 @@ const TypingArea = () => {
     if (newText.length > typedText.length) {
       const getCorrect = calculateTotalMatches(newText);
       setCorrectCharacters(getCorrect);
+      const speed = updatedTypingSpeed();
+      setTypingSpeed(speed);
     } else {
       void 0;
     }
-
-    // const decomposedNewText = newText.split("").map(decomposeKorean);
-    // setDecomposedTyped(decomposedNewText);
-    
-    // const lastIndex = decomposedNewText.length - 1;
-
-    // if (lastIndex >= 0) {
-    //   const lastTypedChar = decomposedNewText[lastIndex];
-    //   const lastCorrectChar = decomposedText[lastIndex];
-  
-    //   // 현재 입력된 자소가 목표 자소의 일부와 일치하는지 확인
-    //   const isPartialMatch = lastTypedChar.every(
-    //     (char, index) => char === lastCorrectChar[index]
-    //   );
-
-    //   // 완전히 일치했는지 확인
-    //   const isFullMatch =
-    //     lastTypedChar.length === lastCorrectChar.length &&
-    //     lastTypedChar.every((char, index) => char === lastCorrectChar[index]);
-
-    //     // console.log("lastTypedChar, lastCorrectChar", lastTypedChar, lastCorrectChar);
-
-    //   if (isFullMatch) {
-    //     // 완전 일치
-    //     // console.log("완전 일치");
-    //     // addCorrectCharacters();
-    //     updatedTypingSpeed(1);
-    //   } else if (isPartialMatch) {
-    //     // 부분 일치
-    //     // 아무 동작도 하지 않음
-    //     void 0;
-    //   } else {
-    //     // 불일치
-    //     // console.log("불일치");
-    //     setShakingIndex(lastIndex); // 틀린 자소에 애니메이션 효과
-    //     setTimeout(() => setShakingIndex(null), 150);
-    //   }
-    // } 
-
-    
-
-    /// 정확도 로직 개선하기
 
     // 다음 문장으로 넘어가기
     if (newText.length >= visibleContent.length) {
@@ -129,6 +107,12 @@ const TypingArea = () => {
       setCurrentIndex((prevIndex) => {
         const nextIndex = prevIndex + 1;
         setVisibleContent(text.contents[nextIndex] || "");
+        resetTyping();
+
+        if (inputRef.current) {
+          inputRef.current.setSelectionRange(0, 0); // 커서를 맨 앞으로 이동
+        }
+
         return nextIndex;
       });
     }
@@ -194,8 +178,17 @@ const TypingArea = () => {
   return (
     <div>
       <div className="bg-black p-4 rounded-lg w-full h-[210px] overflow-hidden font-mono text-lg text-left leading-relaxed px-4 py-6">
+        <div className="flex text-white mb-4">
+          <div className="flex mr-4">
+            {Math.round(realTimeAccuracy * 100)} %
+          </div>
+          <div className="flex">
+            {`cpm: ${typingSpeed}`}
+          </div>
+        </div>
+
         <div>{renderText()}</div>
-        <div className="text-white">{accuracy} %</div>
+      
         <input
           ref={inputRef}
           type="text"
