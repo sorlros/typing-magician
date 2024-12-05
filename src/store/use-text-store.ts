@@ -10,9 +10,12 @@ interface TextStore {
   setDecomposedText: (content: string[][]) => void;
   setText: (texts: string[]) => void;
   setTypedText: (typedText: string) => void;
+  currentIndex: number;
+  initializeIndex: () => void;
+  // subscribeToTextChanges: (callback: () => void) => () => void;
 }
 
-export const useTextStore = create<TextStore>((set, get) => ({
+export const useTextStore = create<TextStore>((set, get, api) => ({
   text: {
     // title: "",
     contents: [""],
@@ -20,8 +23,6 @@ export const useTextStore = create<TextStore>((set, get) => ({
   typedText: "",
   decomposedText: [[""]],
   setText: (texts) => {
-    const { text } = get();
-
     set({
       text: {
         contents: texts
@@ -39,5 +40,21 @@ export const useTextStore = create<TextStore>((set, get) => ({
 
     // console.log("분리된 store의 Text", decomposedContent);
   },
-  setTypedText: (typedText: string) => set({ typedText })
+  setTypedText: (typedText: string) => set({ typedText }),
+  currentIndex: 0,
+  initializeIndex: () => {
+    const { text } = get();
+
+    if (text.contents.length > 0) {
+      const randomIndex = Math.floor(Math.random() * text.contents.length);
+      set({ currentIndex: randomIndex });
+    }
+  },
+  // subscribeToTextChanges: (callback) => {
+  //   const unsubscribe = api.subscribe(
+  //     (state) => state.text.contents,
+      
+  //   );
+  //   return unsubscribe; 
+  // },
 }))

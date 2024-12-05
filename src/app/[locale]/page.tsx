@@ -1,7 +1,8 @@
-import ClientComponentPage from "./client-page";
+// import ClientComponentPage from "./client-page";
 import i18n from "../../../i18n";
 import LocalePageLayout from "./layout";
 import { FileContentArray, TextItem } from "../libs/types";
+import dynamic from 'next/dynamic';
 
 type LangType = {
   header: {
@@ -11,6 +12,10 @@ type LangType = {
     [key: string]: string;
   };
 };
+
+const ClientComponentPage = dynamic(() => import("./client-page"), {
+  ssr: false, // 서버 사이드 렌더링 방지
+});
 
 export default async function LocalePage ({locale}: {locale: string}) {
   

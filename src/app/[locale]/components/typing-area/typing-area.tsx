@@ -1,34 +1,41 @@
+"use client";
+
 import { useTextStore } from "@/store/use-text-store";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useCallback, useEffect, useRef, useState } from "react";
 import decomposeKorean from "./decompose-korean";
+import { toast } from "sonner";
 
 const TypingArea = () => {
   const { updatedTypingSpeed, resetTyping, decreaseCPM, setAccuracy, accuracy, correctCharacters, setCorrectCharacters, setTypedCharacters, typedCharacters } = useTypingStore();
-  const { text, typedText, decomposedText, setTypedText, setDecomposedText } = useTextStore();
+  const { text, typedText, decomposedText, setTypedText, setDecomposedText, initializeIndex, currentIndex } = useTextStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [visibleContent, setVisibleContent] = useState<string>("");
-  const [decomposedTyped, setDecomposedTyped] = useState<string[][]>([]);
+  // const [decomposedTyped, setDecomposedTyped] = useState<string[][]>([]);
 
   const [realTimeAccuracy, setRealTimeAccuracy] = useState<number>(0);
   const [typingSpeed, setTypingSpeed] = useState<number>(0);
 
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
 
   const lastTypedTime = useRef(Date.now()); // 마지막 타이핑 시간 추적
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  useEffect(() => {
+    initializeIndex();
+  }, [initializeIndex]);
+
   // 현재 타이핑할 텍스트 설정
   useEffect(() => {
-    const currentText = text.contents[currentIndex];
-    setVisibleContent(currentText);
-
-    const decomposed = currentText.split("").map(decomposeKorean);
-    // console.log("분리된 컨텐츠", decomposed);
-    setDecomposedText(decomposed)
+    if (text.contents.length > 0) {
+      const currentText = text.contents[currentIndex];
+      setVisibleContent(currentText);
+  
+      const decomposed = currentText.split("").map(decomposeKorean);
+      setDecomposedText(decomposed);
+    }
   }, [text, currentIndex]);
 
   useEffect(() => {
@@ -78,6 +85,21 @@ const TypingArea = () => {
     return totalMatches;
   }, [visibleContent]);
 
+  const resetTypingState = () => {
+    setTypedText("");
+    resetTyping();
+    initializeIndex();
+  };
+
+  const loadNextSentence = () => {
+    try {
+      resetTypingState();
+      setVisibleContent(text.contents[currentIndex]);
+    } catch (error) {
+      toast.error("새로운 문장을 불러오는데 실패했습니다.");
+    }
+  };
+
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.target.value;
 
@@ -89,7 +111,6 @@ const TypingArea = () => {
     setTypedCharacters(typedCharacterCount);
     // console.log("커서 위치 기준으로 타이핑한 문자 수:", typedCharacterCount);
     
-
     setTypedText(newText);
 
     if (newText.length > typedText.length) {
@@ -101,20 +122,9 @@ const TypingArea = () => {
       void 0;
     }
 
-    // 다음 문장으로 넘어가기
+    // 다음 문장으로 넘어가기 및 초기화
     if (newText.length >= visibleContent.length) {
-      setTypedText("");
-      setCurrentIndex((prevIndex) => {
-        const nextIndex = prevIndex + 1;
-        setVisibleContent(text.contents[nextIndex] || "");
-        resetTyping();
-
-        if (inputRef.current) {
-          inputRef.current.setSelectionRange(0, 0); // 커서를 맨 앞으로 이동
-        }
-
-        return nextIndex;
-      });
+      loadNextSentence();
     }
   };
   

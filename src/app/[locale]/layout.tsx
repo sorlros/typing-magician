@@ -1,10 +1,14 @@
+import { Toaster } from "sonner";
 import "../globals.css"
 
 const LocalePageLayout = ({children}: {children: React.ReactNode}) => {
   return (
-    <div className="flex w-full min-h-screen bg-slate-800">
-      {children}
-    </div>
+    <>
+      <Toaster />
+      <div className="flex w-full min-h-screen bg-slate-800">
+        {children}
+      </div>
+    </>
   )
 }
 

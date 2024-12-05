@@ -5,7 +5,6 @@ import Header from "./components/header";
 import { FileContentArray, LangType, TextItem } from "../libs/types";
 import GameComponent from "./components/game-component";
 import TypingArea from "./components/typing-area/typing-area";
-import SelectText from "./components/select-text";
 import { useTextStore } from "@/store/use-text-store";
 import HpAndSkills from "./components/hp-mp-ui/hp-mp";
 import ChoiceModal from "./components/modal/choice-modal";

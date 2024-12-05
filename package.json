@@ -23,6 +23,7 @@
     "react-dom": "^18",
     "react-i18next": "^15.0.1",
     "react-spinners": "^0.14.1",
+    "sonner": "^1.7.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^4.5.5"
