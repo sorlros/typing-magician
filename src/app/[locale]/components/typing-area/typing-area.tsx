@@ -204,7 +204,7 @@ const TypingArea = () => {
           type="text"
           value={typedText}
           onChange={handleTyping}
-          className="opacity-0 absolute inset-0"
+          className="opacity-0 absolute inset-0 z-0"
           autoFocus
         />
       </div>
