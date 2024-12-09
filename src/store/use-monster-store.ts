@@ -15,6 +15,8 @@ interface MonsterState {
   frameHeight: number; // 각 프레임의 높이 (px)
   frameDuration: number;
   updateMonsterSettings: () => void;
+  appearMonster: boolean;
+  setAppearMonster: () => void;
 }
 
 export const useMonsterStore = create<MonsterState>((set, get) => ({
@@ -77,5 +79,12 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
     });
 
     // console.log('Updated monster settings:', { typedCharacters, monsterType, action });
+  },
+  appearMonster: false,
+  setAppearMonster: () => {
+    const { appearMonster } = get();
+    set({
+      appearMonster: !appearMonster
+    })
   }
 }))

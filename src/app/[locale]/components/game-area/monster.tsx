@@ -19,13 +19,14 @@ const Monster = () => {
 
   const typingSpeed = useTypingStore(state => state.cpm);
 
-  const { totalFrames, frameWidth, frameHeight, frameDuration, monster, updateMonsterSettings } = useMonsterStore(state => ({
+  const { totalFrames, frameWidth, frameHeight, frameDuration, monster, updateMonsterSettings, appearMonster } = useMonsterStore(state => ({
     monster: state.monster,
     totalFrames: state.totalFrames,
     frameWidth: state.frameWidth,
     frameHeight: state.frameHeight,
     frameDuration: state.frameDuration,
     updateMonsterSettings: state.updateMonsterSettings,
+    appearMonster: state.appearMonster
   }));
 
   const monsterSituation = useMonsterSituationStore();
@@ -55,7 +56,7 @@ const Monster = () => {
   }, [frameDuration, totalFrames]);
 
   useEffect(() => {
-    if (typedCharacters > 99) {
+    if (appearMonster) {
       setHidden(false);
       setTimeout(() => {
         setPosition("50%");
