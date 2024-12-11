@@ -5,14 +5,17 @@ import { useTypingStore } from "@/store/use-typing-store";
 import { useCallback, useEffect, useRef, useState } from "react";
 import decomposeKorean from "./decompose-korean";
 import { toast } from "sonner";
+import { useMonsterStore } from "@/store/use-monster-store";
 
 const TypingArea = () => {
   const { updatedTypingSpeed, resetTyping, decreaseCPM, setAccuracy, accuracy, correctCharacters, setCorrectCharacters, setTypedCharacters, typedCharacters } = useTypingStore();
   const { text, typedText, decomposedText, setTypedText, setDecomposedText, initializeIndex, currentIndex } = useTextStore();
+  const { setAppearMonster } = useMonsterStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [visibleContent, setVisibleContent] = useState<string>("");
+  const [sentenceNumber, setSentenceNumber] = useState<number>(0);
   // const [decomposedTyped, setDecomposedTyped] = useState<string[][]>([]);
 
   const [realTimeAccuracy, setRealTimeAccuracy] = useState<number>(0);
@@ -95,6 +98,11 @@ const TypingArea = () => {
     try {
       resetTypingState();
       setVisibleContent(text.contents[currentIndex]);
+      setSentenceNumber((prevNumber) => prevNumber + 1);
+
+      if (sentenceNumber > 0) {
+        setAppearMonster(true);
+      }
     } catch (error) {
       toast.error("새로운 문장을 불러오는데 실패했습니다.");
     }

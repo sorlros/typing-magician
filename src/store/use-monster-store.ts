@@ -16,7 +16,7 @@ interface MonsterState {
   frameDuration: number;
   updateMonsterSettings: () => void;
   appearMonster: boolean;
-  setAppearMonster: () => void;
+  setAppearMonster: (value: boolean) => void;
 }
 
 export const useMonsterStore = create<MonsterState>((set, get) => ({
@@ -81,10 +81,9 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
     // console.log('Updated monster settings:', { typedCharacters, monsterType, action });
   },
   appearMonster: false,
-  setAppearMonster: () => {
-    const { appearMonster } = get();
+  setAppearMonster: (value) => {
     set({
-      appearMonster: !appearMonster
+      appearMonster: value
     })
   }
 }))
