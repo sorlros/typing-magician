@@ -68,7 +68,7 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
 
     set({
       monster: {
-        monsterNumber: typedCharacters >= 300 ? 2 : (typedCharacters >= 200 ? 1 : 0),
+        monsterNumber: 0,
         monsterImage: `url("/game_images/skeleton/${monsterType}/${action}.png")`,
         monsterHP: 100,
       },

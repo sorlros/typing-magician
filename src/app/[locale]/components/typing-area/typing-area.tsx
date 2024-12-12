@@ -97,12 +97,14 @@ const TypingArea = () => {
   const loadNextSentence = () => {
     try {
       resetTypingState();
+      // setAppearMonster(true); // 캐릭터 UI 오류
       setVisibleContent(text.contents[currentIndex]);
+      
       setSentenceNumber((prevNumber) => prevNumber + 1);
 
-      if (sentenceNumber > 0) {
-        setAppearMonster(true);
-      }
+      // if (sentenceNumber > 0) {
+      //   setAppearMonster(true); 
+      // }
     } catch (error) {
       toast.error("새로운 문장을 불러오는데 실패했습니다.");
     }

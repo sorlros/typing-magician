@@ -62,7 +62,7 @@ const Monster = () => {
         setPosition("50%");
       }, 100);
     }
-  }, [typedCharacters]);
+  }, [typedCharacters, appearMonster]);
 
   const handleTransitionEnd = () => {
     characterSituation.setCharacterSituations("inCombat");

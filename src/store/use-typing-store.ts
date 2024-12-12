@@ -77,7 +77,7 @@ export const useTypingStore = create<TypingState>((set, get) => ({
       cpm: updatedCPM,
     });
 
-    // console.log("실시간 cpm", updatedCPM);
+    console.log("실시간 cpm", updatedCPM);
     return updatedCPM;
   },
   decreaseCPM: () => {
