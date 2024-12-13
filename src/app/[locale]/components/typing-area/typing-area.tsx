@@ -35,6 +35,7 @@ const TypingArea = () => {
     if (text.contents.length > 0) {
       const currentText = text.contents[currentIndex];
       setVisibleContent(currentText);
+      setSentenceNumber(0);
   
       const decomposed = currentText.split("").map(decomposeKorean);
       setDecomposedText(decomposed);
@@ -43,8 +44,8 @@ const TypingArea = () => {
 
   useEffect(() => {
     if (typedCharacters > 0) {
-        const typingAccuracy = setAccuracy()
-        setRealTimeAccuracy(typingAccuracy);
+      const typingAccuracy = setAccuracy()
+      setRealTimeAccuracy(typingAccuracy);
     }
   }, [typedCharacters, correctCharacters, setAccuracy])
 
@@ -97,9 +98,8 @@ const TypingArea = () => {
   const loadNextSentence = () => {
     try {
       resetTypingState();
-      // setAppearMonster(true); // 캐릭터 UI 오류
+      setAppearMonster(true); // 캐릭터 UI 오류
       setVisibleContent(text.contents[currentIndex]);
-      
       setSentenceNumber((prevNumber) => prevNumber + 1);
 
       // if (sentenceNumber > 0) {

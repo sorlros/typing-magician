@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
 import useCharacterSituationStore from "./use-character-situation-store";
+import { useInteractStore } from "./use-interact-store";
 
 interface CharacterState {
   totalFrames: number; // 스프라이트 시트에 있는 총 프레임 수
@@ -9,7 +10,7 @@ interface CharacterState {
   frameDuration: number;
   characterImage: string;
   hp: number;
-  updateCharacterSettings: () => void;
+  updateCharacterSettings: (action: string) => void;
   reduceHp: (amount: number) => void;
 }
 
@@ -20,11 +21,13 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
   frameDuration: 300,
   characterImage: `url("/game_images/character-wizard/Fire vizard/Idle.png")`,
   hp: 100,
-  updateCharacterSettings: () => {
+  updateCharacterSettings: (characterAction) => {
     const typingSpeed = useTypingStore.getState().cpm;
-    const { inCombat, isDying, isHurt } = useCharacterSituationStore.getState();
+    // const { inCombat, isDying, isHurt } = useCharacterSituationStore.getState();
+    // const { characterAction } = useInteractStore.getState();
+    console.log("current", characterAction);
 
-    if (isDying) {
+    if (characterAction === "Dead") {
       set({
         totalFrames: 6,
         frameWidth: 200,
@@ -32,7 +35,7 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
         frameDuration: 300,
         characterImage: `url("/game_images/character-wizard/Fire vizard/Dead.png")`,
       });
-    } else if (isHurt) {
+    } else if (characterAction === "Hurt") {
       set({
         totalFrames: 3,
         frameWidth: 200,
@@ -40,15 +43,15 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
         frameDuration: 200,
         characterImage: `url("/game_images/character-wizard/Fire vizard/Hurt.png")`,
       });
-    } else if (inCombat && typingSpeed !== 0) {
+    } else if (characterAction === "Attack") {
       set({
         totalFrames: 4,
         frameWidth: 200,
         frameHeight: 200,
-        frameDuration: 30000 / typingSpeed,
+        frameDuration: Math.max(100, Math.min(10000 / typingSpeed, 1000)),
         characterImage: `url("/game_images/character-wizard/Fire vizard/Attack_2.png")`,
       });
-    } else if (typingSpeed > 200) {
+    } else if (characterAction === "Idle" && typingSpeed > 150) {
       set({
         totalFrames: 8,
         frameWidth: 200,
@@ -56,7 +59,7 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
         frameDuration: 100,
         characterImage: `url("/game_images/character-wizard/Fire vizard/Run.png")`,
       });
-    } else if (typingSpeed > 0) {
+    } else if (characterAction === "Idle" && typingSpeed > 0) {
       set({
         totalFrames: 6,
         frameWidth: 200,

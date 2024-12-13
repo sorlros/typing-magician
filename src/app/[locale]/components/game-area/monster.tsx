@@ -67,7 +67,7 @@ const Monster = () => {
   const handleTransitionEnd = () => {
     characterSituation.setCharacterSituations("inCombat");
     monsterSituation.setMonsterSituations("inCombat");
-  }
+  } // 이 부분 수정할 것
 
   // useEffect(() => {
   //   if (monsterCondition.isDying) {

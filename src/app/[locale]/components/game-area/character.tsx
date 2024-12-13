@@ -5,6 +5,7 @@ import { useTypingStore } from "@/store/use-typing-store";
 import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
 import useCharacterSituationStore from "@/store/use-character-situation-store";
+import { useInteractStore } from "@/store/use-interact-store";
 
 const Character = () => {
   const [frame, setFrame] = useState(0);
@@ -25,10 +26,17 @@ const Character = () => {
     setCharacterSituations: state.setCharacterSituations
   }));
 
+  const { updateActions, characterAction } = useInteractStore();
+
   useEffect(() => {
     // 타이핑 속도가 변경될 때 상태 업데이트 호출
-    updateCharacterSettings();
-  }, [typingSpeed]);
+    updateCharacterSettings(characterAction);
+    // updateActions()
+  }, [characterAction, typingSpeed]);
+
+  useEffect(() => {
+    updateActions();
+  }, [typingSpeed])
 
   useEffect(() => {
     const interval = setInterval(() => {

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
 import useMonsterSituationStore from "./use-character-situation-store";
+import { useInteractStore } from "./use-interact-store";
 
 type MonsterDetails = {
   monsterNumber: number;
@@ -32,7 +33,8 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
   updateMonsterSettings: () => {
     const typedCharacters = useTypingStore.getState().typedCharacters;
     const monster = useMonsterStore.getState().monster;
-    const { inUsual ,inCombat, isHurt, isDying } = useMonsterSituationStore.getState();
+    // const { inUsual ,inCombat, isHurt, isDying } = useMonsterSituationStore.getState();
+    const { monsterAction } = useInteractStore.getState();
 
     let action: "Idle" | "Hurt" | "Dead" | "Attack_1" = "Idle";
     let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior";
@@ -48,13 +50,13 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
       monsterType = "Skeleton_Archer"; // 기본 값
     }
 
-    if (isDying) {
+    if (monsterAction === "Dead") {
       action = "Dead";
-    } else if (isHurt && inCombat && !inUsual) {
+    } else if (monsterAction === "Hurt") {
       action = "Hurt";
-    } else if (!isHurt && inCombat && !inUsual) {
+    } else if (monsterAction === "Attack") {
       action = "Attack_1";
-    } else if (inUsual) {
+    } else if (monsterAction === "Idle") {
       action = "Idle";
     }
   
