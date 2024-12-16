@@ -11,11 +11,12 @@ const TypingArea = () => {
   const { updatedTypingSpeed, resetTyping, decreaseCPM, setAccuracy, accuracy, correctCharacters, setCorrectCharacters, setTypedCharacters, typedCharacters } = useTypingStore();
   const { text, typedText, decomposedText, setTypedText, setDecomposedText, initializeIndex, currentIndex } = useTextStore();
   const { setAppearMonster } = useMonsterStore();
+  const { sentenceNumber, addSentenceNumber} = useTypingStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [visibleContent, setVisibleContent] = useState<string>("");
-  const [sentenceNumber, setSentenceNumber] = useState<number>(0);
+  // const [sentenceNumber, setSentenceNumber] = useState<number>(0);
   // const [decomposedTyped, setDecomposedTyped] = useState<string[][]>([]);
 
   const [realTimeAccuracy, setRealTimeAccuracy] = useState<number>(0);
@@ -30,12 +31,16 @@ const TypingArea = () => {
     initializeIndex();
   }, [initializeIndex]);
 
+  // useEffect(() => {
+  //   console.log("sentenceNumber", sentenceNumber)
+  // }, [sentenceNumber])
+
   // 현재 타이핑할 텍스트 설정
   useEffect(() => {
     if (text.contents.length > 0) {
       const currentText = text.contents[currentIndex];
       setVisibleContent(currentText);
-      setSentenceNumber(0);
+      // setSentenceNumber(0);
   
       const decomposed = currentText.split("").map(decomposeKorean);
       setDecomposedText(decomposed);
@@ -100,7 +105,7 @@ const TypingArea = () => {
       resetTypingState();
       setAppearMonster(true); // 캐릭터 UI 오류
       setVisibleContent(text.contents[currentIndex]);
-      setSentenceNumber((prevNumber) => prevNumber + 1);
+      addSentenceNumber();
 
       // if (sentenceNumber > 0) {
       //   setAppearMonster(true); 

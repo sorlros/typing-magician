@@ -64,10 +64,10 @@ const Monster = () => {
     }
   }, [typedCharacters, appearMonster]);
 
-  const handleTransitionEnd = () => {
-    characterSituation.setCharacterSituations("inCombat");
-    monsterSituation.setMonsterSituations("inCombat");
-  } // 이 부분 수정할 것
+  // const handleTransitionEnd = () => {
+  //   characterSituation.setCharacterSituations("inCombat");
+  //   monsterSituation.setMonsterSituations("inCombat");
+  // } // 이 부분 수정할 것
 
   // useEffect(() => {
   //   if (monsterCondition.isDying) {
@@ -88,7 +88,7 @@ const Monster = () => {
           left: position,
           transition: "left 3s ease",
         }}
-        onTransitionEnd={handleTransitionEnd}
+        // onTransitionEnd={handleTransitionEnd}
       >
         {/* <div className="absolute top-12 left-[70px] z-50">
           <HpAndMp />

@@ -12,26 +12,16 @@ const Character = () => {
 
   const typingSpeed = useTypingStore(state => state.cpm);
 
-  const { totalFrames, frameWidth, frameHeight, frameDuration, characterImage, updateCharacterSettings, reduceHp } = useCharacterStore(state => ({
-      totalFrames: state.totalFrames,
-      frameWidth: state.frameWidth,
-      frameHeight: state.frameHeight,
-      frameDuration: state.frameDuration,
-      characterImage: state.characterImage,
-      updateCharacterSettings: state.updateCharacterSettings,
-      reduceHp: state.reduceHp,
-  }));
+  const { totalFrames, frameWidth, frameHeight, frameDuration, characterImage, updateCharacterSettings, reduceHp, currentJob, changeJob } = useCharacterStore();
 
-  const { setCharacterSituations } = useCharacterSituationStore(state => ({
-    setCharacterSituations: state.setCharacterSituations
-  }));
+  // const { setCharacterSituations } = useCharacterSituationStore(state => ({
+  //   setCharacterSituations: state.setCharacterSituations
+  // }));
 
   const { updateActions, characterAction } = useInteractStore();
 
   useEffect(() => {
-    // 타이핑 속도가 변경될 때 상태 업데이트 호출
     updateCharacterSettings(characterAction);
-    // updateActions()
   }, [characterAction, typingSpeed]);
 
   useEffect(() => {

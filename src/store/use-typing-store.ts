@@ -13,6 +13,8 @@ interface TypingState {
   updatedTypingSpeed: () => number;
   decreaseCPM: () => void;
   resetTyping: () => void;
+  sentenceNumber: number;
+  addSentenceNumber: () => void;
 }
 
 export const useTypingStore = create<TypingState>((set, get) => ({
@@ -22,6 +24,12 @@ export const useTypingStore = create<TypingState>((set, get) => ({
   cpm: 0,
   correctCharacters: 0,
   accuracy: 100,
+  sentenceNumber: 0,
+  addSentenceNumber: () => {
+    set((state) => ({
+      sentenceNumber: state.sentenceNumber + 1,
+    }));
+  },
   setAccuracy: () => {
     const { typedCharacters, correctCharacters } = get();
   
