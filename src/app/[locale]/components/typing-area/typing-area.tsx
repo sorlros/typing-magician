@@ -6,12 +6,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import decomposeKorean from "./decompose-korean";
 import { toast } from "sonner";
 import { useMonsterStore } from "@/store/use-monster-store";
+import { useChoice } from "@/store/use-choice";
 
 const TypingArea = () => {
   const { updatedTypingSpeed, resetTyping, decreaseCPM, setAccuracy, accuracy, correctCharacters, setCorrectCharacters, setTypedCharacters, typedCharacters } = useTypingStore();
   const { text, typedText, decomposedText, setTypedText, setDecomposedText, initializeIndex, currentIndex } = useTextStore();
   const { setAppearMonster } = useMonsterStore();
   const { sentenceNumber, addSentenceNumber} = useTypingStore();
+  const { isOpen, onClose, onOpen } = useChoice();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -100,16 +102,14 @@ const TypingArea = () => {
     initializeIndex();
   };
 
+  // 해당 문과 로직들 발동 시점 수정할 것
   const loadNextSentence = () => {
     try {
       resetTypingState();
       setAppearMonster(true); // 캐릭터 UI 오류
       setVisibleContent(text.contents[currentIndex]);
       addSentenceNumber();
-
-      // if (sentenceNumber > 0) {
-      //   setAppearMonster(true); 
-      // }
+      console.log("sentenceNumber", sentenceNumber)
     } catch (error) {
       toast.error("새로운 문장을 불러오는데 실패했습니다.");
     }

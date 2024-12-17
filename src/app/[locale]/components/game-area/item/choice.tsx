@@ -1,20 +1,34 @@
 "use client";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import React from 'react'
 import Image from 'next/image';
 
-const Choice = () => {
+interface ChoiceState {
+  isOpen: boolean;
+}
 
+const Choice = ({ isOpen }: ChoiceState) => {
   return (
-    <div className="w-28 h-28 outer-hexagon flex items-center justify-center bg-white">
-      <div className="inner-hexagon w-24 h-24 bg-neutral-700">
-        <Image 
-          src=""
-          alt="Item"
-        />
-        <span></span>
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Card Title</CardTitle>
+        <CardDescription>Card Description</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>Card Content</p>
+      </CardContent>
+      <CardFooter>
+        <p>Card Footer</p>
+      </CardFooter>
+    </Card>
   )
 }
 
