@@ -39,7 +39,7 @@ const ClientComponentPage = ({ lang, text: phrase }: PageProps) => {
       <Header lang={lang}/>
       <GameComponent />
       <TypingArea />
-      <ChoiceModal isOpen={choiceModal.isOpen}/>
+      <ChoiceModal />
       {/* <ItemList /> */}
       {/* <SelectText text={literature} /> */}
     </div>

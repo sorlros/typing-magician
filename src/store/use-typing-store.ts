@@ -3,7 +3,7 @@ import { create } from "zustand";
 interface TypingState {
   startTime: number | null;
   typedCharacters: number;
-  wpm: number; // WPM (Words per minute)
+  // wpm: number; // WPM (Words per minute)
   cpm: number;
   correctCharacters: number;
   accuracy: number;
@@ -20,7 +20,7 @@ interface TypingState {
 export const useTypingStore = create<TypingState>((set, get) => ({
   startTime: null,
   typedCharacters: 0,
-  wpm: 0,
+  // wpm: 0,
   cpm: 0,
   correctCharacters: 0,
   accuracy: 100,
@@ -99,7 +99,7 @@ export const useTypingStore = create<TypingState>((set, get) => ({
       startTime: null,
       typedCharacters: 0,
       correctCharacters: 0,
-      wpm: 0,
+      // wpm: 0,
       cpm: 0,
       accuracy: 0,
     });

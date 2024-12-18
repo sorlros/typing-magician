@@ -32,7 +32,7 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
     const currentJob = get().currentJob;
     // const { inCombat, isDying, isHurt } = useCharacterSituationStore.getState();
     // const { characterAction } = useInteractStore.getState();
-    console.log("current", characterAction);
+    // console.log("current", characterAction);
 
     if(characterAction === "Skill") {
       set({

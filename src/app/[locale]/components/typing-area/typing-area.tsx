@@ -7,13 +7,83 @@ import decomposeKorean from "./decompose-korean";
 import { toast } from "sonner";
 import { useMonsterStore } from "@/store/use-monster-store";
 import { useChoice } from "@/store/use-choice";
+import shallow from 'zustand/shallow'
+import { useShallow } from "zustand/react/shallow";
 
 const TypingArea = () => {
-  const { updatedTypingSpeed, resetTyping, decreaseCPM, setAccuracy, accuracy, correctCharacters, setCorrectCharacters, setTypedCharacters, typedCharacters } = useTypingStore();
-  const { text, typedText, decomposedText, setTypedText, setDecomposedText, initializeIndex, currentIndex } = useTextStore();
-  const { setAppearMonster } = useMonsterStore();
-  const { sentenceNumber, addSentenceNumber} = useTypingStore();
-  const { isOpen, onClose, onOpen } = useChoice();
+  // const { updatedTypingSpeed, resetTyping, decreaseCPM, setAccuracy, accuracy, correctCharacters, setCorrectCharacters, setTypedCharacters, typedCharacters } = useTypingStore();
+  // const { text, typedText, decomposedText, setTypedText, setDecomposedText, initializeIndex, currentIndex } = useTextStore();
+  // const { setAppearMonster } = useMonsterStore();
+  // const { sentenceNumber, addSentenceNumber} = useTypingStore();
+  // const { isOpen, onClose, onOpen } = useChoice();
+  const {
+    updatedTypingSpeed,
+    resetTyping,
+    decreaseCPM,
+    setAccuracy,
+    accuracy,
+    correctCharacters,
+    setCorrectCharacters,
+    setTypedCharacters,
+    typedCharacters,
+    sentenceNumber,
+    addSentenceNumber,
+  } = useTypingStore(
+    useShallow((state) => [
+      state.updatedTypingSpeed,
+      state.resetTyping,
+      state.decreaseCPM,
+      state.setAccuracy,
+      state.accuracy,
+      state.correctCharacters,
+      state.setCorrectCharacters,
+      state.setTypedCharacters,
+      state.typedCharacters,
+      state.sentenceNumber,
+      state.addSentenceNumber
+    ])
+  );
+
+  // Text 관련 상태 구독
+  const {
+    text,
+    typedText,
+    decomposedText,
+    setTypedText,
+    setDecomposedText,
+    initializeIndex,
+    currentIndex,
+  } = useTextStore(
+    (state) => ({
+      text: state.text,
+      typedText: state.typedText,
+      decomposedText: state.decomposedText,
+      setTypedText: state.setTypedText,
+      setDecomposedText: state.setDecomposedText,
+      initializeIndex: state.initializeIndex,
+      currentIndex: state.currentIndex,
+    }),
+    shallow
+  );
+
+  // Monster 관련 상태 구독
+  const { setAppearMonster } = useMonsterStore(
+    (state) => ({
+      setAppearMonster: state.setAppearMonster,
+    }),
+    shallow
+  );
+
+  // Choice 관련 상태 구독
+  const { isOpen, onClose, onOpen } = useChoice(
+    (state) => ({
+      isOpen: state.isOpen,
+      onClose: state.onClose,
+      onOpen: state.onOpen,
+    }),
+    shallow
+  );
+};
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -32,10 +102,6 @@ const TypingArea = () => {
   useEffect(() => {
     initializeIndex();
   }, [initializeIndex]);
-
-  // useEffect(() => {
-  //   console.log("sentenceNumber", sentenceNumber)
-  // }, [sentenceNumber])
 
   // 현재 타이핑할 텍스트 설정
   useEffect(() => {
@@ -74,7 +140,7 @@ const TypingArea = () => {
         decreaseCPM(); // 타이핑이 멈춘 지 1.5초가 지나면 CPM 감소
       }
     };
-    // 1초마다 확인
+    
     timerRef.current = setInterval(handleDecreaseCPM, 1000);
 
     return () => {
@@ -103,13 +169,31 @@ const TypingArea = () => {
   };
 
   // 해당 문과 로직들 발동 시점 수정할 것
+  // const loadNextSentence = () => {
+  //   try {
+  //     resetTypingState();
+  //     setAppearMonster(true); // 캐릭터 UI 오류
+  //     setVisibleContent(text.contents[currentIndex]);
+  //     addSentenceNumber();
+  //     console.log("sentenceNumber", sentenceNumber)
+  //   } catch (error) {
+  //     toast.error("새로운 문장을 불러오는데 실패했습니다.");
+  //   }
+  // };
   const loadNextSentence = () => {
     try {
+      // 현재 문장을 초기화
       resetTypingState();
-      setAppearMonster(true); // 캐릭터 UI 오류
+  
+      // 새로운 문장으로 상태 업데이트
       setVisibleContent(text.contents[currentIndex]);
-      addSentenceNumber();
-      console.log("sentenceNumber", sentenceNumber)
+      setAppearMonster(true);
+  
+      // 상태 변경이 완료된 이후 실행될 로직
+      setTimeout(() => {
+        addSentenceNumber();
+        // console.log("sentenceNumber", sentenceNumber);
+      }, 0);
     } catch (error) {
       toast.error("새로운 문장을 불러오는데 실패했습니다.");
     }

@@ -1,37 +1,44 @@
+"use client";
+
 import { useCharacterStore } from "@/store/use-character-store";
 import { useChoice } from "@/store/use-choice";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useEffect } from "react";
 
-interface ChoiceState {
-  isOpen: boolean;
-}
-
-const ChoiceModal = ({ isOpen }: ChoiceState) => {
-  const { onClose, onOpen } = useChoice();
+const ChoiceModal = () => {
+  const { onClose, onOpen, isOpen } = useChoice();
   const { changeJob } = useCharacterStore();
-  const { sentenceNumber } = useTypingStore();
-
-  if (!isOpen) return null;
+  const { resetTyping } = useTypingStore();
+  const sentenceNumber = useTypingStore((state) => state.sentenceNumber);
 
   useEffect(() => {
     if (sentenceNumber === 1) {
       onOpen();
     }
-  }, [sentenceNumber, onOpen]);
+  }, [sentenceNumber]);
 
   const handleChangeJob = (job: string) => {
     changeJob(job);
+    resetTyping();
     onClose();
-  }
+  };
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-80 z-50 flex justify-center items-center">
-      <div className="flex space-x-8">
+    <div
+      className={`fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-black bg-opacity-80 z-50 transition-all duration-300 ${
+        isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+      }`}
+      data-state={isOpen ? "open" : "closed"}
+    >
+      <div
+        className={`flex space-x-8 transition-transform duration-300 ${
+          isOpen ? "translate-y-0" : "-translate-y-10"
+        }`}
+      >
         {/* Fireball Choice */}
-        <div 
+        <div
           className="relative bg-gradient-to-br cursor-pointer from-red-500 to-orange-700 p-6 w-64 h-72 rounded-lg shadow-xl transform hover:-translate-y-2 hover:scale-105 transition-all duration-300"
-          onClick={() =>handleChangeJob("Fire vizard")}
+          onClick={() => handleChangeJob("Fire vizard")}
         >
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-30 rounded-lg z-0"></div>
           <img
@@ -48,9 +55,9 @@ const ChoiceModal = ({ isOpen }: ChoiceState) => {
         </div>
 
         {/* Ice Blast Choice */}
-        <div 
+        <div
           className="relative bg-gradient-to-br cursor-pointer from-blue-500 to-cyan-700 p-6 w-64 h-72 rounded-lg shadow-xl transform hover:-translate-y-2 hover:scale-105 transition-all duration-300"
-          onClick={() =>handleChangeJob("Wanderer Magician")}
+          onClick={() => handleChangeJob("Wanderer Magician")}
         >
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-30 rounded-lg z-0"></div>
           <img
@@ -62,14 +69,14 @@ const ChoiceModal = ({ isOpen }: ChoiceState) => {
             Ice Blast
           </h3>
           <p className="text-sm text-gray-300 text-center mt-4">
-            적의 움직임을 느리게 얼립니다.
+            적을 얼어붙게하는 얼음을 소환합니다.
           </p>
         </div>
 
         {/* Thunder Strike Choice */}
-        <div 
+        <div
           className="relative bg-gradient-to-br cursor-pointer from-yellow-400 to-purple-600 p-6 w-64 h-72 rounded-lg shadow-xl transform hover:-translate-y-2 hover:scale-105 transition-all duration-300"
-          onClick={() =>handleChangeJob("Lightning Mage")}
+          onClick={() => handleChangeJob("Lightning Mage")}
         >
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-30 rounded-lg z-0"></div>
           <img
