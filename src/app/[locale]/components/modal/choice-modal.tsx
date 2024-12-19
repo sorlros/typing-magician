@@ -57,7 +57,7 @@ const ChoiceModal = () => {
         {/* Ice Blast Choice */}
         <div
           className="relative bg-gradient-to-br cursor-pointer from-blue-500 to-cyan-700 p-6 w-64 h-72 rounded-lg shadow-xl transform hover:-translate-y-2 hover:scale-105 transition-all duration-300"
-          onClick={() => handleChangeJob("Wanderer Magician")}
+          onClick={() => handleChangeJob("Wanderer Magican")}
         >
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-30 rounded-lg z-0"></div>
           <img

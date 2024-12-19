@@ -17,6 +17,8 @@ const TypingArea = () => {
   // const { sentenceNumber, addSentenceNumber} = useTypingStore();
   // const { isOpen, onClose, onOpen } = useChoice();
   const {
+    startTime,
+    cpm,
     updatedTypingSpeed,
     resetTyping,
     decreaseCPM,
@@ -29,19 +31,21 @@ const TypingArea = () => {
     sentenceNumber,
     addSentenceNumber,
   } = useTypingStore(
-    useShallow((state) => [
-      state.updatedTypingSpeed,
-      state.resetTyping,
-      state.decreaseCPM,
-      state.setAccuracy,
-      state.accuracy,
-      state.correctCharacters,
-      state.setCorrectCharacters,
-      state.setTypedCharacters,
-      state.typedCharacters,
-      state.sentenceNumber,
-      state.addSentenceNumber
-    ])
+    useShallow((state) => ({
+      startTime: state.startTime,
+      cpm: state.cpm,
+      updatedTypingSpeed: state.updatedTypingSpeed,
+      resetTyping: state.resetTyping,
+      decreaseCPM: state.decreaseCPM,
+      setAccuracy: state.setAccuracy,
+      accuracy: state.accuracy,
+      correctCharacters: state.correctCharacters,
+      setCorrectCharacters: state.setCorrectCharacters,
+      setTypedCharacters: state.setTypedCharacters,
+      typedCharacters: state.typedCharacters,
+      sentenceNumber: state.sentenceNumber,
+      addSentenceNumber: state.addSentenceNumber,
+    }))
   );
 
   // Text 관련 상태 구독
@@ -54,7 +58,7 @@ const TypingArea = () => {
     initializeIndex,
     currentIndex,
   } = useTextStore(
-    (state) => ({
+    useShallow((state) => ({
       text: state.text,
       typedText: state.typedText,
       decomposedText: state.decomposedText,
@@ -62,8 +66,7 @@ const TypingArea = () => {
       setDecomposedText: state.setDecomposedText,
       initializeIndex: state.initializeIndex,
       currentIndex: state.currentIndex,
-    }),
-    shallow
+    })),
   );
 
   // Monster 관련 상태 구독
@@ -71,7 +74,6 @@ const TypingArea = () => {
     (state) => ({
       setAppearMonster: state.setAppearMonster,
     }),
-    shallow
   );
 
   // Choice 관련 상태 구독
@@ -81,9 +83,8 @@ const TypingArea = () => {
       onClose: state.onClose,
       onOpen: state.onOpen,
     }),
-    shallow
   );
-};
+
 
   const inputRef = useRef<HTMLInputElement>(null);
 

@@ -3,7 +3,7 @@ import { useTypingStore } from "./use-typing-store";
 import { useMonsterStore } from "./use-monster-store";
 
 interface InteractStore {
-  characterAction: "Idle" | "Attack" | "Hurt" | "Dead";
+  characterAction: "Idle" | "Attack" | "Hurt" | "Dead" | "Skill";
   monsterAction: "Idle" | "Attack" | "Hurt" | "Dead";
   characterHp: number;
   monsterHp: number;
