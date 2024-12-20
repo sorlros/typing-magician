@@ -77,13 +77,13 @@ const TypingArea = () => {
   );
 
   // Choice 관련 상태 구독
-  const { isOpen, onClose, onOpen } = useChoice(
-    (state) => ({
-      isOpen: state.isOpen,
-      onClose: state.onClose,
-      onOpen: state.onOpen,
-    }),
-  );
+  // const { isOpen, onClose, onOpen } = useChoice(
+  //   (state) => ({
+  //     isOpen: state.isOpen,
+  //     onClose: state.onClose,
+  //     onOpen: state.onOpen,
+  //   }),
+  // );
 
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -118,18 +118,20 @@ const TypingArea = () => {
 
   useEffect(() => {
     if (typedCharacters > 0) {
-      const typingAccuracy = setAccuracy()
-      setRealTimeAccuracy(typingAccuracy);
+      // const typingAccuracy = setAccuracy()
+      setRealTimeAccuracy(setAccuracy());
     }
-  }, [typedCharacters, correctCharacters, setAccuracy])
+  }, [typedCharacters, correctCharacters])
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const speed = updatedTypingSpeed();
-      setTypingSpeed(speed);
-    }, 100); // 100ms마다 타이핑 속도 갱신
-  
-    return () => clearInterval(interval);
+    if (typedCharacters > 0) {
+      const interval = setInterval(() => {
+        // const speed = updatedTypingSpeed();
+        setTypingSpeed(updatedTypingSpeed());
+      }, 100); // 100ms마다 타이핑 속도 갱신
+    
+      return () => clearInterval(interval);
+    }
   }, []);
 
   useEffect(() => {
@@ -169,18 +171,6 @@ const TypingArea = () => {
     initializeIndex();
   };
 
-  // 해당 문과 로직들 발동 시점 수정할 것
-  // const loadNextSentence = () => {
-  //   try {
-  //     resetTypingState();
-  //     setAppearMonster(true); // 캐릭터 UI 오류
-  //     setVisibleContent(text.contents[currentIndex]);
-  //     addSentenceNumber();
-  //     console.log("sentenceNumber", sentenceNumber)
-  //   } catch (error) {
-  //     toast.error("새로운 문장을 불러오는데 실패했습니다.");
-  //   }
-  // };
   const loadNextSentence = () => {
     try {
       // 현재 문장을 초기화
@@ -300,12 +290,13 @@ const TypingArea = () => {
         <div>{renderText()}</div>
       
         <input
+          id="typingInput"
           ref={inputRef}
           type="text"
           value={typedText}
           onChange={handleTyping}
           className="opacity-0 absolute inset-0 z-0"
-          autoFocus
+          // autoFocus
         />
       </div>
     </div>

@@ -6,17 +6,32 @@ import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
 import useCharacterSituationStore from "@/store/use-character-situation-store";
 import { useInteractStore } from "@/store/use-interact-store";
+import { useShallow } from 'zustand/react/shallow';
 
 const Character = () => {
   const [frame, setFrame] = useState(0);
 
   const typingSpeed = useTypingStore(state => state.cpm);
 
-  const { totalFrames, frameWidth, frameHeight, frameDuration, characterImage, updateCharacterSettings, reduceHp, currentJob, changeJob } = useCharacterStore();
+  // const { totalFrames, frameWidth, frameHeight, frameDuration, characterImage, updateCharacterSettings, reduceHp, currentJob, changeJob } = useCharacterStore();
 
-  // const { setCharacterSituations } = useCharacterSituationStore(state => ({
-  //   setCharacterSituations: state.setCharacterSituations
-  // }));
+  const {
+    totalFrames,
+    frameWidth,
+    frameHeight,
+    frameDuration,
+    characterImage,
+    updateCharacterSettings
+  } = useCharacterStore(
+    useShallow((state) => ({
+      totalFrames: state.totalFrames,
+      frameWidth: state.frameWidth,
+      frameHeight: state.frameHeight,
+      frameDuration: state.frameDuration,
+      characterImage: state.characterImage,
+      updateCharacterSettings: state.updateCharacterSettings
+    }))
+  )
 
   const { updateActions, characterAction } = useInteractStore();
 

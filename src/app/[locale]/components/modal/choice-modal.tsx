@@ -21,11 +21,16 @@ const ChoiceModal = () => {
     changeJob(job);
     resetTyping();
     onClose();
+
+    setTimeout(() => {
+      const inputElement = document.querySelector<HTMLInputElement>("#typingInput");
+      inputElement?.focus();
+    }, 300);
   };
 
   return (
     <div
-      className={`fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-black bg-opacity-80 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-black bg-opacity-80 z-50 transition-all duration-300 ${  
         isOpen ? "opacity-100 visible" : "opacity-0 invisible"
       }`}
       data-state={isOpen ? "open" : "closed"}
