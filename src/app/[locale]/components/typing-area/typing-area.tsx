@@ -9,6 +9,7 @@ import { useMonsterStore } from "@/store/use-monster-store";
 import { useChoice } from "@/store/use-choice";
 import shallow from 'zustand/shallow'
 import { useShallow } from "zustand/react/shallow";
+import useStageStore from "@/store/use-stage-store";
 
 const TypingArea = () => {
   // const { updatedTypingSpeed, resetTyping, decreaseCPM, setAccuracy, accuracy, correctCharacters, setCorrectCharacters, setTypedCharacters, typedCharacters } = useTypingStore();
@@ -18,7 +19,8 @@ const TypingArea = () => {
   // const { isOpen, onClose, onOpen } = useChoice();
   const {
     startTime,
-    cpm,
+    lastTypedTime,
+    // cpm,
     updatedTypingSpeed,
     resetTyping,
     decreaseCPM,
@@ -33,7 +35,8 @@ const TypingArea = () => {
   } = useTypingStore(
     useShallow((state) => ({
       startTime: state.startTime,
-      cpm: state.cpm,
+      lastTypedTime: state.lastTypedTime,
+      // cpm: state.cpm,
       updatedTypingSpeed: state.updatedTypingSpeed,
       resetTyping: state.resetTyping,
       decreaseCPM: state.decreaseCPM,
@@ -47,6 +50,8 @@ const TypingArea = () => {
       addSentenceNumber: state.addSentenceNumber,
     }))
   );
+
+  const cpm = useTypingStore((state) => state.cpm);
 
   // Text 관련 상태 구독
   const {
@@ -69,22 +74,18 @@ const TypingArea = () => {
     })),
   );
 
+  const { setModalState } = useStageStore(
+    (state) => ({
+      setModalState: state.setModalState
+    })
+  );
+
   // Monster 관련 상태 구독
   const { setAppearMonster } = useMonsterStore(
     (state) => ({
       setAppearMonster: state.setAppearMonster,
     }),
   );
-
-  // Choice 관련 상태 구독
-  // const { isOpen, onClose, onOpen } = useChoice(
-  //   (state) => ({
-  //     isOpen: state.isOpen,
-  //     onClose: state.onClose,
-  //     onOpen: state.onOpen,
-  //   }),
-  // );
-
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -97,7 +98,7 @@ const TypingArea = () => {
 
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
 
-  const lastTypedTime = useRef(Date.now()); // 마지막 타이핑 시간 추적
+  // const lastTypedTime = useRef(Date.now()); // 마지막 타이핑 시간 추적
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -117,6 +118,30 @@ const TypingArea = () => {
   }, [text, currentIndex]);
 
   useEffect(() => {
+    // 타이핑 속도 업데이트
+    const typingInterval = setInterval(() => {
+      updatedTypingSpeed();
+    }, 1000); // 1초마다 실행
+
+    // 타이핑 입력이 없으면 CPM 감소
+    const decreaseInterval = setInterval(() => {
+      const currentTime = Date.now();
+      if (lastTypedTime && currentTime - lastTypedTime > 1500) {
+        decreaseCPM();
+      }
+    }, 1000); // 1초마다 실행
+
+    return () => {
+      clearInterval(typingInterval);
+      clearInterval(decreaseInterval);
+    };
+  }, [updatedTypingSpeed, decreaseCPM, lastTypedTime]);
+
+  useEffect(() => {
+    console.log("cpm", cpm);
+  },[cpm])
+
+  useEffect(() => {
     if (typedCharacters > 0) {
       // const typingAccuracy = setAccuracy()
       setRealTimeAccuracy(setAccuracy());
@@ -133,23 +158,6 @@ const TypingArea = () => {
       return () => clearInterval(interval);
     }
   }, []);
-
-  useEffect(() => {
-    const handleDecreaseCPM = () => {
-      const currentTime = Date.now();
-      const timeSinceLastTyped = currentTime - lastTypedTime.current;
-
-      if (timeSinceLastTyped >= 1500) {
-        decreaseCPM(); // 타이핑이 멈춘 지 1.5초가 지나면 CPM 감소
-      }
-    };
-    
-    timerRef.current = setInterval(handleDecreaseCPM, 1000);
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current); // 타이머 클리어
-    };
-  }, [typedCharacters, decreaseCPM]);
 
   const calculateTotalMatches = useCallback((newText: string) => {
     let totalMatches = 0;
@@ -179,6 +187,8 @@ const TypingArea = () => {
       // 새로운 문장으로 상태 업데이트
       setVisibleContent(text.contents[currentIndex]);
       setAppearMonster(true);
+
+      setModalState("open");
   
       // 상태 변경이 완료된 이후 실행될 로직
       setTimeout(() => {
@@ -283,7 +293,7 @@ const TypingArea = () => {
             {Math.round(realTimeAccuracy * 100)} %
           </div>
           <div className="flex">
-            {`cpm: ${typingSpeed}`}
+            {`cpm: ${cpm}`}
           </div>
         </div>
 

@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 interface TypingState {
   startTime: number | null;
+  lastTypedTime: number | null;
   typedCharacters: number;
   // wpm: number; // WPM (Words per minute)
   cpm: number;
@@ -19,6 +20,7 @@ interface TypingState {
 
 export const useTypingStore = create<TypingState>((set, get) => ({
   startTime: null,
+  lastTypedTime: null,
   typedCharacters: 0,
   // wpm: 0,
   cpm: 0,
@@ -55,7 +57,8 @@ export const useTypingStore = create<TypingState>((set, get) => ({
   },
   setTypedCharacters: (char: number) => {
     set(() => ({
-      typedCharacters: char
+      typedCharacters: char,
+      lastTypedTime: Date.now(),
     }))
 
     // console.log("typedCharacters", char);
@@ -97,6 +100,7 @@ export const useTypingStore = create<TypingState>((set, get) => ({
   resetTyping: () => {
     set({
       startTime: null,
+      lastTypedTime: null,
       typedCharacters: 0,
       correctCharacters: 0,
       // wpm: 0,

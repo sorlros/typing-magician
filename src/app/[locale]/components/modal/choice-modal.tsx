@@ -2,6 +2,7 @@
 
 import { useCharacterStore } from "@/store/use-character-store";
 import { useChoice } from "@/store/use-choice";
+import useStageStore from "@/store/use-stage-store";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useEffect } from "react";
 
@@ -9,6 +10,11 @@ const ChoiceModal = () => {
   const { onClose, onOpen, isOpen } = useChoice();
   const { changeJob } = useCharacterStore();
   const { resetTyping } = useTypingStore();
+  const { setModalState } = useStageStore(
+    (state) => ({
+      setModalState: state.setModalState
+    })
+  );
   const sentenceNumber = useTypingStore((state) => state.sentenceNumber);
 
   useEffect(() => {
@@ -20,6 +26,7 @@ const ChoiceModal = () => {
   const handleChangeJob = (job: string) => {
     changeJob(job);
     resetTyping();
+    setModalState("close");
     onClose();
 
     setTimeout(() => {

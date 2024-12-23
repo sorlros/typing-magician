@@ -9,6 +9,8 @@ import HpAndMp from "../hp-mp-ui/hp-mp";
 import { useMonsterStore } from "@/store/use-monster-store";
 import useMonsterSituationStore from "@/store/use-monster-situation-store";
 import useCharacterSituationStore from "@/store/use-character-situation-store";
+import useStageStore from "@/store/use-stage-store";
+import { useInteractStore } from "@/store/use-interact-store";
 
 const Monster = () => {
   const [frame, setFrame] = useState(0); // 현재 프레임 인덱스
@@ -29,12 +31,16 @@ const Monster = () => {
     appearMonster: state.appearMonster
   }));
 
-  const monsterSituation = useMonsterSituationStore();
-  const characterSituation = useCharacterSituationStore();
+  const { modalState } = useStageStore();
+  const { updateActions, monsterAction } = useInteractStore();
 
   useEffect(() => {
-    updateMonsterSettings();
-  }, [typedCharacters, updateMonsterSettings]);
+    updateMonsterSettings(monsterAction);
+  }, [typedCharacters, updateMonsterSettings, monsterAction]);
+
+  useEffect(() => {
+    updateActions();
+  }, [typingSpeed])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -56,11 +62,11 @@ const Monster = () => {
   }, [frameDuration, totalFrames]);
 
   useEffect(() => {
-    if (appearMonster) {
+    if (appearMonster && modalState === "close") {
       setHidden(false);
       setTimeout(() => {
         setPosition("50%");
-      }, 100);
+      }, 700);
     }
   }, [typedCharacters, appearMonster]);
 

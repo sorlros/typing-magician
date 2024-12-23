@@ -15,7 +15,7 @@ interface MonsterState {
   frameWidth: number; // 각 프레임의 너비 (px)
   frameHeight: number; // 각 프레임의 높이 (px)
   frameDuration: number;
-  updateMonsterSettings: () => void;
+  updateMonsterSettings: (actionState: string) => void;
   appearMonster: boolean;
   setAppearMonster: (value: boolean) => void;
 }
@@ -30,11 +30,11 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
   frameWidth: 200,
   frameHeight: 200,
   frameDuration: 300,
-  updateMonsterSettings: () => {
+  updateMonsterSettings: (monsterAction) => {
     const typedCharacters = useTypingStore.getState().typedCharacters;
     const monster = useMonsterStore.getState().monster;
     // const { inUsual ,inCombat, isHurt, isDying } = useMonsterSituationStore.getState();
-    const { monsterAction } = useInteractStore.getState();
+    // const { monsterAction } = useInteractStore.getState();
 
     let action: "Idle" | "Hurt" | "Dead" | "Attack_1" = "Idle";
     let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior";
@@ -77,7 +77,7 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
       totalFrames,
       frameWidth: 200,
       frameHeight: 200,
-      frameDuration: 200,
+      frameDuration: 100,
     });
 
     // console.log('Updated monster settings:', { typedCharacters, monsterType, action });
