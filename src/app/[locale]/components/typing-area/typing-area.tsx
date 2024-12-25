@@ -116,30 +116,45 @@ const TypingArea = () => {
       setDecomposedText(decomposed);
     }
   }, [text, currentIndex]);
-
+  
   useEffect(() => {
-    // 타이핑 속도 업데이트
     const typingInterval = setInterval(() => {
       updatedTypingSpeed();
-    }, 1000); // 1초마다 실행
-
-    // 타이핑 입력이 없으면 CPM 감소
-    const decreaseInterval = setInterval(() => {
-      const currentTime = Date.now();
-      if (lastTypedTime && currentTime - lastTypedTime > 1500) {
-        decreaseCPM();
-      }
-    }, 1000); // 1초마다 실행
-
-    return () => {
-      clearInterval(typingInterval);
-      clearInterval(decreaseInterval);
-    };
-  }, [updatedTypingSpeed, decreaseCPM, lastTypedTime]);
+    }, 2000);
+  
+    return () => clearInterval(typingInterval);
+  }, []);
 
   useEffect(() => {
-    console.log("cpm", cpm);
-  },[cpm])
+    const decreaseInterval = setInterval(() => {
+      // console.log("lastTypedTime", lastTypedTime)
+      if (Date.now() - lastTypedTime > 1500) {
+        decreaseCPM();
+      }
+    }, 1000);
+  
+    return () => clearInterval(decreaseInterval);
+  }, [lastTypedTime, decreaseCPM]);
+
+  // useEffect(() => {
+  //   // 타이핑 속도 업데이트
+  //   const typingInterval = setInterval(() => {
+  //     updatedTypingSpeed();
+  //   }, 2000);
+
+  //   // 타이핑 입력이 없으면 CPM 감소
+  //   const decreaseInterval = setInterval(() => {
+  //     const currentTime = Date.now();
+  //     if (lastTypedTime && currentTime - lastTypedTime > 1500) {
+  //       decreaseCPM();
+  //     }
+  //   }, 1000); // 1초마다 실행
+
+  //   return () => {
+  //     clearInterval(typingInterval);
+  //     clearInterval(decreaseInterval);
+  //   };
+  // }, [updatedTypingSpeed, decreaseCPM, lastTypedTime]);
 
   useEffect(() => {
     if (typedCharacters > 0) {
@@ -148,16 +163,16 @@ const TypingArea = () => {
     }
   }, [typedCharacters, correctCharacters])
 
-  useEffect(() => {
-    if (typedCharacters > 0) {
-      const interval = setInterval(() => {
-        // const speed = updatedTypingSpeed();
-        setTypingSpeed(updatedTypingSpeed());
-      }, 100); // 100ms마다 타이핑 속도 갱신
+  // useEffect(() => {
+  //   if (typedCharacters > 0) {
+  //     const interval = setInterval(() => {
+  //       // const speed = updatedTypingSpeed();
+  //       setTypingSpeed(updatedTypingSpeed());
+  //     }, 100); // 100ms마다 타이핑 속도 갱신
     
-      return () => clearInterval(interval);
-    }
-  }, []);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, []);
 
   const calculateTotalMatches = useCallback((newText: string) => {
     let totalMatches = 0;
@@ -175,7 +190,7 @@ const TypingArea = () => {
 
   const resetTypingState = () => {
     setTypedText("");
-    resetTyping();
+    // resetTyping();
     initializeIndex();
   };
 

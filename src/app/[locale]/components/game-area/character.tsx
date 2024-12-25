@@ -7,13 +7,14 @@ import HpAndMp from "../hp-mp-ui/hp-mp";
 import useCharacterSituationStore from "@/store/use-character-situation-store";
 import { useInteractStore } from "@/store/use-interact-store";
 import { useShallow } from 'zustand/react/shallow';
+import useStageStore from "@/store/use-stage-store";
+import { useMonsterStore } from "@/store/use-monster-store";
 
 const Character = () => {
   const [frame, setFrame] = useState(0);
+  const [atFirst, setAtFirst] = useState(true);
 
   const typingSpeed = useTypingStore(state => state.cpm);
-
-  // const { totalFrames, frameWidth, frameHeight, frameDuration, characterImage, updateCharacterSettings, reduceHp, currentJob, changeJob } = useCharacterStore();
 
   const {
     totalFrames,
@@ -34,10 +35,31 @@ const Character = () => {
   )
 
   const { updateActions, characterAction } = useInteractStore();
+  const { modalState } = useStageStore();
+  const { appearMonster } = useMonsterStore();
+
+  // useEffect(() => {
+  //   if (appearMonster && modalState === "close") {
+  //     if (atFirst) {
+  //       updateCharacterSettings("Idle");
+  //       setAtFirst(false);
+  //       setTimeout(() => {
+  //         updateCharacterSettings(characterAction);
+  //       }, 1000)
+  //     }
+  //     updateCharacterSettings(characterAction);
+  //     // updateCharacterSettings("Idle");
+  //     // setTimeout(() => {
+  //     //   updateCharacterSettings(characterAction);
+  //     // }, 1000)
+  //   } else {
+  //     updateCharacterSettings(characterAction);
+  //   }
+  // }, [characterAction, typingSpeed]);
 
   useEffect(() => {
     updateCharacterSettings(characterAction);
-  }, [characterAction, typingSpeed]);
+  }, [characterAction, typingSpeed])
 
   useEffect(() => {
     updateActions();
@@ -50,7 +72,7 @@ const Character = () => {
 
     return () => clearInterval(interval); 
   }, [frameDuration, totalFrames]);
-  
+
   return (
     <>
       <div className="flex w-full h-full relative">

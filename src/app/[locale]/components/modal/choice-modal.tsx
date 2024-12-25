@@ -25,7 +25,7 @@ const ChoiceModal = () => {
 
   const handleChangeJob = (job: string) => {
     changeJob(job);
-    resetTyping();
+    // resetTyping();
     setModalState("close");
     onClose();
 
