@@ -1,16 +1,12 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
-import useMonsterSituationStore from "./use-character-situation-store";
-import { useInteractStore } from "./use-interact-store";
-
-type MonsterDetails = {
-  monsterNumber: number;
-  monsterImage: string;
-  monsterHP: number;
-}
+import { subscribeWithSelector } from "zustand/middleware";
 
 interface MonsterState {
-  monster: MonsterDetails;
+  monsterNumber: number;
+  monsterImage: string;
+  monsterHP: number
+  setMonsterNumber: (newNumber: number) => void;
   totalFrames: number; // 스프라이트 시트에 있는 총 프레임 수
   frameWidth: number; // 각 프레임의 너비 (px)
   frameHeight: number; // 각 프레임의 높이 (px)
@@ -18,13 +14,20 @@ interface MonsterState {
   updateMonsterSettings: (actionState: string) => void;
   appearMonster: boolean;
   setAppearMonster: (value: boolean) => void;
+  monsterReduceHp: (amount: number) => void;
 }
 
-export const useMonsterStore = create<MonsterState>((set, get) => ({
-  monster: {
-    monsterNumber: 0,
-    monsterImage: "",
-    monsterHP: 100,
+export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, get) => ({
+  // monster: {
+  //   // monsterNumber: 0,
+  //   monsterImage: "",
+  //   monsterHP: 100,
+  // },
+  monsterNumber: 0,
+  monsterImage: "",
+  monsterHP: 100,
+  setMonsterNumber: (newNumber) => {
+    set({ monsterNumber: newNumber });
   },
   totalFrames: 7,
   frameWidth: 200,
@@ -32,19 +35,18 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
   frameDuration: 300,
   updateMonsterSettings: (monsterAction) => {
     const typedCharacters = useTypingStore.getState().typedCharacters;
-    const monster = useMonsterStore.getState().monster;
-    // const { inUsual ,inCombat, isHurt, isDying } = useMonsterSituationStore.getState();
-    // const { monsterAction } = useInteractStore.getState();
+    const monsterNumber = useMonsterStore.getState().monsterNumber;
+    const monsterHP = useMonsterStore.getState().monsterHP;
 
     let action: "Idle" | "Hurt" | "Dead" | "Attack_1" = "Idle";
     let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior";
     let totalFrames: number;
     
-    if (monster.monsterNumber === 0) {
+    if (monsterNumber === 0) {
       monsterType = "Skeleton_Archer";
-    } else if (monster.monsterNumber === 1) {
+    } else if (monsterNumber === 1) {
       monsterType = "Skeleton_Spearman";
-    } else if (monster.monsterNumber === 2) {
+    } else if (monsterNumber === 2) {
       monsterType = "Skeleton_Warrior";
     } else {
       monsterType = "Skeleton_Archer"; // 기본 값
@@ -69,11 +71,9 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
     totalFrames = framesMap[monsterType][action];
 
     set({
-      monster: {
-        monsterNumber: 0,
-        monsterImage: `url("/game_images/skeleton/${monsterType}/${action}.png")`,
-        monsterHP: 100,
-      },
+      monsterNumber: monsterNumber,
+      monsterImage: `url("/game_images/skeleton/${monsterType}/${action}.png")`,
+      monsterHP: monsterHP,
       totalFrames,
       frameWidth: 200,
       frameHeight: 200,
@@ -87,5 +87,24 @@ export const useMonsterStore = create<MonsterState>((set, get) => ({
     set({
       appearMonster: value
     })
+  },
+  monsterReduceHp: (amount) => {
+    set((state) => {
+      const newHp = Math.max(state.monsterHP - amount, 0);
+
+      return {
+        monsterHP: newHp,
+      }
+    });
   }
-}))
+})));
+
+useMonsterStore.subscribe(
+  (state) => state.monsterHP, // hp 상태 변화 감지
+  (monsterHP) => {
+    if (monsterHP <= 0) {
+      console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
+      useMonsterStore.getState().updateMonsterSettings("Dead");
+    }
+  }
+);

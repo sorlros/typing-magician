@@ -13,7 +13,7 @@ interface TypingState {
   setCorrectCharacters: (correct: number) => void;
   setTypedCharacters: (char: number) => void;
   updatedTypingSpeed: () => number;
-  decreaseCPM: () => void;
+  // decreaseCPM: () => void;
   resetTyping: () => void;
   sentenceNumber: number;
   addSentenceNumber: () => void;
@@ -63,7 +63,7 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     }));
   },
   updatedTypingSpeed: () => {
-    const { startTime, cpm, totalTypedCharacters, totalElapsedTime, accuracy } = get();
+    const { startTime, cpm, totalTypedCharacters, totalElapsedTime, accuracy, lastTypedTime } = get();
 
     if (startTime === null) {
       set({
@@ -88,14 +88,22 @@ export const useTypingStore = create<TypingState>((set, get) => ({
       cpm: updatedCPM,
     });
 
-    return updatedCPM;
+    if (currentTime - lastTypedTime > 1500) {
+      set({
+        cpm: Math.max(cpm - 10, 0),
+      });
+    }
+  
+    return get().cpm;
+
+    // return updatedCPM;
   },
-  decreaseCPM: () => {
-    const { cpm } = get();
-    set({
-      cpm: Math.max(cpm - 10, 0),
-    });
-  },
+  // decreaseCPM: () => {
+  //   const { cpm } = get();
+  //   set({
+  //     cpm: Math.max(cpm - 10, 0),
+  //   });
+  // },
   resetTyping: () => {
     const { totalTypedCharacters, totalElapsedTime, startTime } = get();
 

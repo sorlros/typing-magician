@@ -1,7 +1,16 @@
 import React, { useEffect } from 'react'
 import Image from 'next/image'
+import { useCharacterStore } from '@/store/use-character-store'
+import { useMonsterStore } from '@/store/use-monster-store';
 
 const HpAndMp = () => {
+  const characterHP = useCharacterStore((state) => state.characterHP);
+  const monsterHP = useMonsterStore((state) => state.monsterHP);
+
+  // 해야 할것
+  // 캐릭터가 "Skill" 상태일 때 로직
+  // HP MP의 UI 유동적으로 변경 로직
+  // typingArea컴포넌트의 loadNextSentence시 monsterNumber값 변경
   useEffect(() => {
 
   },[])

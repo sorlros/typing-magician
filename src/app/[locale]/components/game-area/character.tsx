@@ -4,11 +4,8 @@ import { useEffect, useState } from "react";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
-import useCharacterSituationStore from "@/store/use-character-situation-store";
 import { useInteractStore } from "@/store/use-interact-store";
 import { useShallow } from 'zustand/react/shallow';
-import useStageStore from "@/store/use-stage-store";
-import { useMonsterStore } from "@/store/use-monster-store";
 
 const Character = () => {
   const [frame, setFrame] = useState(0);
@@ -22,7 +19,8 @@ const Character = () => {
     frameHeight,
     frameDuration,
     characterImage,
-    updateCharacterSettings
+    updateCharacterSettings,
+    characterReduceHp
   } = useCharacterStore(
     useShallow((state) => ({
       totalFrames: state.totalFrames,
@@ -30,32 +28,12 @@ const Character = () => {
       frameHeight: state.frameHeight,
       frameDuration: state.frameDuration,
       characterImage: state.characterImage,
-      updateCharacterSettings: state.updateCharacterSettings
+      updateCharacterSettings: state.updateCharacterSettings,
+      characterReduceHp: state.characterReduceHp
     }))
-  )
+  );
 
   const { updateActions, characterAction } = useInteractStore();
-  const { modalState } = useStageStore();
-  const { appearMonster } = useMonsterStore();
-
-  // useEffect(() => {
-  //   if (appearMonster && modalState === "close") {
-  //     if (atFirst) {
-  //       updateCharacterSettings("Idle");
-  //       setAtFirst(false);
-  //       setTimeout(() => {
-  //         updateCharacterSettings(characterAction);
-  //       }, 1000)
-  //     }
-  //     updateCharacterSettings(characterAction);
-  //     // updateCharacterSettings("Idle");
-  //     // setTimeout(() => {
-  //     //   updateCharacterSettings(characterAction);
-  //     // }, 1000)
-  //   } else {
-  //     updateCharacterSettings(characterAction);
-  //   }
-  // }, [characterAction, typingSpeed]);
 
   useEffect(() => {
     updateCharacterSettings(characterAction);
@@ -65,13 +43,32 @@ const Character = () => {
     updateActions();
   }, [typingSpeed])
 
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setFrame((prevFrame) => (prevFrame + 1) % totalFrames);
+  //   }, frameDuration);
+
+  //   return () => clearInterval(interval); 
+  // }, [frameDuration, totalFrames]);
   useEffect(() => {
     const interval = setInterval(() => {
-      setFrame((prevFrame) => (prevFrame + 1) % totalFrames);
+      setFrame((prevFrame) => {
+        const nextFrame = (prevFrame + 1) % totalFrames;
+  
+        // 모든 프레임이 끝난 후(마지막 프레임에서 첫 프레임으로 넘어가기 전)
+        if (nextFrame === 0 && characterAction === "Hurt") {
+          // 체력 감소 로직 실행
+          characterReduceHp(5); // 캐릭터의 체력 감소
+          console.log("캐릭터가 공격을 받았습니다.");
+        }
+  
+        return nextFrame;
+      });
     }, frameDuration);
-
-    return () => clearInterval(interval); 
-  }, [frameDuration, totalFrames]);
+  
+    return () => clearInterval(interval);
+  }, [frameDuration, totalFrames, characterAction]);
+  
 
   return (
     <>

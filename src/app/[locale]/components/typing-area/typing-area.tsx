@@ -23,7 +23,7 @@ const TypingArea = () => {
     // cpm,
     updatedTypingSpeed,
     resetTyping,
-    decreaseCPM,
+    // decreaseCPM,
     setAccuracy,
     accuracy,
     correctCharacters,
@@ -39,7 +39,7 @@ const TypingArea = () => {
       // cpm: state.cpm,
       updatedTypingSpeed: state.updatedTypingSpeed,
       resetTyping: state.resetTyping,
-      decreaseCPM: state.decreaseCPM,
+      // decreaseCPM: state.decreaseCPM,
       setAccuracy: state.setAccuracy,
       accuracy: state.accuracy,
       correctCharacters: state.correctCharacters,
@@ -81,9 +81,10 @@ const TypingArea = () => {
   );
 
   // Monster 관련 상태 구독
-  const { setAppearMonster } = useMonsterStore(
+  const { setAppearMonster, monsterNumber } = useMonsterStore(
     (state) => ({
       setAppearMonster: state.setAppearMonster,
+      monsterNumber: state.monsterNumber,
     }),
   );
 
@@ -125,16 +126,16 @@ const TypingArea = () => {
     return () => clearInterval(typingInterval);
   }, []);
 
-  useEffect(() => {
-    const decreaseInterval = setInterval(() => {
-      // console.log("lastTypedTime", lastTypedTime)
-      if (Date.now() - lastTypedTime > 1500) {
-        decreaseCPM();
-      }
-    }, 1000);
+  // useEffect(() => {
+  //   const decreaseInterval = setInterval(() => {
+  //     // console.log("lastTypedTime", lastTypedTime)
+  //     if (Date.now() - lastTypedTime > 1500) {
+  //       decreaseCPM();
+  //     }
+  //   }, 1000);
   
-    return () => clearInterval(decreaseInterval);
-  }, [lastTypedTime, decreaseCPM]);
+  //   return () => clearInterval(decreaseInterval);
+  // }, [lastTypedTime, decreaseCPM]);
 
   // useEffect(() => {
   //   // 타이핑 속도 업데이트
@@ -194,6 +195,11 @@ const TypingArea = () => {
     initializeIndex();
   };
 
+  // asdasdad
+  const handleMonsterNumber = () => {
+    monsterNumber
+  }
+
   const loadNextSentence = () => {
     try {
       // 현재 문장을 초기화
@@ -204,6 +210,9 @@ const TypingArea = () => {
       setAppearMonster(true);
 
       setModalState("open");
+
+      // 몬스터 넘버 변경
+      // if (monster.monsterNumber)
   
       // 상태 변경이 완료된 이후 실행될 로직
       setTimeout(() => {

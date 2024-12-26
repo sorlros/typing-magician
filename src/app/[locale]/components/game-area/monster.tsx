@@ -21,18 +21,22 @@ const Monster = () => {
 
   const typingSpeed = useTypingStore(state => state.cpm);
 
-  const { totalFrames, frameWidth, frameHeight, frameDuration, monster, updateMonsterSettings, appearMonster } = useMonsterStore(state => ({
-    monster: state.monster,
+  const { totalFrames, frameWidth, frameHeight, frameDuration, monsterNumber, monsterImage, monsterHP, updateMonsterSettings, appearMonster, monsterReduceHp } = useMonsterStore(state => ({
+    monsterNumber: state.monsterNumber,
+    monsterImage: state.monsterImage,
+    monsterHP: state.monsterHP,
     totalFrames: state.totalFrames,
     frameWidth: state.frameWidth,
     frameHeight: state.frameHeight,
     frameDuration: state.frameDuration,
     updateMonsterSettings: state.updateMonsterSettings,
-    appearMonster: state.appearMonster
+    appearMonster: state.appearMonster,
+    monsterReduceHp: state.monsterReduceHp,
   }));
 
   const { modalState } = useStageStore();
-  const { updateActions, monsterAction } = useInteractStore();
+  const { updateActions, monsterAction, characterAction } = useInteractStore();
+  // const characterAction = useCharacterStore(state => state.characterAction)
 
   useEffect(() => {
     updateMonsterSettings(monsterAction);
@@ -42,24 +46,47 @@ const Monster = () => {
     updateActions();
   }, [typingSpeed])
 
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setFrame((prevFrame) => {
+  //       // console.log("111", monsterSituation.isHurt)
+  //       const nextFrame = (prevFrame + 1) % totalFrames;
+        
+  //       // if (nextFrame === 0 && monsterSituation.inCombat) {
+  //       //   console.log('마지막 프레임에 도달했습니다!');
+  //       //   setTimeout(() => {
+  //       //     monsterSituation.setMonsterSituations("isDying");
+  //       //   }, 150);
+  //       // }
+  //       return nextFrame;
+  //     });
+  //   }, frameDuration);
+  
+  //   return () => clearInterval(interval);
+  // }, [frameDuration, totalFrames]);
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setFrame((prevFrame) => {
-        // console.log("111", monsterSituation.isHurt)
         const nextFrame = (prevFrame + 1) % totalFrames;
-        
-        // if (nextFrame === 0 && monsterSituation.inCombat) {
-        //   console.log('마지막 프레임에 도달했습니다!');
-        //   setTimeout(() => {
-        //     monsterSituation.setMonsterSituations("isDying");
-        //   }, 150);
-        // }
+  
+        // 모든 프레임이 끝난 후(마지막 프레임에서 첫 프레임으로 넘어가기 전)
+        if (nextFrame === 0 && monsterAction === "Hurt") {
+          monsterReduceHp(5);
+          console.log("몬스터가 공격을 받았습니다.");
+
+          if (characterAction === "Skill") {
+            monsterReduceHp(30);
+            console.log("캐릭터가 스킬을 사용");
+          }
+        }
+  
         return nextFrame;
       });
     }, frameDuration);
   
     return () => clearInterval(interval);
-  }, [frameDuration, totalFrames]);
+  }, [frameDuration, totalFrames, monsterAction]);
 
   useEffect(() => {
     if (appearMonster && modalState === "close") {
@@ -82,7 +109,7 @@ const Monster = () => {
   //   }
   // }, [monsterCondition]);
 
-  if (hidden || !monster.monsterImage) {
+  if (hidden || !monsterImage) {
     return null;
   }
   
@@ -105,7 +132,7 @@ const Monster = () => {
           style={{ 
             width: `${frameWidth}px`,
             height: `${frameHeight}px`,
-            backgroundImage: `${monster.monsterImage}`,
+            backgroundImage: `${monsterImage}`,
             backgroundPosition: `-${frame * frameWidth}px 0px`,
             backgroundSize: `${frameWidth * totalFrames}px 200px`,
           }}
