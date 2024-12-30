@@ -12,11 +12,6 @@ import { useShallow } from "zustand/react/shallow";
 import useStageStore from "@/store/use-stage-store";
 
 const TypingArea = () => {
-  // const { updatedTypingSpeed, resetTyping, decreaseCPM, setAccuracy, accuracy, correctCharacters, setCorrectCharacters, setTypedCharacters, typedCharacters } = useTypingStore();
-  // const { text, typedText, decomposedText, setTypedText, setDecomposedText, initializeIndex, currentIndex } = useTextStore();
-  // const { setAppearMonster } = useMonsterStore();
-  // const { sentenceNumber, addSentenceNumber} = useTypingStore();
-  // const { isOpen, onClose, onOpen } = useChoice();
   const {
     startTime,
     lastTypedTime,
@@ -126,54 +121,12 @@ const TypingArea = () => {
     return () => clearInterval(typingInterval);
   }, []);
 
-  // useEffect(() => {
-  //   const decreaseInterval = setInterval(() => {
-  //     // console.log("lastTypedTime", lastTypedTime)
-  //     if (Date.now() - lastTypedTime > 1500) {
-  //       decreaseCPM();
-  //     }
-  //   }, 1000);
-  
-  //   return () => clearInterval(decreaseInterval);
-  // }, [lastTypedTime, decreaseCPM]);
-
-  // useEffect(() => {
-  //   // 타이핑 속도 업데이트
-  //   const typingInterval = setInterval(() => {
-  //     updatedTypingSpeed();
-  //   }, 2000);
-
-  //   // 타이핑 입력이 없으면 CPM 감소
-  //   const decreaseInterval = setInterval(() => {
-  //     const currentTime = Date.now();
-  //     if (lastTypedTime && currentTime - lastTypedTime > 1500) {
-  //       decreaseCPM();
-  //     }
-  //   }, 1000); // 1초마다 실행
-
-  //   return () => {
-  //     clearInterval(typingInterval);
-  //     clearInterval(decreaseInterval);
-  //   };
-  // }, [updatedTypingSpeed, decreaseCPM, lastTypedTime]);
-
   useEffect(() => {
     if (typedCharacters > 0) {
       // const typingAccuracy = setAccuracy()
       setRealTimeAccuracy(setAccuracy());
     }
   }, [typedCharacters, correctCharacters])
-
-  // useEffect(() => {
-  //   if (typedCharacters > 0) {
-  //     const interval = setInterval(() => {
-  //       // const speed = updatedTypingSpeed();
-  //       setTypingSpeed(updatedTypingSpeed());
-  //     }, 100); // 100ms마다 타이핑 속도 갱신
-    
-  //     return () => clearInterval(interval);
-  //   }
-  // }, []);
 
   const calculateTotalMatches = useCallback((newText: string) => {
     let totalMatches = 0;
@@ -195,10 +148,10 @@ const TypingArea = () => {
     initializeIndex();
   };
 
-  // asdasdad
-  const handleMonsterNumber = () => {
-    monsterNumber
-  }
+  // // asdasdad
+  // const handleMonsterNumber = () => {
+  //   monsterNumber
+  // }
 
   const loadNextSentence = () => {
     try {

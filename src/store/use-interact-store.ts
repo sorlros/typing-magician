@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
 import { useMonsterStore } from "./use-monster-store";
+import { useCharacterStore } from "./use-character-store";
 
 interface InteractStore {
   characterAction: "Idle" | "Attack" | "Hurt" | "Dead" | "Skill";
@@ -10,8 +11,8 @@ interface InteractStore {
   setCharacterAction: (action: InteractStore["characterAction"]) => void;
   setMonsterAction: (action: InteractStore["monsterAction"]) => void;
   updateActions: () => void;
-  reduceCharacterHp: (amount: number) => void;
-  reduceMonsterHp: (amount: number) => void;
+  // reduceCharacterHp: (amount: number) => void;
+  // reduceMonsterHp: (amount: number) => void;
 }
 
 export const useInteractStore = create<InteractStore>((set, get) => ({
@@ -24,25 +25,31 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
     set((state) => ({
       characterAction: action,
       ...(action === "Attack" && { monsterAction: "Hurt" }),
+      ...(action === "Dead" && { monsterAction: "Idle" }),
     })),
 
   setMonsterAction: (action) =>
     set((state) => ({
       monsterAction: action,
       ...(action === "Attack" && { characterAction: "Hurt" }),
+      ...(action === "Dead" && { characterAction: "Idle" }),
     })),
 
   updateActions: () => {
     const { cpm } = useTypingStore.getState(); // 타이핑 속도 가져오기
-    const { characterHp, monsterHp } = get();
+    const { characterAction, monsterAction } = get();
+    const characterHP = useCharacterStore.getState().characterHP;
+    const monsterHP = useMonsterStore.getState().monsterHP;
 
     // 캐릭터 또는 몬스터가 죽었는지 확인
-    if (characterHp <= 0) {
-      set({ characterAction: "Dead" });
+    if (characterHP <= 0 || characterAction === "Dead") {
+      // set({ characterAction: "Dead" });
+      set({ monsterAction: "Idle" });
       return;
     }
-    if (monsterHp <= 0) {
-      set({ monsterAction: "Dead" });
+    if (monsterHP <= 0 || monsterAction === "Dead") {
+      // set({ monsterAction: "Dead" });
+      set({ characterAction: "Idle" });
       return;
     }
 
@@ -50,7 +57,7 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
     // 몬스터가 공격 가능한 조건: 타이핑 속도 100 이하
 
     if (appearMonster) {
-      if (cpm <= 100 && monsterHp > 0 && characterHp > 0) {
+      if (cpm <= 100 && monsterHP > 0 && characterHP > 0) {
         set({ monsterAction: "Attack", characterAction: "Hurt" });
       } else if (cpm > 100) {
         // 타이핑 속도가 높을 경우 캐릭터가 공격
@@ -65,13 +72,13 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
     
   },
 
-  reduceCharacterHp: (amount) =>
-    set((state) => ({
-      characterHp: Math.max(state.characterHp - amount, 0),
-    })),
+  // reduceCharacterHp: (amount) =>
+  //   set((state) => ({
+  //     characterHp: Math.max(state.characterHp - amount, 0),
+  //   })),
 
-  reduceMonsterHp: (amount) =>
-    set((state) => ({
-      monsterHp: Math.max(state.monsterHp - amount, 0),
-    })),
+  // reduceMonsterHp: (amount) =>
+  //   set((state) => ({
+  //     monsterHp: Math.max(state.monsterHp - amount, 0),
+  //   })),
 }));

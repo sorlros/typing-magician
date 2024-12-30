@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
 import { subscribeWithSelector } from "zustand/middleware";
+import { useCharacterStore } from "./use-character-store";
 
 interface MonsterState {
   monsterNumber: number;
@@ -105,6 +106,7 @@ useMonsterStore.subscribe(
     if (monsterHP <= 0) {
       console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
       useMonsterStore.getState().updateMonsterSettings("Dead");
+      // useCharacterStore.getState().updateCharacterSettings("Idle");
     }
   }
 );

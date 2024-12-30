@@ -45,25 +45,6 @@ const Monster = () => {
   useEffect(() => {
     updateActions();
   }, [typingSpeed])
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setFrame((prevFrame) => {
-  //       // console.log("111", monsterSituation.isHurt)
-  //       const nextFrame = (prevFrame + 1) % totalFrames;
-        
-  //       // if (nextFrame === 0 && monsterSituation.inCombat) {
-  //       //   console.log('마지막 프레임에 도달했습니다!');
-  //       //   setTimeout(() => {
-  //       //     monsterSituation.setMonsterSituations("isDying");
-  //       //   }, 150);
-  //       // }
-  //       return nextFrame;
-  //     });
-  //   }, frameDuration);
-  
-  //   return () => clearInterval(interval);
-  // }, [frameDuration, totalFrames]);
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -72,13 +53,22 @@ const Monster = () => {
   
         // 모든 프레임이 끝난 후(마지막 프레임에서 첫 프레임으로 넘어가기 전)
         if (nextFrame === 0 && monsterAction === "Hurt") {
-          monsterReduceHp(5);
+          monsterReduceHp(3);
           console.log("몬스터가 공격을 받았습니다.");
 
           if (characterAction === "Skill") {
             monsterReduceHp(30);
             console.log("캐릭터가 스킬을 사용");
           }
+        }
+
+        if (monsterAction === "Dead") {
+          if (prevFrame === totalFrames - 1) {
+            clearInterval(interval); // Interval 정지
+            console.log("몬스터가 사망했습니다.");
+            return prevFrame; // 마지막 프레임 유지
+          }
+          return prevFrame + 1; // 마지막 프레임에 도달하기까지 계속 증가
         }
   
         return nextFrame;
@@ -123,9 +113,9 @@ const Monster = () => {
         }}
         // onTransitionEnd={handleTransitionEnd}
       >
-        {/* <div className="absolute top-12 left-[70px] z-50">
-          <HpAndMp />
-        </div> */}
+       <div className="absolute top-12 left-[70px] z-50">
+          <HpAndMp hp={monsterHP} />
+        </div>
         
         <div
           className={`absolute transform translate scale-x-[-1]`}

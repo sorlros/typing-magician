@@ -19,6 +19,7 @@ const Character = () => {
     frameHeight,
     frameDuration,
     characterImage,
+    characterHP,
     updateCharacterSettings,
     characterReduceHp
   } = useCharacterStore(
@@ -28,6 +29,7 @@ const Character = () => {
       frameHeight: state.frameHeight,
       frameDuration: state.frameDuration,
       characterImage: state.characterImage,
+      characterHP: state.characterHP,
       updateCharacterSettings: state.updateCharacterSettings,
       characterReduceHp: state.characterReduceHp
     }))
@@ -37,6 +39,7 @@ const Character = () => {
 
   useEffect(() => {
     updateCharacterSettings(characterAction);
+    console.log("characterAction", characterAction);
   }, [characterAction, typingSpeed])
 
   useEffect(() => {
@@ -45,36 +48,64 @@ const Character = () => {
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
-  //     setFrame((prevFrame) => (prevFrame + 1) % totalFrames);
-  //   }, frameDuration);
+  //     setFrame((prevFrame) => {
+  //       const nextFrame = (prevFrame + 1) % totalFrames;
+  //       // 모든 프레임이 끝난 후(마지막 프레임에서 첫 프레임으로 넘어가기 전)
+  //       if (nextFrame === 0 && characterAction === "Hurt") {
+  //         // 체력 감소 로직 실행
+  //         characterReduceHp(3); // 캐릭터의 체력 감소
+  //         console.log("캐릭터가 공격을 받았습니다.");
+  //       }
 
-  //   return () => clearInterval(interval); 
-  // }, [frameDuration, totalFrames]);
+  //       if (characterAction === "Dead") {
+  //         if (prevFrame === totalFrames - 1) {
+  //           clearInterval(interval); // Interval 정지
+  //           console.log("캐릭터가 사망했습니다.");
+  //           return prevFrame; // 마지막 프레임 유지
+  //         }
+  //         return prevFrame + 1; // 마지막 프레임에 도달하기까지 계속 증가
+  //       }
+  
+  //       return nextFrame;
+  //     });
+  //   }, frameDuration);
+  
+  //   return () => clearInterval(interval);
+  // }, [frameDuration, totalFrames, characterAction]);
   useEffect(() => {
     const interval = setInterval(() => {
       setFrame((prevFrame) => {
-        const nextFrame = (prevFrame + 1) % totalFrames;
+        // 캐릭터가 "Dead" 상태일 때 프레임 멈춤
+        if (characterAction === "Dead") {
+          if (prevFrame === totalFrames - 1) {
+            clearInterval(interval); // Interval 정지
+            console.log("캐릭터가 사망했습니다. 마지막 프레임에서 멈춥니다.");
+            return prevFrame; // 마지막 프레임 유지
+          }
+          return prevFrame + 1; // 사망 애니메이션이 마지막 프레임에 도달할 때까지 증가
+        }
   
-        // 모든 프레임이 끝난 후(마지막 프레임에서 첫 프레임으로 넘어가기 전)
+        // Hurt 상태에서 체력 감소 로직 실행
+        const nextFrame = (prevFrame + 1) % totalFrames;
         if (nextFrame === 0 && characterAction === "Hurt") {
-          // 체력 감소 로직 실행
-          characterReduceHp(5); // 캐릭터의 체력 감소
+          characterReduceHp(3); // 체력 감소
           console.log("캐릭터가 공격을 받았습니다.");
         }
   
-        return nextFrame;
+        return nextFrame; // 기본 프레임 업데이트
       });
     }, frameDuration);
   
     return () => clearInterval(interval);
   }, [frameDuration, totalFrames, characterAction]);
   
+  
 
   return (
     <>
       <div className="flex w-full h-full relative">
         <div className="absolute top-12 left-[70px] z-50">
-          <HpAndMp />
+          <HpAndMp hp={characterHP} />
         </div>
         <div
           className="absolute left-10 top-0 bottom-0 right-10"

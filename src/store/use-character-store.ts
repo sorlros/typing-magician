@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
 import { subscribeWithSelector } from "zustand/middleware";
+import { useMonsterStore } from "./use-monster-store";
+import { useInteractStore } from "./use-interact-store";
 
 interface CharacterState {
   totalFrames: number; // 스프라이트 시트에 있는 총 프레임 수
@@ -30,6 +32,7 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
     const typingSpeed = useTypingStore.getState().cpm;
     const currentJob = get().currentJob;
     // const { characterAction } = useInteractStore.getState();
+    const monsterAction = useInteractStore.getState().monsterAction;
     
     let totalFrames: number;
     let action: "Idle" | "Walk" | "Run" | "Hurt" | "Dead" | "Attack" | "Skill" = "Idle";
@@ -46,7 +49,8 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
       action = "Run";
     } else if (characterAction === "Idle" && typingSpeed > 0) {
       action = "Walk";
-    } else if (characterAction === "Idle" && typingSpeed === 0) {
+      // ?? 
+    } else if (characterAction === "Idle" && typingSpeed === 0 || monsterAction === "Dead") {
       action = "Idle";
     } else if (characterAction === "Skill") {
       action = "Skill";
@@ -100,7 +104,7 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
   characterReduceHp: (amount) => {
     set((state) => {
       const newHp = Math.max(state.characterHP - amount, 0);
-      
+
       return {
         characterHP: newHp,
       }
@@ -114,6 +118,7 @@ useCharacterStore.subscribe(
     if (characterHP <= 0) {
       console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
       useCharacterStore.getState().updateCharacterSettings("Dead");
+      // useMonsterStore.getState().updateMonsterSettings("Idle");
     }
   }
 );
