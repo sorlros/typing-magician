@@ -76,10 +76,11 @@ const TypingArea = () => {
   );
 
   // Monster 관련 상태 구독
-  const { setAppearMonster, monsterNumber } = useMonsterStore(
+  const { setAppearMonster, monsterNumber, setMonsterNumber } = useMonsterStore(
     (state) => ({
       setAppearMonster: state.setAppearMonster,
       monsterNumber: state.monsterNumber,
+      setMonsterNumber: state.setMonsterNumber
     }),
   );
 
@@ -147,12 +148,7 @@ const TypingArea = () => {
     // resetTyping();
     initializeIndex();
   };
-
-  // // asdasdad
-  // const handleMonsterNumber = () => {
-  //   monsterNumber
-  // }
-
+  
   const loadNextSentence = () => {
     try {
       // 현재 문장을 초기화
@@ -166,6 +162,9 @@ const TypingArea = () => {
 
       // 몬스터 넘버 변경
       // if (monster.monsterNumber)
+      if (sentenceNumber > 0) {
+        setMonsterNumber();
+      }
   
       // 상태 변경이 완료된 이후 실행될 로직
       setTimeout(() => {

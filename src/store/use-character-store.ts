@@ -39,21 +39,25 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
     let frameJob: "Fire_vizard" | "Wanderer_Magican" | "Lightning_Mage" = "Fire_vizard";
 
     // 캐릭터 행동 변수 정의
-    if (characterAction === "Dead") {
-      action = "Dead";
-    } else if (characterAction === "Hurt") {
-      action = "Hurt";
-    } else if (characterAction === "Attack") {
-      action = "Attack";
-    } else if (characterAction === "Idle" && typingSpeed > 150) {
-      action = "Run";
-    } else if (characterAction === "Idle" && typingSpeed > 0) {
-      action = "Walk";
-      // ?? 
-    } else if (characterAction === "Idle" && typingSpeed === 0 || monsterAction === "Dead") {
+    if (monsterAction === "Dead") {
       action = "Idle";
-    } else if (characterAction === "Skill") {
-      action = "Skill";
+    } else {
+      // 캐릭터 행동 변수 정의
+      if (characterAction === "Dead") {
+        action = "Dead";
+      } else if (characterAction === "Hurt") {
+        action = "Hurt";
+      } else if (characterAction === "Attack") {
+        action = "Attack";
+      } else if (characterAction === "Idle" && typingSpeed > 150) {
+        action = "Run";
+      } else if (characterAction === "Idle" && typingSpeed > 0) {
+        action = "Walk";
+      } else if (characterAction === "Idle" && typingSpeed === 0) {
+        action = "Idle";
+      } else if (characterAction === "Skill") {
+        action = "Skill";
+      }
     }
     
     if (currentJob === "Fire vizard") {

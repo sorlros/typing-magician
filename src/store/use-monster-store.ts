@@ -5,9 +5,10 @@ import { useCharacterStore } from "./use-character-store";
 
 interface MonsterState {
   monsterNumber: number;
+  setMonsterNumber: () => void;
+  bossIndex: 1 | 2 | 3;
   monsterImage: string;
-  monsterHP: number
-  setMonsterNumber: (newNumber: number) => void;
+  monsterHP: number;
   totalFrames: number; // 스프라이트 시트에 있는 총 프레임 수
   frameWidth: number; // 각 프레임의 너비 (px)
   frameHeight: number; // 각 프레임의 높이 (px)
@@ -19,39 +20,65 @@ interface MonsterState {
 }
 
 export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, get) => ({
-  // monster: {
-  //   // monsterNumber: 0,
-  //   monsterImage: "",
-  //   monsterHP: 100,
-  // },
   monsterNumber: 0,
+  bossIndex: 1,
   monsterImage: "",
   monsterHP: 100,
-  setMonsterNumber: (newNumber) => {
-    set({ monsterNumber: newNumber });
+  setMonsterNumber: () => {
+    set((state) => {
+      const currentNumber = state.monsterNumber;
+      const newNumber = currentNumber === 3 ? 0 : currentNumber + 1;
+      const newMonsterHP = newNumber < 3 ? 100 : 250;
+  
+      return {
+        monsterNumber: newNumber,
+        monsterHP: newMonsterHP,
+      };
+    });
   },
   totalFrames: 7,
   frameWidth: 200,
   frameHeight: 200,
   frameDuration: 300,
   updateMonsterSettings: (monsterAction) => {
-    const typedCharacters = useTypingStore.getState().typedCharacters;
+    // const typedCharacters = useTypingStore.getState().typedCharacters;
     const monsterNumber = useMonsterStore.getState().monsterNumber;
     const monsterHP = useMonsterStore.getState().monsterHP;
+    const bossIndex = useMonsterStore.getState().bossIndex;
 
     let action: "Idle" | "Hurt" | "Dead" | "Attack_1" = "Idle";
-    let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior";
+    // // let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior" | "Gorgon_1" | "Gorgon_2" | "Gorgon_3";
+    // const bossTypes = ["Gorgon_1", "Gorgon_2", "Gorgon_3"];
     let totalFrames: number;
+    // let monsterType: string;
+
+    const framesMap = {
+      Skeleton_Archer: { Idle: 7, Hurt: 2, Dead: 5, Attack_1: 5 },
+      Skeleton_Spearman: { Idle: 7, Hurt: 3, Dead: 5, Attack_1: 4 },
+      Skeleton_Warrior: { Idle: 7, Hurt: 2, Dead: 4, Attack_1: 5 },
+      Gorgon_1: { Idle: 7, Hurt: 3, Dead: 3, Attack_1: 16 },
+      Gorgon_2: { Idle: 7, Hurt: 3, Dead: 3, Attack_1: 16 },
+      Gorgon_3: { Idle: 7, Hurt: 3, Dead: 3, Attack_1: 16 },
+    };
+
+    let monsterType: MonsterType;
     
-    if (monsterNumber === 0) {
-      monsterType = "Skeleton_Archer";
-    } else if (monsterNumber === 1) {
-      monsterType = "Skeleton_Spearman";
-    } else if (monsterNumber === 2) {
-      monsterType = "Skeleton_Warrior";
+    type MonsterType = keyof typeof framesMap;
+    
+    if (monsterNumber < 3) {
+      // 일반 몬스터 로직
+      if (monsterNumber === 0) {
+        monsterType = "Skeleton_Archer";
+      } else if (monsterNumber === 1) {
+        monsterType = "Skeleton_Spearman";
+      } else {
+        monsterType = "Skeleton_Warrior";
+      }
     } else {
-      monsterType = "Skeleton_Archer"; // 기본 값
+      // 보스 몬스터 로직
+      monsterType = `Gorgon_${bossIndex}` as MonsterType;
     }
+
 
     if (monsterAction === "Dead") {
       action = "Dead";
@@ -63,17 +90,20 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
       action = "Idle";
     }
   
-    const framesMap = {
-      Skeleton_Archer: { Idle: 7, Hurt: 2, Dead: 5, Attack_1: 5 },
-      Skeleton_Spearman: { Idle: 7, Hurt: 3, Dead: 5, Attack_1: 4 },
-      Skeleton_Warrior: { Idle: 7, Hurt: 2, Dead: 4, Attack_1: 5 },
-    };
+    // const framesMap = {
+    //   Skeleton_Archer: { Idle: 7, Hurt: 2, Dead: 5, Attack_1: 5 },
+    //   Skeleton_Spearman: { Idle: 7, Hurt: 3, Dead: 5, Attack_1: 4 },
+    //   Skeleton_Warrior: { Idle: 7, Hurt: 2, Dead: 4, Attack_1: 5 },
+    //   Gorgon_1: { Idle: 7, Hurt: 3, Dead: 3, Attack_1: 16 },
+    //   Gorgon_2: { Idle: 7, Hurt: 3, Dead: 3, Attack_1: 16 },
+    //   Gorgon_3: { Idle: 7, Hurt: 3, Dead: 3, Attack_1: 16 },
+    // };
 
     totalFrames = framesMap[monsterType][action];
 
     set({
       monsterNumber: monsterNumber,
-      monsterImage: `url("/game_images/skeleton/${monsterType}/${action}.png")`,
+      monsterImage: `url("/game_images/${monsterNumber < 3 ? "skeleton" : "gorgon"}/${monsterType}/${action}.png")`,
       monsterHP: monsterHP,
       totalFrames,
       frameWidth: 200,

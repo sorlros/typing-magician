@@ -14,15 +14,17 @@ import { useInteractStore } from "@/store/use-interact-store";
 
 const Monster = () => {
   const [frame, setFrame] = useState(0); // 현재 프레임 인덱스
-  const [hidden, setHidden] = useState<boolean>(true);
+  // const [hidden, setHidden] = useState<boolean>(true);
   const [position, setPosition] = useState("110%");
+  const [display, setDisplay] = useState("none");
 
   const { typedCharacters } = useTypingStore();
 
   const typingSpeed = useTypingStore(state => state.cpm);
 
-  const { totalFrames, frameWidth, frameHeight, frameDuration, monsterNumber, monsterImage, monsterHP, updateMonsterSettings, appearMonster, monsterReduceHp } = useMonsterStore(state => ({
+  const { totalFrames, frameWidth, frameHeight, frameDuration, monsterNumber, setMonsterNumber, monsterImage, monsterHP, updateMonsterSettings, appearMonster, setAppearMonster, monsterReduceHp } = useMonsterStore(state => ({
     monsterNumber: state.monsterNumber,
+    setMonsterNumber: state.appearMonster,
     monsterImage: state.monsterImage,
     monsterHP: state.monsterHP,
     totalFrames: state.totalFrames,
@@ -31,6 +33,7 @@ const Monster = () => {
     frameDuration: state.frameDuration,
     updateMonsterSettings: state.updateMonsterSettings,
     appearMonster: state.appearMonster,
+    setAppearMonster: state.setAppearMonster,
     monsterReduceHp: state.monsterReduceHp,
   }));
 
@@ -53,7 +56,7 @@ const Monster = () => {
   
         // 모든 프레임이 끝난 후(마지막 프레임에서 첫 프레임으로 넘어가기 전)
         if (nextFrame === 0 && monsterAction === "Hurt") {
-          monsterReduceHp(3);
+          monsterReduceHp(1);
           console.log("몬스터가 공격을 받았습니다.");
 
           if (characterAction === "Skill") {
@@ -80,12 +83,25 @@ const Monster = () => {
 
   useEffect(() => {
     if (appearMonster && modalState === "close") {
-      setHidden(false);
+      setDisplay("block");
+
       setTimeout(() => {
         setPosition("50%");
-      }, 700);
+      }, 500);
     }
   }, [typedCharacters, appearMonster]);
+
+  useEffect(() => {
+    if (monsterHP === 0) {
+      console.log("000000000")
+      setAppearMonster(false);
+      // setMonsterNumber();
+      setTimeout(() => {
+        setDisplay("none");
+        setPosition("110%");
+      }, 1500)
+    }
+  }, [monsterHP]);
 
   // const handleTransitionEnd = () => {
   //   characterSituation.setCharacterSituations("inCombat");
@@ -98,10 +114,6 @@ const Monster = () => {
   //     setHidden(true);
   //   }
   // }, [monsterCondition]);
-
-  if (hidden || !monsterImage) {
-    return null;
-  }
   
   return (
     <>
@@ -109,6 +121,7 @@ const Monster = () => {
         style={{
           position: "absolute",
           left: position,
+          display: display,
           transition: "left 3s ease",
         }}
         // onTransitionEnd={handleTransitionEnd}

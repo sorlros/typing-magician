@@ -71,14 +71,5 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
     }
     
   },
-
-  // reduceCharacterHp: (amount) =>
-  //   set((state) => ({
-  //     characterHp: Math.max(state.characterHp - amount, 0),
-  //   })),
-
-  // reduceMonsterHp: (amount) =>
-  //   set((state) => ({
-  //     monsterHp: Math.max(state.monsterHp - amount, 0),
-  //   })),
+  // 각종 상황에 따른 값들 여기서만들 것
 }));

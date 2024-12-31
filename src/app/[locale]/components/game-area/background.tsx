@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from 'next/image';
 import { useTypingStore } from '@/store/use-typing-store';
 import useCharacterSituationStore from '@/store/use-character-situation-store';
+import { useMonsterStore } from '@/store/use-monster-store';
 
 const Background = () => {
   const animeRef = useRef<HTMLDivElement | null>(null);
@@ -10,6 +11,7 @@ const Background = () => {
 
   const typingSpeed = useTypingStore(state => state.cpm);
   const situation = useCharacterSituationStore();
+  const appearMonster = useMonsterStore.getState().appearMonster;
 
   const [currentSpeedLevel, setCurrentSpeedLevel] = useState(0);
 
@@ -38,12 +40,12 @@ const Background = () => {
         });
       }
 
-      if (situation.inCombat) {
+      if (appearMonster) {
         if (animationRef.current) {
           // 애니메이션을 서서히 멈추도록 설정
           anime({
             targets: animeRef.current,
-            easing: "easeOutQuad", // 서서히 멈추는 이징 함수
+            easing: "easeOutQuad",
             update: () => {
               if (animationRef.current) {
                 animationRef.current.duration += 10000; // 속도 점차 줄이기
