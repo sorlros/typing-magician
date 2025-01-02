@@ -162,9 +162,9 @@ const TypingArea = () => {
 
       // 몬스터 넘버 변경
       // if (monster.monsterNumber)
-      if (sentenceNumber > 0) {
-        setMonsterNumber();
-      }
+      // if (sentenceNumber > 0) {
+      //   setMonsterNumber();
+      // }
   
       // 상태 변경이 완료된 이후 실행될 로직
       setTimeout(() => {

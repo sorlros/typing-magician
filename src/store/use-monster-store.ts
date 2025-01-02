@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
 import { subscribeWithSelector } from "zustand/middleware";
-import { useCharacterStore } from "./use-character-store";
+import { useInteractStore } from "./use-interact-store";
 
 interface MonsterState {
   monsterNumber: number;
@@ -45,6 +45,7 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
     const monsterNumber = useMonsterStore.getState().monsterNumber;
     const monsterHP = useMonsterStore.getState().monsterHP;
     const bossIndex = useMonsterStore.getState().bossIndex;
+    const characterAction = useInteractStore.getState().characterAction;
 
     let action: "Idle" | "Hurt" | "Dead" | "Attack_1" = "Idle";
     // // let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior" | "Gorgon_1" | "Gorgon_2" | "Gorgon_3";
@@ -79,16 +80,30 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
       monsterType = `Gorgon_${bossIndex}` as MonsterType;
     }
 
-
-    if (monsterAction === "Dead") {
-      action = "Dead";
-    } else if (monsterAction === "Hurt") {
-      action = "Hurt";
-    } else if (monsterAction === "Attack") {
-      action = "Attack_1";
-    } else if (monsterAction === "Idle") {
+    if (characterAction === "Dead") {
       action = "Idle";
+    } else {
+      if (monsterAction === "Dead") {
+        action = "Dead";
+      } else if (monsterAction === "Hurt") {
+        action = "Hurt";
+      } else if (monsterAction === "Attack") {
+        action = "Attack_1";
+      } else {
+        action = "Idle";
+      }
     }
+
+
+    // if (monsterAction === "Dead") {
+    //   action = "Dead";
+    // } else if (monsterAction === "Hurt") {
+    //   action = "Hurt";
+    // } else if (monsterAction === "Attack") {
+    //   action = "Attack_1";
+    // } else if (monsterAction === "Idle") {
+    //   action = "Idle";
+    // }
   
     // const framesMap = {
     //   Skeleton_Archer: { Idle: 7, Hurt: 2, Dead: 5, Attack_1: 5 },
