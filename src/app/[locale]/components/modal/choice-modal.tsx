@@ -4,7 +4,8 @@ import { useCharacterStore } from "@/store/use-character-store";
 import { useChoice } from "@/store/use-choice";
 import useStageStore from "@/store/use-stage-store";
 import { useTypingStore } from "@/store/use-typing-store";
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
+
 
 const ChoiceModal = () => {
   const { onClose, onOpen, isOpen } = useChoice();
@@ -17,6 +18,8 @@ const ChoiceModal = () => {
   );
   const sentenceNumber = useTypingStore((state) => state.sentenceNumber);
 
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
   useEffect(() => {
     if (sentenceNumber === 1) {
       onOpen();
@@ -28,6 +31,7 @@ const ChoiceModal = () => {
     // resetTyping();
     setModalState("close");
     onClose();
+    forceUpdate();
 
     setTimeout(() => {
       const inputElement = document.querySelector<HTMLInputElement>("#typingInput");

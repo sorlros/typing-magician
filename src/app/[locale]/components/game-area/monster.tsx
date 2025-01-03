@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { DotsProps } from "../../../libs/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
@@ -24,7 +24,7 @@ const Monster = () => {
 
   const { totalFrames, frameWidth, frameHeight, frameDuration, monsterNumber, setMonsterNumber, monsterImage, monsterHP, updateMonsterSettings, appearMonster, setAppearMonster, monsterReduceHp } = useMonsterStore(state => ({
     monsterNumber: state.monsterNumber,
-    setMonsterNumber: state.appearMonster,
+    setMonsterNumber: state.setMonsterNumber,
     monsterImage: state.monsterImage,
     monsterHP: state.monsterHP,
     totalFrames: state.totalFrames,
@@ -38,48 +38,61 @@ const Monster = () => {
   }));
 
   const { modalState } = useStageStore();
-  const { updateActions, monsterAction, characterAction } = useInteractStore();
+  const { updateActions, monsterAction, characterAction, setInActionToggle } = useInteractStore();
   // const characterAction = useCharacterStore(state => state.characterAction)
 
   useEffect(() => {
-    updateMonsterSettings(monsterAction);
-  }, [typedCharacters, updateMonsterSettings, monsterAction]);
-
-  useEffect(() => {
     updateActions();
-  }, [typingSpeed])
-  
+    updateMonsterSettings(monsterAction);
+  }, [typedCharacters, updateMonsterSettings, monsterAction, typingSpeed]);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setFrame((prevFrame) => {
-        const nextFrame = (prevFrame + 1) % totalFrames;
+    let animationFrameId: number;
+    let lastFrameTime = performance.now();
   
-        // 모든 프레임이 끝난 후(마지막 프레임에서 첫 프레임으로 넘어가기 전)
-        if (nextFrame === 0 && monsterAction === "Hurt") {
-          monsterReduceHp(1);
-          console.log("몬스터가 공격을 받았습니다.");
-
-          if (characterAction === "Skill") {
-            monsterReduceHp(30);
-            console.log("캐릭터가 스킬을 사용");
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - lastFrameTime;
+  
+      if (elapsed >= frameDuration) {
+        setFrame((prevFrame) => {
+          const nextFrame = (prevFrame + 1) % totalFrames;
+  
+          // 모든 프레임이 끝난 후(마지막 프레임에서 첫 프레임으로 넘어가기 전)
+          if (nextFrame === 0 && monsterAction === "Hurt") {
+            monsterReduceHp(1);
+            console.log("몬스터가 공격을 받았습니다.");
+  
+            if (characterAction === "Skill") {
+              monsterReduceHp(30);
+              console.log("캐릭터가 스킬을 사용했습니다.");
+            }
           }
-        }
-
-        if (monsterAction === "Dead") {
-          if (prevFrame === totalFrames - 1) {
-            clearInterval(interval); // Interval 정지
-            console.log("몬스터가 사망했습니다.");
-            return prevFrame; // 마지막 프레임 유지
+  
+          if (monsterAction === "Dead") {
+            if (prevFrame === totalFrames - 1) {
+              console.log("몬스터가 사망했습니다.");
+              return prevFrame; // 마지막 프레임 유지
+            }
+            return prevFrame + 1; // 마지막 프레임에 도달하기까지 계속 증가
           }
-          return prevFrame + 1; // 마지막 프레임에 도달하기까지 계속 증가
-        }
   
-        return nextFrame;
-      });
-    }, frameDuration);
+          return nextFrame;
+        });
   
-    return () => clearInterval(interval);
-  }, [frameDuration, totalFrames, monsterAction]);
+        lastFrameTime = currentTime;
+      }
+  
+      animationFrameId = requestAnimationFrame(animate);
+    };
+  
+    animationFrameId = requestAnimationFrame(animate);
+  
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [frameDuration, totalFrames, monsterAction, characterAction, monsterReduceHp]);
+  
+  
 
   useEffect(() => {
     if (appearMonster && modalState === "close") {
@@ -99,21 +112,21 @@ const Monster = () => {
       setTimeout(() => {
         setDisplay("none");
         setPosition("110%");
-      }, 1500)
+        setMonsterNumber();
+      }, 1500);
     }
   }, [monsterHP]);
 
-  // const handleTransitionEnd = () => {
-  //   characterSituation.setCharacterSituations("inCombat");
-  //   monsterSituation.setMonsterSituations("inCombat");
-  // } // 이 부분 수정할 것
 
-  // useEffect(() => {
-  //   if (monsterCondition.isDying) {
-  //     // 몬스터 사망 시 로직 (예: 사라지거나, 죽는 애니메이션 실행)
-  //     setHidden(true);
-  //   }
-  // }, [monsterCondition]);
+  const prevAppearMonster = useRef(appearMonster);
+
+  const handleTransitionEnd = () => {
+    if (prevAppearMonster.current !== appearMonster) {
+      console.log("AAAAAAAAAA");
+      setInActionToggle();
+      prevAppearMonster.current = appearMonster; // 현재 상태값을 업데이트
+    }
+  };
   
   return (
     <>
@@ -124,7 +137,7 @@ const Monster = () => {
           display: display,
           transition: "left 3s ease",
         }}
-        // onTransitionEnd={handleTransitionEnd}
+        onTransitionEnd={handleTransitionEnd}
       >
        <div className="absolute top-12 left-[70px] z-50">
           <HpAndMp hp={monsterHP} />

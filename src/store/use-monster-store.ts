@@ -25,6 +25,7 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
   monsterImage: "",
   monsterHP: 100,
   setMonsterNumber: () => {
+    // 보스와 몬스터 코드 단일화 할 것
     set((state) => {
       const currentNumber = state.monsterNumber;
       const newNumber = currentNumber === 3 ? 0 : currentNumber + 1;
@@ -41,17 +42,13 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
   frameHeight: 200,
   frameDuration: 300,
   updateMonsterSettings: (monsterAction) => {
-    // const typedCharacters = useTypingStore.getState().typedCharacters;
     const monsterNumber = useMonsterStore.getState().monsterNumber;
     const monsterHP = useMonsterStore.getState().monsterHP;
     const bossIndex = useMonsterStore.getState().bossIndex;
     const characterAction = useInteractStore.getState().characterAction;
 
     let action: "Idle" | "Hurt" | "Dead" | "Attack_1" = "Idle";
-    // // let monsterType: "Skeleton_Archer" | "Skeleton_Spearman" | "Skeleton_Warrior" | "Gorgon_1" | "Gorgon_2" | "Gorgon_3";
-    // const bossTypes = ["Gorgon_1", "Gorgon_2", "Gorgon_3"];
     let totalFrames: number;
-    // let monsterType: string;
 
     const framesMap = {
       Skeleton_Archer: { Idle: 7, Hurt: 2, Dead: 5, Attack_1: 5 },
@@ -93,26 +90,6 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
         action = "Idle";
       }
     }
-
-
-    // if (monsterAction === "Dead") {
-    //   action = "Dead";
-    // } else if (monsterAction === "Hurt") {
-    //   action = "Hurt";
-    // } else if (monsterAction === "Attack") {
-    //   action = "Attack_1";
-    // } else if (monsterAction === "Idle") {
-    //   action = "Idle";
-    // }
-  
-    // const framesMap = {
-    //   Skeleton_Archer: { Idle: 7, Hurt: 2, Dead: 5, Attack_1: 5 },
-    //   Skeleton_Spearman: { Idle: 7, Hurt: 3, Dead: 5, Attack_1: 4 },
-    //   Skeleton_Warrior: { Idle: 7, Hurt: 2, Dead: 4, Attack_1: 5 },
-    //   Gorgon_1: { Idle: 7, Hurt: 3, Dead: 3, Attack_1: 16 },
-    //   Gorgon_2: { Idle: 7, Hurt: 3, Dead: 3, Attack_1: 16 },
-    //   Gorgon_3: { Idle: 7, Hurt: 3, Dead: 3, Attack_1: 16 },
-    // };
 
     totalFrames = framesMap[monsterType][action];
 

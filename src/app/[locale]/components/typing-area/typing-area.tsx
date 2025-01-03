@@ -156,8 +156,11 @@ const TypingArea = () => {
   
       // 새로운 문장으로 상태 업데이트
       setVisibleContent(text.contents[currentIndex]);
-      setAppearMonster(true);
 
+      if (sentenceNumber === 0) {
+        setAppearMonster(true);
+      }
+      
       setModalState("open");
 
       // 몬스터 넘버 변경

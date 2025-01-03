@@ -39,7 +39,8 @@ const Background = () => {
           autoplay: false,
         });
       }
-
+      
+      // appearMonster의 값이 false일때 타이핑시에 배경이 애니메이트 되지 않는 문제 해결 할 것
       if (appearMonster) {
         if (animationRef.current) {
           // 애니메이션을 서서히 멈추도록 설정
@@ -74,7 +75,7 @@ const Background = () => {
       }
     }
 
-  }, [typingSpeed, currentSpeedLevel, situation.inCombat]);
+  }, [typingSpeed, currentSpeedLevel, appearMonster]);
 
   // useEffect(() => {
   //   console.log("typingSpeed", typingSpeed);
