@@ -138,13 +138,13 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
   }
 })));
 
-useCharacterStore.subscribe(
-  (state) => state.characterHP, // hp 상태 변화 감지
-  (characterHP) => {
-    if (characterHP <= 0) {
-      console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
-      useCharacterStore.getState().updateCharacterSettings("Dead");
-      // useMonsterStore.getState().updateMonsterSettings("Idle");
-    }
-  }
-);
+// useCharacterStore.subscribe(
+//   (state) => state.characterHP, // hp 상태 변화 감지
+//   (characterHP) => {
+//     if (characterHP <= 0) {
+//       console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
+//       useCharacterStore.getState().updateCharacterSettings("Dead");
+//       // useMonsterStore.getState().updateMonsterSettings("Idle");
+//     }
+//   }
+// );

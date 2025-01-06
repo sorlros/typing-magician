@@ -11,16 +11,19 @@ import useMonsterSituationStore from "@/store/use-monster-situation-store";
 import useCharacterSituationStore from "@/store/use-character-situation-store";
 import useStageStore from "@/store/use-stage-store";
 import { useInteractStore } from "@/store/use-interact-store";
+import { useShallow } from "zustand/react/shallow";
 
 const Monster = () => {
   const [frame, setFrame] = useState(0); // 현재 프레임 인덱스
   // const [hidden, setHidden] = useState<boolean>(true);
   const [position, setPosition] = useState("110%");
   const [display, setDisplay] = useState("none");
+  const [atLastMonster, setAtLastMonster] = useState<number>(0);
 
-  const { typedCharacters } = useTypingStore();
+  // const { typedCharacters } = useTypingStore();
 
-  const typingSpeed = useTypingStore(state => state.cpm);
+  // const typingSpeed = useTypingStore(state => state.cpm);
+  // const sentenceNumber = useTypingStore(state => state.sentenceNumber)
 
   const { totalFrames, frameWidth, frameHeight, frameDuration, monsterNumber, setMonsterNumber, monsterImage, monsterHP, updateMonsterSettings, appearMonster, setAppearMonster, monsterReduceHp } = useMonsterStore(state => ({
     monsterNumber: state.monsterNumber,
@@ -38,8 +41,20 @@ const Monster = () => {
   }));
 
   const { modalState } = useStageStore();
-  const { updateActions, monsterAction, characterAction, setInActionToggle } = useInteractStore();
-  // const characterAction = useCharacterStore(state => state.characterAction)
+  const { updateActions, monsterAction, characterAction, inAction, setInActionToggle } = useInteractStore();
+  const {
+    typedCharacters,
+    totalTypedCharacters,
+    sentenceNumber,
+    typingSpeed,
+  } = useTypingStore(
+    useShallow((state) => ({
+      typedCharacters: state.typedCharacters,
+      totalTypedCharacters: state.totalTypedCharacters,
+      sentenceNumber: state.sentenceNumber,
+      typingSpeed: state.cpm
+    })),
+  );
 
   useEffect(() => {
     updateActions();
@@ -60,7 +75,7 @@ const Monster = () => {
           // 모든 프레임이 끝난 후(마지막 프레임에서 첫 프레임으로 넘어가기 전)
           if (nextFrame === 0 && monsterAction === "Hurt") {
             monsterReduceHp(1);
-            console.log("몬스터가 공격을 받았습니다.");
+            // console.log("몬스터가 공격을 받았습니다.");
   
             if (characterAction === "Skill") {
               monsterReduceHp(30);
@@ -70,7 +85,7 @@ const Monster = () => {
   
           if (monsterAction === "Dead") {
             if (prevFrame === totalFrames - 1) {
-              console.log("몬스터가 사망했습니다.");
+              // console.log("몬스터가 사망했습니다.");
               return prevFrame; // 마지막 프레임 유지
             }
             return prevFrame + 1; // 마지막 프레임에 도달하기까지 계속 증가
@@ -94,7 +109,7 @@ const Monster = () => {
   
   
 
-  useEffect(() => {
+  useEffect(() => { 
     if (appearMonster && modalState === "close") {
       setDisplay("block");
 
@@ -106,7 +121,9 @@ const Monster = () => {
 
   useEffect(() => {
     if (monsterHP === 0) {
-      console.log("000000000")
+      const curretTotalTypedCharacters = totalTypedCharacters
+      setAtLastMonster(curretTotalTypedCharacters);
+      console.log("curretTotalTypedCharacters", curretTotalTypedCharacters);
       setAppearMonster(false);
       // setMonsterNumber();
       setTimeout(() => {
@@ -118,13 +135,25 @@ const Monster = () => {
   }, [monsterHP]);
 
 
+  // 수정할 것
+  // useEffect(() => {
+  //   if (totalTypedCharacters > (atLastMonster + 1000) && !appearMonster && (sentenceNumber > 0)) {
+  //     console.log("몬스터 재등장>>>>>>>>>>>>>>");
+  //     setMonsterNumber();
+  //     setAppearMonster(true);
+  //   }
+  // }, [totalTypedCharacters, appearMonster, setAppearMonster, setMonsterNumber]);
+
   const prevAppearMonster = useRef(appearMonster);
 
   const handleTransitionEnd = () => {
     if (prevAppearMonster.current !== appearMonster) {
-      console.log("AAAAAAAAAA");
+      // console.log("AAAAAAAAAA");
       setInActionToggle();
+      console.log("mooo, appearMonster", appearMonster);
+      console.log("mooo, actionToggle", inAction);
       prevAppearMonster.current = appearMonster; // 현재 상태값을 업데이트
+      
     }
   };
   

@@ -6,7 +6,7 @@ import { useInteractStore } from "./use-interact-store";
 interface MonsterState {
   monsterNumber: number;
   setMonsterNumber: () => void;
-  bossIndex: 1 | 2 | 3;
+  bossIndex: number;
   monsterImage: string;
   monsterHP: number;
   totalFrames: number; // 스프라이트 시트에 있는 총 프레임 수
@@ -25,18 +25,40 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
   monsterImage: "",
   monsterHP: 100,
   setMonsterNumber: () => {
-    // 보스와 몬스터 코드 단일화 할 것
-    set((state) => {
-      const currentNumber = state.monsterNumber;
-      const newNumber = currentNumber === 3 ? 0 : currentNumber + 1;
-      const newMonsterHP = newNumber < 3 ? 100 : 250;
-  
-      return {
-        monsterNumber: newNumber,
-        monsterHP: newMonsterHP,
-      };
-    });
-  },
+      set((state) => {
+        const { monsterNumber, bossIndex } = state;
+
+        // 일반 몬스터에서 보스로 전환
+        if (monsterNumber < 2) {
+          return {
+            monsterNumber: monsterNumber + 1,
+            monsterHP: 100,
+          };
+        }
+
+        // 보스 몬스터로 전환
+        if (monsterNumber === 2) {
+          return {
+            monsterNumber: 3,
+            monsterHP: 250,
+            bossIndex,
+          };
+        }
+
+        // 보스 몬스터 처리가 완료된 후 다시 일반 몬스터로 전환
+        if (monsterNumber === 3) {
+          const nextBossIndex = bossIndex < 3 ? bossIndex + 1 : 1;
+
+          return {
+            monsterNumber: 0,
+            monsterHP: 100,
+            bossIndex: nextBossIndex,
+          };
+        }
+
+        return state; // 기본 상태 유지
+      });
+    },
   totalFrames: 7,
   frameWidth: 200,
   frameHeight: 200,
@@ -122,13 +144,13 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
   }
 })));
 
-useMonsterStore.subscribe(
-  (state) => state.monsterHP, // hp 상태 변화 감지
-  (monsterHP) => {
-    if (monsterHP <= 0) {
-      console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
-      useMonsterStore.getState().updateMonsterSettings("Dead");
-      // useCharacterStore.getState().updateCharacterSettings("Idle");
-    }
-  }
-);
+// useMonsterStore.subscribe(
+//   (state) => state.monsterHP, // hp 상태 변화 감지
+//   (monsterHP) => {
+//     if (monsterHP <= 0) {
+//       console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
+//       useMonsterStore.getState().updateMonsterSettings("Dead");
+//       // useCharacterStore.getState().updateCharacterSettings("Idle");
+//     }
+//   }
+// );

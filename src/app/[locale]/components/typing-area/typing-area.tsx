@@ -25,6 +25,7 @@ const TypingArea = () => {
     setCorrectCharacters,
     setTypedCharacters,
     typedCharacters,
+    totalTypedCharacters,
     sentenceNumber,
     addSentenceNumber,
   } = useTypingStore(
@@ -41,6 +42,7 @@ const TypingArea = () => {
       setCorrectCharacters: state.setCorrectCharacters,
       setTypedCharacters: state.setTypedCharacters,
       typedCharacters: state.typedCharacters,
+      totalTypedCharacters: state.totalTypedCharacters,
       sentenceNumber: state.sentenceNumber,
       addSentenceNumber: state.addSentenceNumber,
     }))
@@ -76,8 +78,9 @@ const TypingArea = () => {
   );
 
   // Monster 관련 상태 구독
-  const { setAppearMonster, monsterNumber, setMonsterNumber } = useMonsterStore(
+  const { appearMonster, setAppearMonster, monsterNumber, setMonsterNumber } = useMonsterStore(
     (state) => ({
+      appearMonster: state.appearMonster,
       setAppearMonster: state.setAppearMonster,
       monsterNumber: state.monsterNumber,
       setMonsterNumber: state.setMonsterNumber
@@ -96,7 +99,7 @@ const TypingArea = () => {
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
 
   // const lastTypedTime = useRef(Date.now()); // 마지막 타이핑 시간 추적
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     initializeIndex();

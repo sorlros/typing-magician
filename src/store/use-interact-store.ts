@@ -79,8 +79,8 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
     // 캐릭터와 몬스터 상태 업데이트
     const newCharacterAction = determineCharacterAction();
     const newMonsterAction = determineMonsterAction();
-    console.log("<CHA>", newCharacterAction);
-    console.log("<MON>", newMonsterAction);
+    // console.log("<CHA>", newCharacterAction);
+    // console.log("<MON>", newMonsterAction);
 
     setCharacterAction(newCharacterAction);
     setMonsterAction(newMonsterAction);
