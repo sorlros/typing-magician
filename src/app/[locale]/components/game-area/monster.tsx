@@ -122,27 +122,35 @@ const Monster = () => {
   useEffect(() => {
     if (monsterHP === 0) {
       const curretTotalTypedCharacters = totalTypedCharacters
+      setAppearMonster(false);
       setAtLastMonster(curretTotalTypedCharacters);
       console.log("curretTotalTypedCharacters", curretTotalTypedCharacters);
-      setAppearMonster(false);
+      
       // setMonsterNumber();
       setTimeout(() => {
         setDisplay("none");
         setPosition("110%");
-        setMonsterNumber();
+        // setMonsterNumber();
       }, 1500);
     }
   }, [monsterHP]);
 
+  useEffect(() => {
+    const shouldSpawnMonster = () => {
+      const hasMonsterDead = monsterHP === 0;
+      const enoughTimePassed = totalTypedCharacters > atLastMonster + 700;
+      const isTypingActive = typingSpeed > 80;
+      return hasMonsterDead && enoughTimePassed && !appearMonster && isTypingActive;
+    };
 
-  // 수정할 것
-  // useEffect(() => {
-  //   if (totalTypedCharacters > (atLastMonster + 1000) && !appearMonster && (sentenceNumber > 0)) {
-  //     console.log("몬스터 재등장>>>>>>>>>>>>>>");
-  //     setMonsterNumber();
-  //     setAppearMonster(true);
-  //   }
-  // }, [totalTypedCharacters, appearMonster, setAppearMonster, setMonsterNumber]);
+    if (shouldSpawnMonster()) {
+      setTimeout(() => {
+        console.log("몬스터 출현");
+        setMonsterNumber();
+        setAppearMonster(true);
+      }, 7000)
+    }
+  }, [totalTypedCharacters, typingSpeed, appearMonster, atLastMonster, monsterHP, setAppearMonster, setAtLastMonster]);
 
   const prevAppearMonster = useRef(appearMonster);
 

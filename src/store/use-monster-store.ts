@@ -150,6 +150,7 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
 //     if (monsterHP <= 0) {
 //       console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
 //       useMonsterStore.getState().updateMonsterSettings("Dead");
+      
 //       // useCharacterStore.getState().updateCharacterSettings("Idle");
 //     }
 //   }

@@ -11,7 +11,7 @@ const Background = () => {
 
   const typingSpeed = useTypingStore(state => state.cpm);
   const situation = useCharacterSituationStore();
-  const appearMonster = useMonsterStore.getState().appearMonster;
+  const appearMonster = useMonsterStore(state => state.appearMonster);
 
   const [currentSpeedLevel, setCurrentSpeedLevel] = useState(0);
 
@@ -28,36 +28,30 @@ const Background = () => {
     const newSpeedLevel = getSpeedLevel(typingSpeed);
 
     if (animeRef.current) {
-      // 애니메이션 인스턴스가 없을 때 초기화
       if (!animationRef.current) {
+        // 애니메이션 초기화
         animationRef.current = anime({
           targets: animeRef.current,
-          translateX: ["0%", "-100%"], // 왼쪽으로 이동
+          translateX: ["0%", "-100%"],
           easing: "linear",
           duration: 20000,
           loop: true,
           autoplay: false,
         });
       }
-      
-      // appearMonster의 값이 false일때 타이핑시에 배경이 애니메이트 되지 않는 문제 해결 할 것
+
+      // appearMonster에 따라 애니메이션 조정
       if (appearMonster) {
         if (animationRef.current) {
-          // 애니메이션을 서서히 멈추도록 설정
           anime({
             targets: animeRef.current,
             easing: "easeOutQuad",
+            duration: 2000,
             update: () => {
               if (animationRef.current) {
-                animationRef.current.duration += 10000; // 속도 점차 줄이기
+                animationRef.current.pause();
               }
             },
-            complete: () => {
-              if (animationRef.current) {
-                animationRef.current.pause(); // 2초 후 완전히 멈춤
-              }
-            },
-            duration: 2000, // 2초에 걸쳐 애니메이션이 멈추도록 설정
           });
         }
       } else {
@@ -65,21 +59,18 @@ const Background = () => {
           setCurrentSpeedLevel(newSpeedLevel);
 
           if (newSpeedLevel > 0) {
-            const newDuration = 20000 / newSpeedLevel; 
-            animationRef.current.duration = newDuration;
-            animationRef.current.play();
+            const newDuration = 20000 / newSpeedLevel;
+            if (animationRef.current) {
+              animationRef.current.duration = newDuration;
+              animationRef.current.play();
+            }
           } else {
-            animationRef.current.pause();
+            animationRef.current?.pause();
           }
         }
       }
     }
-
   }, [typingSpeed, currentSpeedLevel, appearMonster]);
-
-  // useEffect(() => {
-  //   console.log("typingSpeed", typingSpeed);
-  // }, [typingSpeed])
 
   const backgroundImages = () => (
     <>

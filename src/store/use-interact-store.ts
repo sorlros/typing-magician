@@ -28,70 +28,68 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
     set({ inAction: !inAction })
   },
   updateActions: () => {
-    const cpm = useTypingStore.getState().cpm;
+    // const cpm = useTypingStore.getState().cpm;
     const { characterAction, monsterAction, setCharacterAction, setMonsterAction, inAction } = get();
-    const characterHP = useCharacterStore.getState().characterHP;
-    const monsterHP = useMonsterStore.getState().monsterHP;
-    const appearMonster = useMonsterStore.getState().appearMonster;
-    const setMonsterNumber = useMonsterStore.getState().setMonsterNumber;
-    const monsterNumber = useMonsterStore.getState().monsterNumber;
+    // const characterHP = useCharacterStore.getState().characterHP;
+    // const monsterHP = useMonsterStore.getState().monsterHP;
+    // const appearMonster = useMonsterStore.getState().appearMonster;
+    // const setMonsterNumber = useMonsterStore.getState().setMonsterNumber;
+    // const monsterNumber = useMonsterStore.getState().monsterNumber;
 
     // 캐릭터 행동 결정 함수
     const determineCharacterAction = (): InteractStore["characterAction"] => {
-      if (characterHP <= 0) return "Dead";
-      if (monsterAction === "Dead" || monsterHP <= 0 || cpm === 0) return "Idle";
-
-      if (cpm > 100 && appearMonster && monsterHP > 0 && inAction) {
-        return "Attack";
-      } else if (cpm <= 100 && appearMonster && monsterHP > 0 && inAction) {
-        return "Hurt";
-      }
+      const cpm = useTypingStore.getState().cpm;
+      const characterHP = useCharacterStore.getState().characterHP;
+      const monsterHP =  useMonsterStore.getState().monsterHP;
+      const appearMonster = useMonsterStore.getState().appearMonster;
+      const { inAction, characterAction } = get();
+    
+      if (characterHP <= 0) return "Dead"; // 캐릭터가 사망한 경우
       
-      if (characterAction === "Dead" || characterAction === "Hurt" || characterAction === "Skill") {
-        return characterAction;
+    
+      if (appearMonster && monsterHP > 0 && cpm > 100 && inAction) {
+        return "Attack"; // 몬스터가 출현했고, 몬스터 HP가 남아 있으며, 타이핑 속도가 조건을 만족하는 경우
       }
-
-      if (cpm > 150 && !appearMonster && !inAction) return "Run";
-      if (cpm > 0 && !appearMonster && !inAction) return "Walk";
-      // if (cpm === 0 || appearMonster) return "Idle";
-
-      return characterAction;
+    
+      if (appearMonster && monsterHP > 0 && cpm <= 100 && inAction) {
+        return "Hurt"; // 몬스터 출현, HP가 남아 있지만 타이핑 속도가 낮은 경우
+      }
+    
+      if (cpm > 150 && !appearMonster && !inAction) return "Run"; // 몬스터가 없고, 타이핑 속도가 높을 때
+      if (cpm > 0 && !appearMonster && !inAction) return "Walk"; // 몬스터가 없고, 타이핑 중일 때
+      if (monsterHP <= 0 || !appearMonster || cpm === 0) return "Idle"; // 몬스터가 없거나 활동 조건이 안 되는 경우
+      return characterAction; // 기본적으로 현재 상태 유지
     };
-
+    
     // 몬스터 행동 결정 함수
     const determineMonsterAction = (): InteractStore["monsterAction"] => {
-      if (monsterHP <= 0) return "Dead";
-      if (characterHP <= 0) return "Idle";
-
-      if (appearMonster && characterHP > 0 && inAction) {
-        if (cpm <= 100) {
-          return "Attack";
-        } else {
-          return "Hurt";
-        }
+      const cpm = useTypingStore.getState().cpm;
+      const characterHP = useCharacterStore.getState().characterHP;
+      const monsterHP =  useMonsterStore.getState().monsterHP;
+      const appearMonster = useMonsterStore.getState().appearMonster;
+      const { inAction, monsterAction } = get();
+    
+      if (monsterHP <= 0) return "Dead"; // 몬스터가 사망한 경우
+      if (characterHP <= 0 || !appearMonster) return "Idle"; // 캐릭터가 사망하거나 몬스터가 출현하지 않은 경우
+    
+      if (appearMonster && monsterHP > 0 && cpm <= 100 && inAction && characterHP > 0) {
+        return "Attack"; // 몬스터가 캐릭터를 공격하는 조건
       }
-
-      return "Idle";
+    
+      if (appearMonster && monsterHP > 0 && cpm > 100 && inAction && characterHP > 0) {
+        return "Hurt"; // 몬스터가 공격받는 조건
+      }
+    
+      return "Idle"; // 기본적으로 Idle 상태 유지
     };
-
-    // if ()
 
     // 캐릭터와 몬스터 상태 업데이트
     const newCharacterAction = determineCharacterAction();
     const newMonsterAction = determineMonsterAction();
-    // console.log("<CHA>", newCharacterAction);
-    // console.log("<MON>", newMonsterAction);
+    console.log("<CHA>", newCharacterAction);
+    console.log("<MON>", newMonsterAction);
 
     setCharacterAction(newCharacterAction);
     setMonsterAction(newMonsterAction);
-
-    // // 추가 로직: 캐릭터와 몬스터가 죽었는지 확인 후 처리
-    // if (newCharacterAction === "Dead") {
-    //   set({ monsterAction: "Idle" });
-    // }
-
-    // if (newMonsterAction === "Dead") {
-    //   set({ characterAction: "Idle" });
-    // }
   },
 }));
