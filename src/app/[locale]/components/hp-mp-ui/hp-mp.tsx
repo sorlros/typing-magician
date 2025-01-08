@@ -16,9 +16,6 @@ const HpAndMp = ({ hp }: HpState) => {
   // 캐릭터가 "Skill" 상태일 때 로직
   // HP MP의 UI 유동적으로 변경 로직
   // typingArea컴포넌트의 loadNextSentence시 monsterNumber값 변경
-  useEffect(() => {
-
-  },[])
 
   return (
     <div className="flex flex-col w-full h-[100px]">

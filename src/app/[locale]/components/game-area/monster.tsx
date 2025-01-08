@@ -115,55 +115,55 @@ const Monster = () => {
 
       setTimeout(() => {
         setPosition("50%");
-      }, 500);
+      }, 1500);
     }
-  }, [typedCharacters, appearMonster]);
+  }, [typedCharacters, appearMonster, modalState]);
 
   useEffect(() => {
     if (monsterHP === 0) {
-      const curretTotalTypedCharacters = totalTypedCharacters
-      setAppearMonster(false);
-      setAtLastMonster(curretTotalTypedCharacters);
-      console.log("curretTotalTypedCharacters", curretTotalTypedCharacters);
-      
       // setMonsterNumber();
       setTimeout(() => {
         setDisplay("none");
         setPosition("110%");
-        // setMonsterNumber();
+        setAppearMonster(false);
+        setMonsterNumber();
       }, 1500);
     }
   }, [monsterHP]);
 
   useEffect(() => {
     const shouldSpawnMonster = () => {
-      const hasMonsterDead = monsterHP === 0;
-      const enoughTimePassed = totalTypedCharacters > atLastMonster + 700;
+      const hasMonsterDead = monsterAction === "Dead";
+      // const enoughTimePassed = totalTypedCharacters > atLastMonster + 700;
       const isTypingActive = typingSpeed > 80;
-      return hasMonsterDead && enoughTimePassed && !appearMonster && isTypingActive;
+
+      return hasMonsterDead && !appearMonster && isTypingActive;
     };
 
     if (shouldSpawnMonster()) {
+      console.log("첫 spawn 지점 ㅐㅐㅐㅐㅐㅐㅐㅐㅐㅐㅐㅐㅐㅐ");
       setTimeout(() => {
-        console.log("몬스터 출현");
-        setMonsterNumber();
+        console.log("몬스터 출현 ㅁㅇㅁㅇㄴㅇㅁㅇㅇㅇㅇㅁㄴㅇ");
+        // setMonsterNumber();
         setAppearMonster(true);
       }, 7000)
     }
-  }, [totalTypedCharacters, typingSpeed, appearMonster, atLastMonster, monsterHP, setAppearMonster, setAtLastMonster]);
+  }, [typingSpeed, appearMonster, monsterHP]);
+
+  // 첫번째 몬스터 이후 몬스터 UI가 나타나지 않는 문제
 
   const prevAppearMonster = useRef(appearMonster);
 
-  const handleTransitionEnd = () => {
-    if (prevAppearMonster.current !== appearMonster) {
-      // console.log("AAAAAAAAAA");
-      setInActionToggle();
-      console.log("mooo, appearMonster", appearMonster);
-      console.log("mooo, actionToggle", inAction);
-      prevAppearMonster.current = appearMonster; // 현재 상태값을 업데이트
+  // const handleTransitionEnd = () => {
+  //   if (prevAppearMonster.current !== appearMonster) {
+  //     // console.log("AAAAAAAAAA");
+  //     setInActionToggle();
+  //     console.log("mooo, appearMonster", appearMonster);
+  //     console.log("mooo, actionToggle", inAction);
+  //     prevAppearMonster.current = appearMonster; // 현재 상태값을 업데이트
       
-    }
-  };
+  //   }
+  // };
   
   return (
     <>
@@ -174,7 +174,7 @@ const Monster = () => {
           display: display,
           transition: "left 3s ease",
         }}
-        onTransitionEnd={handleTransitionEnd}
+        // onTransitionEnd={handleTransitionEnd}
       >
        <div className="absolute top-12 left-[70px] z-50">
           <HpAndMp hp={monsterHP} />
