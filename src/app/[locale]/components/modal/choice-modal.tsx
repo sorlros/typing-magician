@@ -2,6 +2,7 @@
 
 import { useCharacterStore } from "@/store/use-character-store";
 import { useChoice } from "@/store/use-choice";
+import { useInteractStore } from "@/store/use-interact-store";
 import useStageStore from "@/store/use-stage-store";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useEffect, useReducer } from "react";
@@ -17,6 +18,7 @@ const ChoiceModal = () => {
     })
   );
   const sentenceNumber = useTypingStore((state) => state.sentenceNumber);
+  const setIsLoading = useInteractStore.getState().setIsLoading;
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -29,6 +31,7 @@ const ChoiceModal = () => {
   const handleChangeJob = (job: string) => {
     changeJob(job);
     // resetTyping();
+    // setIsLoading(true);
     setModalState("close");
     onClose();
     forceUpdate();

@@ -33,52 +33,9 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
   updateCharacterSettings: (characterAction) => {
     const typingSpeed = useTypingStore.getState().cpm;
     const currentJob = get().currentJob;
-    const appearMonster = useMonsterStore.getState().appearMonster;
-    // const { characterAction } = useInteractStore.getState();
-    const monsterAction = useInteractStore.getState().monsterAction;
-    const monsterHP = useMonsterStore.getState().monsterHP;
     
     let totalFrames: number;
-    // let action: "Idle" | "Walk" | "Run" | "Hurt" | "Dead" | "Attack" | "Skill" = "Idle";
     let frameJob: "Fire_vizard" | "Wanderer_Magican" | "Lightning_Mage" = "Fire_vizard";
-
-    // 캐릭터 행동 변수 정의
-    // if (monsterAction === "Dead") {
-    //   action = "Idle";
-    // } else {
-    //   switch (characterAction) {
-    //     case "Dead":
-    //       action = "Dead";
-    //       break;
-
-    //     case "Hurt":
-    //       action = "Hurt";
-    //       break;
-
-    //     case "Attack":
-    //       action = "Attack";
-    //       break;
-
-    //     case "Skill":
-    //       action = "Skill";
-    //       break;
-
-    //     case "Idle":
-    //       if (typingSpeed > 150 && !appearMonster) {
-    //         action = "Run";
-    //       } else if (typingSpeed > 0 && !appearMonster) {
-    //         action = "Walk";
-    //       } else if (typingSpeed === 0 || appearMonster || monsterHP === 0) {
-    //         action = "Idle";
-    //       }
-    //       break;
-
-    //     default:
-    //       // 예상치 못한 상태에 대한 기본값 설정
-    //       console.warn(`예상하지못한 상태: ${characterAction}`);
-    //       action = "Idle";
-    //   }
-    // }
     
     if (currentJob === "Fire vizard") {
       frameJob = "Fire_vizard"

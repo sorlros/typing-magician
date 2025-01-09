@@ -1,18 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTypingStore } from "@/store/use-typing-store";
 import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
-import { useInteractStore } from "@/store/use-interact-store";
+import { InteractEffect, useInteractStore } from "@/store/use-interact-store";
 import { useShallow } from 'zustand/react/shallow';
 
 const Character = () => {
   const [frame, setFrame] = useState(0);
-  const [atFirst, setAtFirst] = useState(true);
-
-  const typingSpeed = useTypingStore(state => state.cpm);
-
   const {
     totalFrames,
     frameWidth,
@@ -35,13 +30,12 @@ const Character = () => {
     }))
   );
 
-  const { updateActions, characterAction } = useInteractStore();
+  const { characterAction } = useInteractStore();
 
   useEffect(() => {
-    updateActions();
     updateCharacterSettings(characterAction);
     // console.log("characterAction", characterAction);
-  }, [characterAction, typingSpeed])
+  }, [characterAction])
 
   useEffect(() => {
     let animationFrameId: number;
@@ -55,7 +49,7 @@ const Character = () => {
           const nextFrame = (prevFrame + 1) % totalFrames;
   
           if (characterAction === "Dead" && prevFrame === totalFrames - 1) {
-            console.log("캐릭터가 사망했습니다. 마지막 프레임에서 멈춥니다.");
+            // console.log("캐릭터가 사망했습니다. 마지막 프레임에서 멈춥니다.");
             return prevFrame; // 마지막 프레임 유지
           }
   
@@ -77,11 +71,10 @@ const Character = () => {
   
     return () => cancelAnimationFrame(animationFrameId);
   }, [totalFrames, frameDuration, characterAction, characterReduceHp]);
-  
-  
 
   return (
     <>
+      <InteractEffect />
       <div className="flex w-full h-full relative">
         <div className="absolute top-12 left-[70px] z-50">
           <HpAndMp hp={characterHP} />

@@ -1,29 +1,18 @@
 "use client";
 
-import Image from "next/image";
-import { DotsProps } from "../../../libs/types";
 import { useEffect, useRef, useState } from "react";
 import { useTypingStore } from "@/store/use-typing-store";
-import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
 import { useMonsterStore } from "@/store/use-monster-store";
-import useMonsterSituationStore from "@/store/use-monster-situation-store";
-import useCharacterSituationStore from "@/store/use-character-situation-store";
 import useStageStore from "@/store/use-stage-store";
-import { useInteractStore } from "@/store/use-interact-store";
+import { InteractEffect, useInteractStore } from "@/store/use-interact-store";
 import { useShallow } from "zustand/react/shallow";
 
 const Monster = () => {
   const [frame, setFrame] = useState(0); // 현재 프레임 인덱스
-  // const [hidden, setHidden] = useState<boolean>(true);
   const [position, setPosition] = useState("110%");
   const [display, setDisplay] = useState("none");
-  const [atLastMonster, setAtLastMonster] = useState<number>(0);
-
-  // const { typedCharacters } = useTypingStore();
-
-  // const typingSpeed = useTypingStore(state => state.cpm);
-  // const sentenceNumber = useTypingStore(state => state.sentenceNumber)
+  // const [atLastMonster, setAtLastMonster] = useState<number>(0);
 
   const { totalFrames, frameWidth, frameHeight, frameDuration, monsterNumber, setMonsterNumber, monsterImage, monsterHP, updateMonsterSettings, appearMonster, setAppearMonster, monsterReduceHp } = useMonsterStore(state => ({
     monsterNumber: state.monsterNumber,
@@ -41,25 +30,12 @@ const Monster = () => {
   }));
 
   const { modalState } = useStageStore();
-  const { updateActions, monsterAction, characterAction, inAction, setInActionToggle } = useInteractStore();
-  const {
-    typedCharacters,
-    totalTypedCharacters,
-    sentenceNumber,
-    typingSpeed,
-  } = useTypingStore(
-    useShallow((state) => ({
-      typedCharacters: state.typedCharacters,
-      totalTypedCharacters: state.totalTypedCharacters,
-      sentenceNumber: state.sentenceNumber,
-      typingSpeed: state.cpm
-    })),
-  );
+  const { monsterAction, characterAction, inAction, setInActionToggle, setIsLoading, isLoading } = useInteractStore();
+  const { typingSpeed } = useTypingStore(useShallow((state) => ({ typingSpeed: state.cpm })),);
 
   useEffect(() => {
-    updateActions();
     updateMonsterSettings(monsterAction);
-  }, [typedCharacters, updateMonsterSettings, monsterAction, typingSpeed]);
+  }, [monsterAction]);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -108,23 +84,27 @@ const Monster = () => {
   }, [frameDuration, totalFrames, monsterAction, characterAction, monsterReduceHp]);
   
   
-
+  // isLoading 값 위치 찾기
   useEffect(() => { 
     if (appearMonster && modalState === "close") {
+      setIsLoading(true);
       setDisplay("block");
 
       setTimeout(() => {
+        // setDisplay("block");
         setPosition("50%");
       }, 1500);
+      setIsLoading(false);
     }
-  }, [typedCharacters, appearMonster, modalState]);
+  }, [appearMonster, modalState, isLoading]);
 
   useEffect(() => {
     if (monsterHP === 0) {
-      // setMonsterNumber();
       setTimeout(() => {
         setDisplay("none");
-        setPosition("110%");
+        setTimeout(() => {
+          setPosition("110%");
+        }, 100);
         setAppearMonster(false);
         setMonsterNumber();
       }, 1500);
@@ -167,6 +147,7 @@ const Monster = () => {
   
   return (
     <>
+      <InteractEffect />
       <div className="flex w-full h-full"
         style={{
           position: "absolute",

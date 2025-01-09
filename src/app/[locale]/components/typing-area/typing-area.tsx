@@ -10,6 +10,7 @@ import { useChoice } from "@/store/use-choice";
 import shallow from 'zustand/shallow'
 import { useShallow } from "zustand/react/shallow";
 import useStageStore from "@/store/use-stage-store";
+import { useInteractStore } from "@/store/use-interact-store";
 
 const TypingArea = () => {
   const {
@@ -87,6 +88,8 @@ const TypingArea = () => {
     }),
   );
 
+  const setIsLoading = useInteractStore.getState().setIsLoading;
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [visibleContent, setVisibleContent] = useState<string>("");
@@ -159,19 +162,13 @@ const TypingArea = () => {
   
       // 새로운 문장으로 상태 업데이트
       setVisibleContent(text.contents[currentIndex]);
+      setIsLoading(true);
 
       if (sentenceNumber === 0) {
         setAppearMonster(true);
+        setModalState("open");
       }
       
-      setModalState("open");
-
-      // 몬스터 넘버 변경
-      // if (monster.monsterNumber)
-      // if (sentenceNumber > 0) {
-      //   setMonsterNumber();
-      // }
-  
       // 상태 변경이 완료된 이후 실행될 로직
       setTimeout(() => {
         addSentenceNumber();
