@@ -90,6 +90,8 @@ const TypingArea = () => {
 
   const setIsLoading = useInteractStore.getState().setIsLoading;
 
+  // const setIsLoading = useInteractStore.getState().setIsLoading;
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [visibleContent, setVisibleContent] = useState<string>("");
@@ -165,7 +167,7 @@ const TypingArea = () => {
       setIsLoading(true);
 
       if (sentenceNumber === 0) {
-        setAppearMonster(true);
+        // setAppearMonster(true);
         setModalState("open");
       }
       

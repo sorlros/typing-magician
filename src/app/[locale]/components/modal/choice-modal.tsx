@@ -3,6 +3,7 @@
 import { useCharacterStore } from "@/store/use-character-store";
 import { useChoice } from "@/store/use-choice";
 import { useInteractStore } from "@/store/use-interact-store";
+import { useMonsterStore } from "@/store/use-monster-store";
 import useStageStore from "@/store/use-stage-store";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useEffect, useReducer } from "react";
@@ -18,6 +19,7 @@ const ChoiceModal = () => {
     })
   );
   const sentenceNumber = useTypingStore((state) => state.sentenceNumber);
+  const setAppearMonster = useMonsterStore.getState().setAppearMonster;
   const setIsLoading = useInteractStore.getState().setIsLoading;
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -25,14 +27,16 @@ const ChoiceModal = () => {
   useEffect(() => {
     if (sentenceNumber === 1) {
       onOpen();
-    }
+    } 
+    return;
   }, [sentenceNumber]);
 
   const handleChangeJob = (job: string) => {
     changeJob(job);
     // resetTyping();
-    // setIsLoading(true);
     setModalState("close");
+    setAppearMonster(true);
+    setIsLoading(true);
     onClose();
     forceUpdate();
 

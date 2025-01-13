@@ -5,6 +5,8 @@ import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
 import { InteractEffect, useInteractStore } from "@/store/use-interact-store";
 import { useShallow } from 'zustand/react/shallow';
+import { useMonsterStore } from "@/store/use-monster-store";
+import useStageStore from "@/store/use-stage-store";
 
 const Character = () => {
   const [frame, setFrame] = useState(0);
@@ -30,12 +32,33 @@ const Character = () => {
     }))
   );
 
-  const { characterAction } = useInteractStore();
+  const { characterAction, isLoading, setIsLoading } = useInteractStore();
+  const appearMonster = useMonsterStore.getState().appearMonster;
+  const modalState = useStageStore.getState().modalState;
 
   useEffect(() => {
-    updateCharacterSettings(characterAction);
+    if (!isLoading) {
+      updateCharacterSettings(characterAction);
+    }
+    // updateCharacterSettings(characterAction);
     // console.log("characterAction", characterAction);
-  }, [characterAction])
+  }, [characterAction, isLoading])
+
+  useEffect(() => { 
+    if (appearMonster && modalState === "close" && isLoading) {
+      // setIsLoading(true);
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2500);
+    } else {
+      setIsLoading(false);
+    }
+  }, [appearMonster]);
+
+  // useEffect(() => {
+  //   console.log("isLoading in chacracter", isLoading);
+  // }, [isLoading])
 
   useEffect(() => {
     let animationFrameId: number;
@@ -49,7 +72,6 @@ const Character = () => {
           const nextFrame = (prevFrame + 1) % totalFrames;
   
           if (characterAction === "Dead" && prevFrame === totalFrames - 1) {
-            // console.log("캐릭터가 사망했습니다. 마지막 프레임에서 멈춥니다.");
             return prevFrame; // 마지막 프레임 유지
           }
   

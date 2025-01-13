@@ -34,8 +34,10 @@ const Monster = () => {
   const { typingSpeed } = useTypingStore(useShallow((state) => ({ typingSpeed: state.cpm })),);
 
   useEffect(() => {
-    updateMonsterSettings(monsterAction);
-  }, [monsterAction]);
+    if (!isLoading) {
+      updateMonsterSettings(monsterAction);
+    }
+  }, [monsterAction, isLoading]);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -86,17 +88,18 @@ const Monster = () => {
   
   // isLoading 값 위치 찾기
   useEffect(() => { 
-    if (appearMonster && modalState === "close") {
-      setIsLoading(true);
+    if (appearMonster && modalState === "close" && isLoading) {
+      // setIsLoading(true);
       setDisplay("block");
 
       setTimeout(() => {
         // setDisplay("block");
         setPosition("50%");
+        setIsLoading(false);
       }, 1500);
       setIsLoading(false);
     }
-  }, [appearMonster, modalState, isLoading]);
+  }, [appearMonster, modalState]);
 
   useEffect(() => {
     if (monsterHP === 0) {
@@ -121,9 +124,9 @@ const Monster = () => {
     };
 
     if (shouldSpawnMonster()) {
-      console.log("첫 spawn 지점 ㅐㅐㅐㅐㅐㅐㅐㅐㅐㅐㅐㅐㅐㅐ");
+      // console.log("첫 spawn 지점");
       setTimeout(() => {
-        console.log("몬스터 출현 ㅁㅇㅁㅇㄴㅇㅁㅇㅇㅇㅇㅁㄴㅇ");
+        // console.log("몬스터 출현");
         // setMonsterNumber();
         setAppearMonster(true);
       }, 7000)
@@ -132,18 +135,12 @@ const Monster = () => {
 
   // 첫번째 몬스터 이후 몬스터 UI가 나타나지 않는 문제
 
-  const prevAppearMonster = useRef(appearMonster);
+  // const prevAppearMonster = useRef(appearMonster);
 
-  // const handleTransitionEnd = () => {
-  //   if (prevAppearMonster.current !== appearMonster) {
-  //     // console.log("AAAAAAAAAA");
-  //     setInActionToggle();
-  //     console.log("mooo, appearMonster", appearMonster);
-  //     console.log("mooo, actionToggle", inAction);
-  //     prevAppearMonster.current = appearMonster; // 현재 상태값을 업데이트
-      
-  //   }
-  // };
+  const handleTransitionEnd = () => {
+    setIsLoading(false);
+    console.log("isLoading in Monster", isLoading)
+  };
   
   return (
     <>
@@ -155,7 +152,7 @@ const Monster = () => {
           display: display,
           transition: "left 3s ease",
         }}
-        // onTransitionEnd={handleTransitionEnd}
+        onTransitionEnd={handleTransitionEnd}
       >
        <div className="absolute top-12 left-[70px] z-50">
           <HpAndMp hp={monsterHP} />

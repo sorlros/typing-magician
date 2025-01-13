@@ -44,7 +44,7 @@ export const InteractEffect = () => {
     const monsterDied = characterHP > 0 && monsterHP <= 0 && appearMonster;
     const inUsual = appearMonster === false && characterHP > 0;
 
-    console.log("isLoading", isLoading)
+    // console.log("isLoading", isLoading)
 
 
     if (isLoading) {
