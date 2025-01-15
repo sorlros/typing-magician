@@ -55,9 +55,10 @@ const Monster = () => {
             monsterReduceHp(1);
             // console.log("몬스터가 공격을 받았습니다.");
   
-            if (characterAction === "Skill") {
+            if (nextFrame === 0 && characterAction === "Skill") {
               monsterReduceHp(30);
               console.log("캐릭터가 스킬을 사용했습니다.");
+              // useInteractStore.getState().setUseSpecial(false);
             }
           }
   
@@ -85,21 +86,21 @@ const Monster = () => {
     };
   }, [frameDuration, totalFrames, monsterAction, characterAction, monsterReduceHp]);
   
-  
-  // isLoading 값 위치 찾기
   useEffect(() => { 
     if (appearMonster && modalState === "close" && isLoading) {
-      // setIsLoading(true);
+      // console.log("현재 상태 in", appearMonster, modalState, isLoading)
       setDisplay("block");
-
-      setTimeout(() => {
-        // setDisplay("block");
+    
+      const timeoutId = setTimeout(() => {
         setPosition("50%");
         setIsLoading(false);
-      }, 1500);
-      setIsLoading(false);
+        // console.log("현재 상태 out", appearMonster, modalState, isLoading)
+      }, 1500)
+      
+      return () => clearTimeout(timeoutId)
+      // setIsLoading(false);
     }
-  }, [appearMonster, modalState]);
+  }, [appearMonster, modalState, isLoading]);
 
   useEffect(() => {
     if (monsterHP === 0) {
@@ -132,10 +133,6 @@ const Monster = () => {
       }, 7000)
     }
   }, [typingSpeed, appearMonster, monsterHP]);
-
-  // 첫번째 몬스터 이후 몬스터 UI가 나타나지 않는 문제
-
-  // const prevAppearMonster = useRef(appearMonster);
 
   const handleTransitionEnd = () => {
     setIsLoading(false);

@@ -50,7 +50,7 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
     const framesMap = {
       Fire_vizard: { Idle: 7, Walk: 6, Run: 8, Hurt: 3, Dead: 6, Attack: 4, Skill: 14 },
       Wanderer_Magican: { Idle: 8, Walk: 7, Run: 8, Hurt: 4, Dead: 4, Attack: 7, Skill: 16 },
-      Lightning_Mage: { Idle: 7, Walk: 7, Run: 8, Hurt: 3, Dead: 5, Attack: 10, Skill: 12 },
+      Lightning_Mage: { Idle: 7, Walk: 7, Run: 8, Hurt: 3, Dead: 5, Attack: 10, Skill: 13 },
     };
   
     // totalFrames = framesMap[frameJob][characterAction]
@@ -73,7 +73,8 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
     } else if (characterAction === "Idle") {
       setFrameDuration = 300;
     } else if (characterAction === "Skill") {
-      setFrameDuration = 600;
+      setFrameDuration = 150;
+      console.log(`Current Action: ${characterAction}, Frame Duration: ${setFrameDuration}`);
     }
 
     set({

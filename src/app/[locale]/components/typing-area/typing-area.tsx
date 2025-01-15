@@ -77,16 +77,18 @@ const TypingArea = () => {
       setModalState: state.setModalState
     })
   );
+  const setUseSpecial = useInteractStore.getState().setUseSpecial;
+  const useSpecial = useInteractStore.getState().useSpecial;
 
   // Monster 관련 상태 구독
-  const { appearMonster, setAppearMonster, monsterNumber, setMonsterNumber } = useMonsterStore(
-    (state) => ({
-      appearMonster: state.appearMonster,
-      setAppearMonster: state.setAppearMonster,
-      monsterNumber: state.monsterNumber,
-      setMonsterNumber: state.setMonsterNumber
-    }),
-  );
+  // const { appearMonster, setAppearMonster, monsterNumber, setMonsterNumber } = useMonsterStore(
+  //   (state) => ({
+  //     appearMonster: state.appearMonster,
+  //     setAppearMonster: state.setAppearMonster,
+  //     monsterNumber: state.monsterNumber,
+  //     setMonsterNumber: state.setMonsterNumber
+  //   }),
+  // );
 
   const setIsLoading = useInteractStore.getState().setIsLoading;
 
@@ -167,14 +169,16 @@ const TypingArea = () => {
       setIsLoading(true);
 
       if (sentenceNumber === 0) {
-        // setAppearMonster(true);
         setModalState("open");
-      }
-      
+      } 
       // 상태 변경이 완료된 이후 실행될 로직
       setTimeout(() => {
         addSentenceNumber();
-        // console.log("sentenceNumber", sentenceNumber);
+        
+        if (sentenceNumber > 0) {
+          setUseSpecial(true);
+          console.log("useSpecial true?", useSpecial)
+        }
       }, 0);
     } catch (error) {
       toast.error("새로운 문장을 불러오는데 실패했습니다.");

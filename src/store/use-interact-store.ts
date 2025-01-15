@@ -9,6 +9,8 @@ interface InteractStore {
   monsterAction: "Idle" | "Attack" | "Hurt" | "Dead";
   setCharacterAction: (action: InteractStore["characterAction"]) => void;
   setMonsterAction: (action: InteractStore["monsterAction"]) => void;
+  useSpecial: boolean;
+  setUseSpecial: (state: boolean) => void;
   inAction: boolean;
   setInActionToggle: () => void;
   isLoading: boolean;
@@ -20,6 +22,8 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
   monsterAction: "Idle",
   setCharacterAction: (action) => set({ characterAction: action }),
   setMonsterAction: (action) => set({ monsterAction: action }),
+  useSpecial: false,
+  setUseSpecial: (state) => set({ useSpecial: state }),
   inAction: false,
   setInActionToggle: () => {
     const { inAction } = get();
@@ -33,7 +37,7 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
 }));
 
 export const InteractEffect = () => {
-  const { setCharacterAction, setMonsterAction, isLoading, setIsLoading } = useInteractStore();
+  const { setCharacterAction, setMonsterAction, isLoading, setIsLoading, characterAction, useSpecial } = useInteractStore();
   const characterHP = useCharacterStore((state) => state.characterHP);
   const monsterHP = useMonsterStore((state) => state.monsterHP);
   const appearMonster = useMonsterStore((state) => state.appearMonster);
@@ -42,10 +46,20 @@ export const InteractEffect = () => {
   useEffect(() => {
     const inBattle = characterHP > 0 && monsterHP > 0 && appearMonster;
     const monsterDied = characterHP > 0 && monsterHP <= 0 && appearMonster;
-    const inUsual = appearMonster === false && characterHP > 0;
+    const inUsual = !appearMonster && characterHP > 0;
+    const useSkill = appearMonster && monsterHP > 0;
+    const recoveryHP = !appearMonster && monsterHP === 0;
 
     // console.log("isLoading", isLoading)
-
+    if (useSpecial) {
+      if (isLoading) {
+        return;
+      } else if (!isLoading) {
+        setCharacterAction("Skill");
+        setMonsterAction("Hurt");
+        return;
+      }
+    }
 
     if (isLoading) {
       setCharacterAction("Idle");
@@ -78,7 +92,7 @@ export const InteractEffect = () => {
         }
       }
     }
-  }, [characterHP, monsterHP, appearMonster, cpm, setCharacterAction, setMonsterAction, isLoading, setIsLoading]);
+  }, [characterHP, monsterHP, appearMonster, cpm, setCharacterAction, setMonsterAction, isLoading, setIsLoading, useSpecial]);
 
   return null;
 };
