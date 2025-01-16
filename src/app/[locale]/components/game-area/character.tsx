@@ -32,7 +32,7 @@
       }))
     );
 
-    const { characterAction, isLoading, setIsLoading } = useInteractStore();
+    const { characterAction, isLoading, setIsLoading, setUseSpecial } = useInteractStore();
     const appearMonster = useMonsterStore.getState().appearMonster;
     const modalState = useStageStore.getState().modalState;
 
@@ -44,15 +44,15 @@
     }, [characterAction, isLoading])
 
     useEffect(() => {
-      setFrame(0); // 상태 변경 시 프레임 초기화
+      setFrame(0);
     }, [characterAction]);
 
     useEffect(() => {
-      let animationFrameId: number;
-      let lastFrameTime = performance.now(); // 이전 프레임의 시간
+      let animationFrameId: number | null = null; // 애니메이션 ID 관리
+      let lastFrameTime = performance.now();
     
       const updateFrame = (currentTime: number) => {
-        const elapsed = currentTime - lastFrameTime; // 경과 시간 계산
+        const elapsed = currentTime - lastFrameTime;
     
         if (elapsed >= frameDuration) {
           setFrame((prevFrame) => {
@@ -61,21 +61,19 @@
             if (characterAction === "Dead" && prevFrame === totalFrames - 1) {
               return prevFrame; // 마지막 프레임 유지
             }
-
-            if (characterAction === "Skill" && nextFrame === 0 ) {
-              // Skill 애니메이션이 끝나면 `useSpecial`을 false로 설정
-              useInteractStore.getState().setUseSpecial(false);
-              useCharacterStore.getState().updateCharacterSettings("Idle");
+    
+            if (characterAction === "Skill" && nextFrame === 0) {
+              setUseSpecial(false);
+              // useCharacterStore.getState().updateCharacterSettings("Idle");
             }
     
             if (nextFrame === 0 && characterAction === "Hurt") {
               characterReduceHp(3);
-              // console.log("캐릭터가 공격을 받았습니다.");
-            }    
+            }
+    
             return nextFrame;
           });
-    
-          lastFrameTime = currentTime; // 마지막 프레임 시간 갱신
+          lastFrameTime = currentTime; // 프레임 시간 갱신
         }
     
         animationFrameId = requestAnimationFrame(updateFrame);
@@ -83,8 +81,11 @@
     
       animationFrameId = requestAnimationFrame(updateFrame);
     
-      return () => cancelAnimationFrame(animationFrameId);
+      return () => {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId); // 애니메이션 정리
+      };
     }, [totalFrames, frameDuration, characterAction, characterReduceHp]);
+    
 
     return (
       <>

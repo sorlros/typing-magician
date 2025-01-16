@@ -79,18 +79,10 @@ const TypingArea = () => {
   );
   const setUseSpecial = useInteractStore.getState().setUseSpecial;
   const useSpecial = useInteractStore.getState().useSpecial;
+  const setCharacterAction = useInteractStore.getState().setCharacterAction;
+  const setMonsterAction = useInteractStore.getState().setMonsterAction;
 
-  // Monster 관련 상태 구독
-  // const { appearMonster, setAppearMonster, monsterNumber, setMonsterNumber } = useMonsterStore(
-  //   (state) => ({
-  //     appearMonster: state.appearMonster,
-  //     setAppearMonster: state.setAppearMonster,
-  //     monsterNumber: state.monsterNumber,
-  //     setMonsterNumber: state.setMonsterNumber
-  //   }),
-  // );
-
-  const setIsLoading = useInteractStore.getState().setIsLoading;
+  // const setIsLoading = useInteractStore.getState().setIsLoading;
 
   // const setIsLoading = useInteractStore.getState().setIsLoading;
 
@@ -166,9 +158,11 @@ const TypingArea = () => {
   
       // 새로운 문장으로 상태 업데이트
       setVisibleContent(text.contents[currentIndex]);
-      setIsLoading(true);
+      // setIsLoading(true);
 
       if (sentenceNumber === 0) {
+        setCharacterAction("Idle");
+        setMonsterAction("Idle");
         setModalState("open");
       } 
       // 상태 변경이 완료된 이후 실행될 로직

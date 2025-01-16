@@ -30,7 +30,7 @@ const Monster = () => {
   }));
 
   const { modalState } = useStageStore();
-  const { monsterAction, characterAction, inAction, setInActionToggle, setIsLoading, isLoading } = useInteractStore();
+  const { monsterAction, characterAction, inAction, setInActionToggle, setIsLoading, isLoading, setCharacterAction, setMonsterAction } = useInteractStore();
   const { typingSpeed } = useTypingStore(useShallow((state) => ({ typingSpeed: state.cpm })),);
 
   useEffect(() => {
@@ -42,6 +42,7 @@ const Monster = () => {
   useEffect(() => {
     let animationFrameId: number;
     let lastFrameTime = performance.now();
+    let hasUsedSkill = false; // 스킬 사용 여부를 추적하는 로컬 변수
   
     const animate = (currentTime: number) => {
       const elapsed = currentTime - lastFrameTime;
@@ -52,19 +53,18 @@ const Monster = () => {
   
           // 모든 프레임이 끝난 후(마지막 프레임에서 첫 프레임으로 넘어가기 전)
           if (nextFrame === 0 && monsterAction === "Hurt") {
-            monsterReduceHp(1);
+            monsterReduceHp(2);
             // console.log("몬스터가 공격을 받았습니다.");
   
-            if (nextFrame === 0 && characterAction === "Skill") {
+            if (characterAction === "Skill" && !hasUsedSkill) {
               monsterReduceHp(30);
               console.log("캐릭터가 스킬을 사용했습니다.");
-              // useInteractStore.getState().setUseSpecial(false);
+              hasUsedSkill = true; // 스킬 사용 상태를 업데이트
             }
           }
   
           if (monsterAction === "Dead") {
             if (prevFrame === totalFrames - 1) {
-              // console.log("몬스터가 사망했습니다.");
               return prevFrame; // 마지막 프레임 유지
             }
             return prevFrame + 1; // 마지막 프레임에 도달하기까지 계속 증가
@@ -86,16 +86,17 @@ const Monster = () => {
     };
   }, [frameDuration, totalFrames, monsterAction, characterAction, monsterReduceHp]);
   
+  
   useEffect(() => { 
-    if (appearMonster && modalState === "close" && isLoading) {
+    if (appearMonster && modalState === "close" && !isLoading) {
       // console.log("현재 상태 in", appearMonster, modalState, isLoading)
       setDisplay("block");
     
       const timeoutId = setTimeout(() => {
         setPosition("50%");
-        setIsLoading(false);
+        // setIsLoading(false);
         // console.log("현재 상태 out", appearMonster, modalState, isLoading)
-      }, 1500)
+      }, 1000)
       
       return () => clearTimeout(timeoutId)
       // setIsLoading(false);
@@ -103,21 +104,21 @@ const Monster = () => {
   }, [appearMonster, modalState, isLoading]);
 
   useEffect(() => {
-    if (monsterHP === 0) {
+    if (monsterHP === 0 && appearMonster) {
       setTimeout(() => {
         setDisplay("none");
         setTimeout(() => {
           setPosition("110%");
         }, 100);
-        setAppearMonster(false);
-        setMonsterNumber();
+        // setAppearMonster(false);
+        // setMonsterNumber();
       }, 1500);
     }
-  }, [monsterHP]);
+  }, [monsterHP, appearMonster]);
 
   useEffect(() => {
     const shouldSpawnMonster = () => {
-      const hasMonsterDead = monsterAction === "Dead";
+      const hasMonsterDead = monsterHP === 0;
       // const enoughTimePassed = totalTypedCharacters > atLastMonster + 700;
       const isTypingActive = typingSpeed > 80;
 
@@ -127,16 +128,22 @@ const Monster = () => {
     if (shouldSpawnMonster()) {
       // console.log("첫 spawn 지점");
       setTimeout(() => {
-        // console.log("몬스터 출현");
-        // setMonsterNumber();
+        setMonsterNumber();
         setAppearMonster(true);
       }, 7000)
     }
   }, [typingSpeed, appearMonster, monsterHP]);
 
   const handleTransitionEnd = () => {
-    setIsLoading(false);
-    console.log("isLoading in Monster", isLoading)
+    if (position === "50%") {
+      setCharacterAction("Idle"); // 이동 완료 후 행동 복구
+      setMonsterAction("Idle");
+      console.log("When the position is 50%");
+    } else if (position === "110%") {
+      // setIsLoading(true);
+      setAppearMonster(false); 
+      console.log("When the position is 110%")
+    }
   };
   
   return (

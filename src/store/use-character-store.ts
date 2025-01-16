@@ -17,6 +17,7 @@ interface CharacterState {
   characterHP: number;
   updateCharacterSettings: (actionValue: CharacterAction) => void;
   characterReduceHp: (amount: number) => void;
+  characterRecovery: () => void;
 }
 
 export const useCharacterStore = create(subscribeWithSelector<CharacterState>((set, get) => ({
@@ -91,6 +92,15 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
 
       return {
         characterHP: newHp,
+      }
+    })
+  },
+  characterRecovery: () => {
+    set((state) => {
+      const newHp = Math.min(state.characterHP + 20, 100);
+
+      return {
+        characterHP: newHp
       }
     })
   }

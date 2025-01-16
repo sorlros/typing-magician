@@ -36,7 +36,7 @@ const ChoiceModal = () => {
     // resetTyping();
     setModalState("close");
     setAppearMonster(true);
-    setIsLoading(true);
+    setIsLoading(false);
     onClose();
     forceUpdate();
 
