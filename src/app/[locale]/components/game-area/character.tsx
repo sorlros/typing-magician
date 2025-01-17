@@ -37,11 +37,10 @@
     const modalState = useStageStore.getState().modalState;
 
     useEffect(() => {
-      if (!isLoading) {
+      
         updateCharacterSettings(characterAction);
-        console.log("현재 캐릭터 상태", characterAction);
-      }
-    }, [characterAction, isLoading])
+      
+    }, [characterAction])
 
     useEffect(() => {
       setFrame(0);

@@ -37,7 +37,7 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
 }));
 
 export const InteractEffect = () => {
-  const { setCharacterAction, setMonsterAction, isLoading, setIsLoading, characterAction, useSpecial } = useInteractStore();
+  const { setCharacterAction, setMonsterAction, isLoading, setUseSpecial, characterAction, useSpecial } = useInteractStore();
   const characterHP = useCharacterStore((state) => state.characterHP);
   const characterRecovery = useCharacterStore((state) => state.characterRecovery);
   const monsterHP = useMonsterStore((state) => state.monsterHP);
@@ -55,8 +55,6 @@ export const InteractEffect = () => {
     const inBattle = characterHP > 0 && monsterHP > 0 && appearMonster;
     const monsterDied = characterHP > 0 && monsterHP <= 0 && appearMonster;
     const inUsual = !appearMonster && characterHP > 0;
-    const useSkill = appearMonster && monsterHP > 0;
-    const recoveryHP = !appearMonster && monsterHP === 0;
   
     if (characterHP <= 0) {
       setCharacterAction("Dead");
@@ -78,33 +76,39 @@ export const InteractEffect = () => {
     if (monsterDied) {
       setCharacterAction("Idle");
       setMonsterAction("Dead");
-      return;
+
+      setTimeout(() => {
+        setMonsterAction("Idle");
+        setCharacterAction(cpm > 150 ? "Run" : cpm > 0 ? "Walk" : "Idle");
+      }, 1500);
     }
   
     if (inUsual) {
       if (cpm === 0) {
         setCharacterAction("Idle");
-        setMonsterAction("Idle");
+        // setMonsterAction("Idle");
       } else if (cpm > 150) {
         setCharacterAction("Run");
-        setMonsterAction("Idle");
+        // setMonsterAction("Idle");
       } else {
         setCharacterAction("Walk");
-        setMonsterAction("Idle");
+        // setMonsterAction("Idle");
       }
     }
   }, [characterHP, monsterHP, appearMonster, cpm, isLoading]);
 
   useEffect(() => {
-    if (useSpecial && monsterHP > 0) {
+    if (useSpecial && appearMonster) {
       setCharacterAction("Skill");
       setMonsterAction("Hurt");
+      setUseSpecial(false); 
       // setIsLoading(true);
-    } else if (useSpecial && monsterHP === 0) {
+    } else if (useSpecial && !appearMonster) {
       characterRecovery();
+      setUseSpecial(false);
       // setIsLoading(false);
     }
-  }, [useSpecial, monsterHP])
+  }, [useSpecial, appearMonster])
 
   return null;
 };

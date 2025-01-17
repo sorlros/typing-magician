@@ -11,7 +11,8 @@ import { useShallow } from "zustand/react/shallow";
 const Monster = () => {
   const [frame, setFrame] = useState(0); // 현재 프레임 인덱스
   const [position, setPosition] = useState("110%");
-  const [display, setDisplay] = useState("none");
+  const [display, setDisplay] = useState("default");
+  const [isSpawning, setIsSpawning] = useState(false);
   // const [atLastMonster, setAtLastMonster] = useState<number>(0);
 
   const { totalFrames, frameWidth, frameHeight, frameDuration, monsterNumber, setMonsterNumber, monsterImage, monsterHP, updateMonsterSettings, appearMonster, setAppearMonster, monsterReduceHp } = useMonsterStore(state => ({
@@ -34,10 +35,8 @@ const Monster = () => {
   const { typingSpeed } = useTypingStore(useShallow((state) => ({ typingSpeed: state.cpm })),);
 
   useEffect(() => {
-    if (!isLoading) {
-      updateMonsterSettings(monsterAction);
-    }
-  }, [monsterAction, isLoading]);
+    updateMonsterSettings(monsterAction);
+  }, [monsterAction]);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -88,11 +87,13 @@ const Monster = () => {
   
   
   useEffect(() => { 
-    if (appearMonster && modalState === "close" && !isLoading) {
+    if (appearMonster && modalState === "close") {
       // console.log("현재 상태 in", appearMonster, modalState, isLoading)
-      setDisplay("block");
+      setDisplay("visible");
+      setPosition("110%");
     
       const timeoutId = setTimeout(() => {
+        // setAppearMonster(true);
         setPosition("50%");
         // setIsLoading(false);
         // console.log("현재 상태 out", appearMonster, modalState, isLoading)
@@ -101,48 +102,54 @@ const Monster = () => {
       return () => clearTimeout(timeoutId)
       // setIsLoading(false);
     }
-  }, [appearMonster, modalState, isLoading]);
+  }, [appearMonster, modalState]);
 
   useEffect(() => {
     if (monsterHP === 0 && appearMonster) {
       setTimeout(() => {
-        setDisplay("none");
+        setDisplay("hidden");
         setTimeout(() => {
           setPosition("110%");
+          setCharacterAction("Idle"); // 캐릭터 상태 초기화
+          setMonsterAction("Idle"); // 몬스터 상태 초기화
         }, 100);
+        
         // setAppearMonster(false);
+        console.log("몬스터체력 0", appearMonster);
         // setMonsterNumber();
-      }, 1500);
+      }, 1000);
     }
   }, [monsterHP, appearMonster]);
 
+  // 몬스터 제거후 appearMonster 타이밍 재조정할 것
   useEffect(() => {
     const shouldSpawnMonster = () => {
       const hasMonsterDead = monsterHP === 0;
       // const enoughTimePassed = totalTypedCharacters > atLastMonster + 700;
       const isTypingActive = typingSpeed > 80;
+      const hidden = display === "hidden";
 
-      return hasMonsterDead && !appearMonster && isTypingActive;
+      return hasMonsterDead && !appearMonster && isTypingActive && hidden && !isSpawning;
     };
 
     if (shouldSpawnMonster()) {
-      // console.log("첫 spawn 지점");
+      setIsSpawning(true);
+      console.log("첫 spawn 지점");
+
       setTimeout(() => {
         setMonsterNumber();
         setAppearMonster(true);
-      }, 7000)
+        setIsSpawning(false);
+      }, 6000)
     }
-  }, [typingSpeed, appearMonster, monsterHP]);
+  }, [typingSpeed, appearMonster, monsterHP, isSpawning]);
 
   const handleTransitionEnd = () => {
-    if (position === "50%") {
-      setCharacterAction("Idle"); // 이동 완료 후 행동 복구
-      setMonsterAction("Idle");
-      console.log("When the position is 50%");
-    } else if (position === "110%") {
-      // setIsLoading(true);
-      setAppearMonster(false); 
-      console.log("When the position is 110%")
+    if (position === "110%" && display === "hidden") {
+      setTimeout(() => {
+        setAppearMonster(false); // 애니메이션 완료 후 상태 업데이트
+      }, 100);
+      console.log("When the position is 110%");
     }
   };
   
@@ -153,8 +160,8 @@ const Monster = () => {
         style={{
           position: "absolute",
           left: position,
-          display: display,
-          transition: "left 3s ease",
+          opacity: display === "hidden" ? 0 : 1,
+          transition: "left 1.5s ease, opacity 0.7s ease",
         }}
         onTransitionEnd={handleTransitionEnd}
       >

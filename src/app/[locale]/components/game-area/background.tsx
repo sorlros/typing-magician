@@ -12,7 +12,7 @@ const Background = () => {
   const appearMonster = useMonsterStore(state => state.appearMonster);
 
   useEffect(() => {
-    // console.log("appearMonster", appearMonster)
+    console.log("appearMonster", appearMonster)
 
     if (animeRef.current) {
       if (!animationRef.current) {
