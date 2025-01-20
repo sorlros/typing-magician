@@ -88,7 +88,7 @@
 
     return (
       <>
-        <InteractEffect />
+        {/* <InteractEffect /> */}
         <div className="flex w-full h-full relative">
           <div className="absolute top-12 left-[70px] z-50">
             <HpAndMp hp={characterHP} />

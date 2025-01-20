@@ -1,3 +1,4 @@
+import { InteractEffect } from "@/store/use-interact-store";
 import { DotsProps } from "../../libs/types";
 import Background from "./game-area/background";
 import Character from "./game-area/character";
@@ -7,6 +8,7 @@ import HpAndSkills from "./hp-mp-ui/hp-mp";
 const GameComponent = () => {
   return (
     <div className="flex w-full h-[200px] relative overflow-hidden">
+      <InteractEffect />
       <div className="w-full h-full z-10">
         <Background />
       </div>

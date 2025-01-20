@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { useTypingStore } from "./use-typing-store";
 import { subscribeWithSelector } from "zustand/middleware";
 import { useInteractStore } from "./use-interact-store";
+import useStageStore from "./use-stage-store";
 
 interface MonsterState {
   monsterNumber: number;
@@ -144,14 +145,22 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
   }
 })));
 
-// useMonsterStore.subscribe(
-//   (state) => state.monsterHP, // hp 상태 변화 감지
-//   (monsterHP) => {
-//     if (monsterHP <= 0) {
-//       console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
-//       useMonsterStore.getState().updateMonsterSettings("Dead");
+useMonsterStore.subscribe(
+  (state) => state.monsterNumber,
+  (monsterHP, monsterNumber) => {
+    if (monsterNumber === 3 && monsterHP <= 0) {
+      const { setNextStage } = useStageStore.getState();
+      const currentStage = useStageStore.getState().stage; 
+
+      if (currentStage < 4) {
+        setNextStage();
+      }
+    }
+    if (monsterHP <= 0) {
+      console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
+      useMonsterStore.getState().updateMonsterSettings("Dead");
       
-//       // useCharacterStore.getState().updateCharacterSettings("Idle");
-//     }
-//   }
-// );
+      // useCharacterStore.getState().updateCharacterSettings("Idle");
+    }
+  }
+);

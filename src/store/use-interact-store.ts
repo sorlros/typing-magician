@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { unstable_batchedUpdates as batch } from "react-dom";
 import { useTypingStore } from "./use-typing-store";
 import { useMonsterStore } from "./use-monster-store";
 import { useCharacterStore } from "./use-character-store";
@@ -30,10 +31,7 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
     set({ inAction: !inAction });
   },
   isLoading: false,
-  setIsLoading: (state) => {
-    const { isLoading } = get();
-    set({ isLoading: state });
-  }
+  setIsLoading: (state) => set({ isLoading: state }),
 }));
 
 export const InteractEffect = () => {
@@ -44,71 +42,76 @@ export const InteractEffect = () => {
   const appearMonster = useMonsterStore((state) => state.appearMonster);
   const cpm = useTypingStore((state) => state.cpm);
 
-  // useEffect(() => {
-  //   if (isLoading) {
-  //     setCharacterAction("Idle");
-  //     setMonsterAction("Idle");
-  //   }
-  // }, [isLoading])
-
   useEffect(() => {
     const inBattle = characterHP > 0 && monsterHP > 0 && appearMonster;
     const monsterDied = characterHP > 0 && monsterHP <= 0 && appearMonster;
     const inUsual = !appearMonster && characterHP > 0;
-  
+
     if (characterHP <= 0) {
-      setCharacterAction("Dead");
-      setMonsterAction("Idle");
+      batch(() => {
+        setCharacterAction("Dead");
+        setMonsterAction("Idle");
+      });
       return;
     }
-  
+
     if (inBattle) {
-      if (cpm > 150) {
-        setCharacterAction("Attack");
-        setMonsterAction("Hurt");
-      } else {
-        setCharacterAction("Hurt");
-        setMonsterAction("Attack");
-      }
+      batch(() => {
+        if (cpm > 150) {
+          setCharacterAction("Attack");
+          setMonsterAction("Hurt");
+        } else {
+          setCharacterAction("Hurt");
+          setMonsterAction("Attack");
+        }
+      });
       return;
     }
-  
+
     if (monsterDied) {
-      setCharacterAction("Idle");
-      setMonsterAction("Dead");
+      batch(() => {
+        setCharacterAction("Idle");
+        setMonsterAction("Dead");
+      });
 
       setTimeout(() => {
-        setMonsterAction("Idle");
-        setCharacterAction(cpm > 150 ? "Run" : cpm > 0 ? "Walk" : "Idle");
-      }, 1500);
+        batch(() => {
+          setMonsterAction("Idle");
+          setCharacterAction(cpm > 150 ? "Run" : cpm > 0 ? "Walk" : "Idle");
+        });
+      }, 1800);
+      return;
     }
-  
+
     if (inUsual) {
-      if (cpm === 0) {
-        setCharacterAction("Idle");
-        // setMonsterAction("Idle");
-      } else if (cpm > 150) {
-        setCharacterAction("Run");
-        // setMonsterAction("Idle");
-      } else {
-        setCharacterAction("Walk");
-        // setMonsterAction("Idle");
-      }
+      batch(() => {
+        if (cpm === 0) {
+          setCharacterAction("Idle");
+        } else if (cpm > 150) {
+          setCharacterAction("Run");
+        } else {
+          setCharacterAction("Walk");
+        }
+      });
     }
   }, [characterHP, monsterHP, appearMonster, cpm, isLoading]);
 
   useEffect(() => {
-    if (useSpecial && appearMonster) {
-      setCharacterAction("Skill");
-      setMonsterAction("Hurt");
-      setUseSpecial(false); 
-      // setIsLoading(true);
-    } else if (useSpecial && !appearMonster) {
-      characterRecovery();
-      setUseSpecial(false);
-      // setIsLoading(false);
+    if (useSpecial) {
+      if (appearMonster) {
+        batch(() => {
+          setCharacterAction("Skill");
+          setMonsterAction("Hurt");
+          setUseSpecial(false);
+        });
+      } else {
+        batch(() => {
+          characterRecovery();
+          setUseSpecial(false);
+        });
+      }
     }
-  }, [useSpecial, appearMonster])
+  }, [useSpecial, appearMonster]);
 
   return null;
 };

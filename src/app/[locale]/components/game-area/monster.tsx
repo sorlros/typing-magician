@@ -115,7 +115,7 @@ const Monster = () => {
         }, 100);
         
         // setAppearMonster(false);
-        console.log("몬스터체력 0", appearMonster);
+        // console.log("몬스터체력 0", appearMonster);
         // setMonsterNumber();
       }, 1000);
     }
@@ -155,7 +155,7 @@ const Monster = () => {
   
   return (
     <>
-      <InteractEffect />
+      {/* <InteractEffect /> */}
       <div className="flex w-full h-full"
         style={{
           position: "absolute",

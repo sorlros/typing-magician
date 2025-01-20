@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from 'next/image';
 import { useTypingStore } from '@/store/use-typing-store';
 import { useMonsterStore } from '@/store/use-monster-store';
+import useStageStore from '@/store/use-stage-store';
 
 const Background = () => {
   const animeRef = useRef<HTMLDivElement | null>(null);
@@ -10,9 +11,10 @@ const Background = () => {
 
   const typingSpeed = useTypingStore(state => state.cpm);
   const appearMonster = useMonsterStore(state => state.appearMonster);
+  const backgroundImage = useStageStore(state => state.stageImage);
 
   useEffect(() => {
-    console.log("appearMonster", appearMonster)
+    // console.log("appearMonster", appearMonster)
 
     if (animeRef.current) {
       if (!animationRef.current) {
@@ -51,7 +53,7 @@ const Background = () => {
       {[...Array(6)].map((_, index) => (
         <Image
           key={index}
-          src={`/game_images/background/PNG/Battleground1/Bright/Battleground1.png`}
+          src={backgroundImage}
           alt="background-image"
           width={700}
           height={200}
