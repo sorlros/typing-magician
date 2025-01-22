@@ -74,7 +74,7 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
     } else if (characterAction === "Idle") {
       setFrameDuration = 300;
     } else if (characterAction === "Skill") {
-      setFrameDuration = 150;
+      setFrameDuration = 300;
       console.log(`Current Action: ${characterAction}, Frame Duration: ${setFrameDuration}`);
     }
 

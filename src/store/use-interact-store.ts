@@ -43,6 +43,30 @@ export const InteractEffect = () => {
   const cpm = useTypingStore((state) => state.cpm);
 
   useEffect(() => {
+    if (useSpecial) {
+      if (appearMonster) {
+        batch(() => {
+          setCharacterAction("Skill");
+          setMonsterAction("Hurt");
+        });
+
+        const timeout = setTimeout(() => {
+          batch(() => {
+            setUseSpecial(false);
+          });
+        }, 2000);
+
+        return () => clearTimeout(timeout);
+      } else {
+        batch(() => {
+          characterRecovery();
+          setUseSpecial(false);
+        });
+      }
+    }
+  }, [useSpecial, appearMonster]);
+
+  useEffect(() => {
     const inBattle = characterHP > 0 && monsterHP > 0 && appearMonster;
     const monsterDied = characterHP > 0 && monsterHP <= 0 && appearMonster;
     const inUsual = !appearMonster && characterHP > 0;
@@ -96,22 +120,7 @@ export const InteractEffect = () => {
     }
   }, [characterHP, monsterHP, appearMonster, cpm, isLoading]);
 
-  useEffect(() => {
-    if (useSpecial) {
-      if (appearMonster) {
-        batch(() => {
-          setCharacterAction("Skill");
-          setMonsterAction("Hurt");
-          setUseSpecial(false);
-        });
-      } else {
-        batch(() => {
-          characterRecovery();
-          setUseSpecial(false);
-        });
-      }
-    }
-  }, [useSpecial, appearMonster]);
+  
 
   return null;
 };
