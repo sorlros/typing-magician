@@ -78,13 +78,28 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
       console.log(`Current Action: ${characterAction}, Frame Duration: ${setFrameDuration}`);
     }
 
-    set({
-      characterImage: `url("game_images/character-wizard/${currentJob}/${characterAction}.png")`,
-      totalFrames,
-      frameWidth: 200,
-      frameHeight: 200,
-      frameDuration: setFrameDuration,
-    });
+    // set({
+    //   characterImage: `url("game_images/character-wizard/${currentJob}/${characterAction}.png")`,
+    //   totalFrames,
+    //   frameWidth: 200,
+    //   frameHeight: 200,
+    //   frameDuration: setFrameDuration,
+    // });
+    const currentState = get();
+    if (
+      currentState.characterImage !==
+        `url("game_images/character-wizard/${currentJob}/${characterAction}.png")` ||
+      currentState.totalFrames !== totalFrames ||
+      currentState.frameDuration !== setFrameDuration
+    ) {
+      set({
+        characterImage: `url("game_images/character-wizard/${currentJob}/${characterAction}.png")`,
+        totalFrames,
+        frameWidth: 200,
+        frameHeight: 200,
+        frameDuration: setFrameDuration,
+      });
+    }
   },
   characterReduceHp: (amount) => {
     set((state) => {

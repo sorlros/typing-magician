@@ -33,23 +33,35 @@ const Character = () => {
   const { characterAction, setCharacterAction, setUseSpecial, useSpecial } = useInteractStore();
   // const frame = useAnimation(totalFrames, frameDuration, characterAction);
 
+  // const { frame } = useFrameAnimation({
+  //   totalFrames,
+  //   frameDuration,
+  //   action: characterAction,
+  //   onActionComplete: () => {
+  //     setCharacterAction("Idle");
+  //   }
+  // });
   const { frame } = useFrameAnimation({
     totalFrames,
     frameDuration,
     action: characterAction,
+    onActionComplete: () => {
+      if (characterAction === "Skill") {
+        setCharacterAction("Idle"); // 스킬 실행 후 Idle로 전환
+      }
+    },
   });
 
   useEffect(() => {
     updateCharacterSettings(characterAction);
-    console.log(characterImage);
-  }, [characterAction, characterImage]);
+    // console.log(characterImage);
+  }, [characterAction, updateCharacterSettings]);
 
-  // useEffect(() => {
-  //   if (useSpecial) {
-  //     setCharacterAction("Skill"); // 스킬 사용 중에는 액션을 "Skill"로 고정
-  //     console.log("Skill");
-  //   }
-  // }, [useSpecial, characterAction]);
+  useEffect(() => {
+    if (useSpecial && characterAction !== "Skill") {
+      setCharacterAction("Skill"); // 스킬 실행
+    }
+  }, [useSpecial, characterAction, setCharacterAction]);
 
   useEffect(() => {
     if (characterAction === "Hurt" && frame === 0) {

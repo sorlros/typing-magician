@@ -35,7 +35,7 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
 }));
 
 export const InteractEffect = () => {
-  const { setCharacterAction, setMonsterAction, isLoading, setUseSpecial, characterAction, useSpecial } = useInteractStore();
+  const { setCharacterAction, setMonsterAction, monsterAction, setUseSpecial, characterAction, useSpecial } = useInteractStore();
   const characterHP = useCharacterStore((state) => state.characterHP);
   const characterRecovery = useCharacterStore((state) => state.characterRecovery);
   const monsterHP = useMonsterStore((state) => state.monsterHP);
@@ -46,16 +46,16 @@ export const InteractEffect = () => {
     if (useSpecial) {
       if (appearMonster) {
         batch(() => {
-          setCharacterAction("Skill");
-          setMonsterAction("Hurt");
+          if (characterAction !== "Skill") setCharacterAction("Skill");
+          if (monsterAction !== "Hurt") setMonsterAction("Hurt");
         });
-
+  
         const timeout = setTimeout(() => {
           batch(() => {
             setUseSpecial(false);
           });
         }, 2000);
-
+  
         return () => clearTimeout(timeout);
       } else {
         batch(() => {
@@ -64,63 +64,72 @@ export const InteractEffect = () => {
         });
       }
     }
-  }, [useSpecial, appearMonster]);
-
+  }, [useSpecial, appearMonster, characterAction, monsterAction]);
+  
   useEffect(() => {
     const inBattle = characterHP > 0 && monsterHP > 0 && appearMonster;
     const monsterDied = characterHP > 0 && monsterHP <= 0 && appearMonster;
     const inUsual = !appearMonster && characterHP > 0;
-
+  
     if (characterHP <= 0) {
       batch(() => {
-        setCharacterAction("Dead");
-        setMonsterAction("Idle");
+        if (characterAction !== "Dead") setCharacterAction("Dead");
+        if (monsterAction !== "Idle") setMonsterAction("Idle");
       });
       return;
     }
-
+  
     if (inBattle) {
       batch(() => {
-        if (cpm > 150) {
+        if (cpm > 150 && characterAction !== "Attack") {
           setCharacterAction("Attack");
+        }
+        if (cpm > 150 && monsterAction !== "Hurt") {
           setMonsterAction("Hurt");
-        } else {
+        }
+        if (cpm <= 150 && characterAction !== "Hurt") {
           setCharacterAction("Hurt");
+        }
+        if (cpm <= 150 && monsterAction !== "Attack") {
           setMonsterAction("Attack");
         }
       });
       return;
     }
-
+  
     if (monsterDied) {
       batch(() => {
-        setCharacterAction("Idle");
-        setMonsterAction("Dead");
+        if (characterAction !== "Idle") setCharacterAction("Idle");
+        if (monsterAction !== "Dead") setMonsterAction("Dead");
       });
-
+  
       setTimeout(() => {
         batch(() => {
-          setMonsterAction("Idle");
-          setCharacterAction(cpm > 150 ? "Run" : cpm > 0 ? "Walk" : "Idle");
+          if (monsterAction !== "Idle") setMonsterAction("Idle");
+          if (cpm > 150 && characterAction !== "Run") {
+            setCharacterAction("Run");
+          } else if (cpm > 0 && characterAction !== "Walk") {
+            setCharacterAction("Walk");
+          } else if (cpm === 0 && characterAction !== "Idle") {
+            setCharacterAction("Idle");
+          }
         });
       }, 1800);
       return;
     }
-
+  
     if (inUsual) {
       batch(() => {
-        if (cpm === 0) {
+        if (cpm === 0 && characterAction !== "Idle") {
           setCharacterAction("Idle");
-        } else if (cpm > 150) {
+        } else if (cpm > 150 && characterAction !== "Run") {
           setCharacterAction("Run");
-        } else {
+        } else if (cpm > 0 && characterAction !== "Walk") {
           setCharacterAction("Walk");
         }
       });
     }
-  }, [characterHP, monsterHP, appearMonster, cpm, isLoading]);
-
+  }, [characterHP, monsterHP, appearMonster, cpm, characterAction, monsterAction]);
   
-
   return null;
 };

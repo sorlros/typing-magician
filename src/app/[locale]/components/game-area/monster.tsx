@@ -53,16 +53,29 @@ const Monster = () => {
     useShallow((state) => ({ typingSpeed: state.cpm }))
   );
 
+  // const { frame } = useFrameAnimation({
+  //   totalFrames,
+  //   frameDuration,
+  //   action: monsterAction,
+  //   // onActionComplete: () => {
+  //   //   if (characterAction === "Skill") {
+  //   //     // "Skill" 상태가 끝난 후 "Idle" 상태로 전환
+  //   //     setMonsterAction("Idle");
+  //   //   }
+  //   // },
+  // });
+
   const { frame } = useFrameAnimation({
     totalFrames,
     frameDuration,
     action: monsterAction,
-    // onActionComplete: () => {
-    //   if (characterAction === "Skill") {
-    //     // "Skill" 상태가 끝난 후 "Idle" 상태로 전환
-    //     setMonsterAction("Idle");
-    //   }
-    // },
+    onActionComplete: () => {
+      if (characterAction === "Skill") {
+        monsterReduceHp(30); // 마지막 프레임에서 한 번만 실행
+        console.log("캐릭터가 스킬을 사용했습니다.");
+        setCharacterAction("Idle"); // 스킬 종료 후 캐릭터 상태 복구
+      }
+    },
   });
 
   useEffect(() => {
@@ -73,12 +86,12 @@ const Monster = () => {
     if (frame === 0 && monsterAction === "Hurt") {
       monsterReduceHp(2);
 
-      if (characterAction === "Skill") {
-        monsterReduceHp(30);
-        console.log("캐릭터가 스킬을 사용했습니다.");
-      }
+      // if (characterAction === "Skill") {
+      //   monsterReduceHp(30);
+      //   console.log("캐릭터가 스킬을 사용했습니다.");
+      // }
     }
-  }, [frame, monsterAction, characterAction, monsterReduceHp]);
+  }, [frame, monsterAction, monsterReduceHp]);
 
   useEffect(() => {
     if (appearMonster && modalState === "close") {
@@ -117,7 +130,7 @@ const Monster = () => {
 
     if (shouldSpawnMonster()) {
       setIsSpawning(true);
-      console.log("첫 spawn 지점");
+      // console.log("첫 spawn 지점");
 
       setTimeout(() => {
         setMonsterNumber();
@@ -132,7 +145,7 @@ const Monster = () => {
       setTimeout(() => {
         setAppearMonster(false);
       }, 100);
-      console.log("When the position is 110%");
+      // console.log("When the position is 110%");
     }
   };
 

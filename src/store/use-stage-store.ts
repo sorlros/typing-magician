@@ -17,7 +17,7 @@ const useStageStore = create<StageStore>((set, get) => ({
     const nextStage = stage + 1;
     set({
       stage: nextStage,
-      stageImage: `/game_images/background/PNG/Battleground${nextStage}/Bright/Battleground${nextStage}.png`,
+      stageImage: nextStage <= 4 ? `/game_images/background/PNG/Battleground${stage}/Bright/Battleground${stage}.png` : `/game_images/background/PNG/Battleground4/Bright/Battleground4.png`,
     });
   },
   modalState: "close",

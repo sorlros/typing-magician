@@ -146,21 +146,27 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
 })));
 
 useMonsterStore.subscribe(
-  (state) => state.monsterNumber,
-  (monsterHP, monsterNumber) => {
-    if (monsterNumber === 3 && monsterHP <= 0) {
-      const { setNextStage } = useStageStore.getState();
-      const currentStage = useStageStore.getState().stage; 
+  (state) => state.monsterHP, // monsterHP 상태 변화 감지
+  (monsterHP) => {
+    const monsterNumber = useMonsterStore.getState().monsterNumber;
+    const { setNextStage } = useStageStore.getState(); // 스테이지 전환 함수
+    const currentStage = useStageStore.getState().stage;
 
+    // 이미 Dead 상태라면 추가 업데이트 방지
+    if (monsterHP <= 0 && monsterNumber === 3) {
       if (currentStage < 4) {
-        setNextStage();
+        console.log("setNextStage")
+        setNextStage(); // 스테이지 전환
       }
-    }
-    if (monsterHP <= 0) {
-      console.log("캐릭터 사망: Dead 상태로 전환됩니다.");
+
+      // 몬스터 상태를 Dead로 업데이트 (무한 루프 방지)
       useMonsterStore.getState().updateMonsterSettings("Dead");
-      
-      // useCharacterStore.getState().updateCharacterSettings("Idle");
+      return; // 이후 로직 실행 방지
+    }
+
+    if (monsterHP <= 0) {
+      console.log("몬스터 사망: Dead 상태로 전환됩니다.");
+      useMonsterStore.getState().updateMonsterSettings("Dead");
     }
   }
 );
