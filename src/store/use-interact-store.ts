@@ -35,27 +35,29 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
 }));
 
 export const InteractEffect = () => {
-  const { setCharacterAction, setMonsterAction, monsterAction, setUseSpecial, characterAction, useSpecial } = useInteractStore();
+  const { setCharacterAction, setMonsterAction, isLoading, setUseSpecial, characterAction, useSpecial } = useInteractStore();
   const characterHP = useCharacterStore((state) => state.characterHP);
   const characterRecovery = useCharacterStore((state) => state.characterRecovery);
   const monsterHP = useMonsterStore((state) => state.monsterHP);
   const appearMonster = useMonsterStore((state) => state.appearMonster);
   const cpm = useTypingStore((state) => state.cpm);
+  const totalFrames = useCharacterStore((state) => state.totalFrames);
+  const frameDuration = useCharacterStore((state) => state.frameDuration);
 
   useEffect(() => {
     if (useSpecial) {
       if (appearMonster) {
         batch(() => {
-          if (characterAction !== "Skill") setCharacterAction("Skill");
-          if (monsterAction !== "Hurt") setMonsterAction("Hurt");
+          setCharacterAction("Skill");
+          // setMonsterAction("Hurt");
         });
-  
+
         const timeout = setTimeout(() => {
           batch(() => {
             setUseSpecial(false);
           });
-        }, 2000);
-  
+        }, totalFrames * frameDuration);
+
         return () => clearTimeout(timeout);
       } else {
         batch(() => {
@@ -64,72 +66,64 @@ export const InteractEffect = () => {
         });
       }
     }
-  }, [useSpecial, appearMonster, characterAction, monsterAction]);
-  
+  }, [useSpecial, appearMonster]);
+
   useEffect(() => {
-    const inBattle = characterHP > 0 && monsterHP > 0 && appearMonster;
+    const inBattle = characterHP > 0 && monsterHP > 0 && appearMonster && !useSpecial;
     const monsterDied = characterHP > 0 && monsterHP <= 0 && appearMonster;
-    const inUsual = !appearMonster && characterHP > 0;
-  
+    const inUsual = !appearMonster && characterHP > 0 && !useSpecial;
+
     if (characterHP <= 0) {
       batch(() => {
-        if (characterAction !== "Dead") setCharacterAction("Dead");
-        if (monsterAction !== "Idle") setMonsterAction("Idle");
+        setCharacterAction("Dead");
+        setMonsterAction("Idle");
       });
       return;
     }
-  
+
     if (inBattle) {
       batch(() => {
-        if (cpm > 150 && characterAction !== "Attack") {
+        if (cpm > 150) {
           setCharacterAction("Attack");
-        }
-        if (cpm > 150 && monsterAction !== "Hurt") {
           setMonsterAction("Hurt");
-        }
-        if (cpm <= 150 && characterAction !== "Hurt") {
+        } else {
           setCharacterAction("Hurt");
-        }
-        if (cpm <= 150 && monsterAction !== "Attack") {
           setMonsterAction("Attack");
         }
       });
       return;
     }
-  
+
     if (monsterDied) {
       batch(() => {
-        if (characterAction !== "Idle") setCharacterAction("Idle");
-        if (monsterAction !== "Dead") setMonsterAction("Dead");
+        setCharacterAction("Idle");
+        setMonsterAction("Dead");
       });
-  
+
       setTimeout(() => {
         batch(() => {
-          if (monsterAction !== "Idle") setMonsterAction("Idle");
-          if (cpm > 150 && characterAction !== "Run") {
-            setCharacterAction("Run");
-          } else if (cpm > 0 && characterAction !== "Walk") {
-            setCharacterAction("Walk");
-          } else if (cpm === 0 && characterAction !== "Idle") {
-            setCharacterAction("Idle");
-          }
+          setMonsterAction("Idle");
+          setCharacterAction(cpm > 150 ? "Run" : cpm > 0 ? "Walk" : "Idle");
         });
       }, 1800);
       return;
     }
-  
+
     if (inUsual) {
       batch(() => {
-        if (cpm === 0 && characterAction !== "Idle") {
+        if (cpm === 0) {
           setCharacterAction("Idle");
-        } else if (cpm > 150 && characterAction !== "Run") {
+        } else if (cpm > 150) {
           setCharacterAction("Run");
-        } else if (cpm > 0 && characterAction !== "Walk") {
+        } else {
           setCharacterAction("Walk");
         }
       });
+      return;
     }
-  }, [characterHP, monsterHP, appearMonster, cpm, characterAction, monsterAction]);
+  }, [characterHP, monsterHP, appearMonster, cpm]);
+
   
+
   return null;
 };

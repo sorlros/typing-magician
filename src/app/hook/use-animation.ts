@@ -15,7 +15,6 @@ export const useFrameAnimation = ({
 }: FrameAnimationProps) => {
   const [frame, setFrame] = useState(0);
   const [isLastFrame, setIsLastFrame] = useState(false);
-  const animationRunning = useRef(false);
   const lastFrameRef = useRef(false);
   const actionTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -30,17 +29,15 @@ export const useFrameAnimation = ({
         setFrame((prevFrame) => {
           const nextFrame = (prevFrame + 1) % totalFrames;
 
-          // 마지막 프레임에서 애니메이션 중지 및 onActionComplete 호출
-          if (action === "Skill" && prevFrame === totalFrames - 1) {
+          // "Dead" 액션에서 마지막 프레임에 도달하면 프레임 고정
+          if (action === "Dead" && prevFrame === totalFrames - 1) {
             lastFrameRef.current = true;
-            if (onActionComplete && !animationRunning.current) {
-              animationRunning.current = true;
-              onActionComplete(); // 단 한 번만 실행
-            }
-            return prevFrame; // 마지막 프레임 고정
+            setIsLastFrame(true);
+            return prevFrame;
           }
 
           lastFrameRef.current = false;
+          setIsLastFrame(false);
           return nextFrame;
         });
 
@@ -54,9 +51,21 @@ export const useFrameAnimation = ({
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      animationRunning.current = false; // 애니메이션 종료 시 초기화
     };
-  }, [totalFrames, frameDuration, action, onActionComplete]);
+  }, [totalFrames, frameDuration, action]);
 
-  return { frame, isLastFrame: lastFrameRef.current };
+  useEffect(() => {
+    if (action === "Skill") {
+      actionTimeoutRef.current = setTimeout(() => {
+        if (onActionComplete) onActionComplete();
+      }, frameDuration * totalFrames);
+      // console.log("Timeout duration:", frameDuration * totalFrames);
+      return () => {
+        if (actionTimeoutRef.current) clearTimeout(actionTimeoutRef.current);
+      };
+    }
+  }, [action, frameDuration, totalFrames, onActionComplete]);
+
+  
+  return { frame, isLastFrame };
 };

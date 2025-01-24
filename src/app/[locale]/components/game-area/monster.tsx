@@ -68,12 +68,12 @@ const Monster = () => {
   const { frame } = useFrameAnimation({
     totalFrames,
     frameDuration,
-    action: monsterAction,
+    action: characterAction,
     onActionComplete: () => {
       if (characterAction === "Skill") {
         monsterReduceHp(30); // 마지막 프레임에서 한 번만 실행
-        console.log("캐릭터가 스킬을 사용했습니다.");
-        setCharacterAction("Idle"); // 스킬 종료 후 캐릭터 상태 복구
+        console.log("onActionComplete: 캐릭터가 스킬을 사용했습니다.");
+        // setCharacterAction("Idle"); // 스킬 종료 후 캐릭터 상태 복구
       }
     },
   });
@@ -112,8 +112,8 @@ const Monster = () => {
         setDisplay("hidden");
         setTimeout(() => {
           setPosition("110%");
-          setCharacterAction("Idle");
-          setMonsterAction("Idle");
+          // setCharacterAction("Idle");
+          // setMonsterAction("Idle");
         }, 100);
       }, 1000);
     }
