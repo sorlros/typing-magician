@@ -12,8 +12,8 @@ interface InteractStore {
   setMonsterAction: (action: InteractStore["monsterAction"]) => void;
   useSpecial: boolean;
   setUseSpecial: (state: boolean) => void;
-  inAction: boolean;
-  setInActionToggle: () => void;
+  // inAction: boolean;
+  // setInActionToggle: () => void;
   isLoading: boolean;
   setIsLoading: (state: boolean) => void;
 }
@@ -25,17 +25,17 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
   setMonsterAction: (action) => set({ monsterAction: action }),
   useSpecial: false,
   setUseSpecial: (state) => set({ useSpecial: state }),
-  inAction: false,
-  setInActionToggle: () => {
-    const { inAction } = get();
-    set({ inAction: !inAction });
-  },
+  // inAction: false,
+  // setInActionToggle: () => {
+  //   const { inAction } = get();
+  //   set({ inAction: !inAction });
+  // },
   isLoading: false,
   setIsLoading: (state) => set({ isLoading: state }),
 }));
 
 export const InteractEffect = () => {
-  const { setCharacterAction, setMonsterAction, isLoading, setUseSpecial, characterAction, useSpecial } = useInteractStore();
+  const { setCharacterAction, setMonsterAction, setUseSpecial, characterAction, useSpecial } = useInteractStore();
   const characterHP = useCharacterStore((state) => state.characterHP);
   const characterRecovery = useCharacterStore((state) => state.characterRecovery);
   const monsterHP = useMonsterStore((state) => state.monsterHP);
@@ -49,11 +49,12 @@ export const InteractEffect = () => {
       if (appearMonster) {
         batch(() => {
           setCharacterAction("Skill");
-          // setMonsterAction("Hurt");
+          setMonsterAction("Hurt");
         });
 
         const timeout = setTimeout(() => {
           batch(() => {
+            setCharacterAction("Idle");
             setUseSpecial(false);
           });
         }, totalFrames * frameDuration);
@@ -66,7 +67,7 @@ export const InteractEffect = () => {
         });
       }
     }
-  }, [useSpecial, appearMonster]);
+  }, [useSpecial, appearMonster, totalFrames, frameDuration]);
 
   useEffect(() => {
     const inBattle = characterHP > 0 && monsterHP > 0 && appearMonster && !useSpecial;

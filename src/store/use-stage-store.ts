@@ -14,7 +14,8 @@ const useStageStore = create<StageStore>((set, get) => ({
   stageImage: "/game_images/background/PNG/Battleground1/Bright/Battleground1.png",
   setNextStage: () => {
     const { stage } = get();
-    const nextStage = stage + 1;
+    const maxStage = 4;
+    const nextStage = Math.min(stage + 1, maxStage);
     set({
       stage: nextStage,
       stageImage: nextStage <= 4 ? `/game_images/background/PNG/Battleground${stage}/Bright/Battleground${stage}.png` : `/game_images/background/PNG/Battleground4/Bright/Battleground4.png`,

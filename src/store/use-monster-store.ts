@@ -48,7 +48,8 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
 
         // 보스 몬스터 처리가 완료된 후 다시 일반 몬스터로 전환
         if (monsterNumber === 3) {
-          const nextBossIndex = bossIndex < 3 ? bossIndex + 1 : 1;
+          // const nextBossIndex = bossIndex < 3 ? bossIndex + 1 : 1;
+          const nextBossIndex = (bossIndex % 3) + 1; 
 
           return {
             monsterNumber: 0,

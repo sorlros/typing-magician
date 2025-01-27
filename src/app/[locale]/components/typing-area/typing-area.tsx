@@ -2,7 +2,7 @@
 
 import { useTextStore } from "@/store/use-text-store";
 import { useTypingStore } from "@/store/use-typing-store";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import decomposeKorean from "./decompose-korean";
 import { toast } from "sonner";
 import { useMonsterStore } from "@/store/use-monster-store";
@@ -228,7 +228,8 @@ const TypingArea = () => {
       });
     };
 
-    const decomposedTyped = typedText.split("").map(decomposeKorean);
+    const decomposedTyped = useMemo(() => typedText.split("").map(decomposeKorean), [typedText]);
+    // const decomposedTyped = typedText.split("").map(decomposeKorean);
     const decomposedContent = decomposedText;
 
     const decomposedContentMap = decomposedContent.map((correctCharArray, index) => {

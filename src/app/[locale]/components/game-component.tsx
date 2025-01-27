@@ -4,8 +4,11 @@ import Background from "./game-area/background";
 import Character from "./game-area/character";
 import Monster from "./game-area/monster";
 import HpAndSkills from "./hp-mp-ui/hp-mp";
+import React from "react";
 
 const GameComponent = () => {
+
+  // const MemoizedInteractEffect = React.memo(InteractEffect);
   return (
     <div className="flex w-full h-[200px] relative overflow-hidden">
       <InteractEffect />

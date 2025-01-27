@@ -74,6 +74,7 @@ export const useTypingStore = create<TypingState>((set, get) => ({
 
     const currentTime = Date.now();
     const elapsedTime = (currentTime - startTime) / 1000; // 초 단위
+    // const elapsedTime = (currentTime - startTime) / 60000;
 
     // 최소 1초 이상 경과한 경우에만 계산
     if (elapsedTime < 1) return cpm;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTypingStore } from "@/store/use-typing-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
 import { useMonsterStore } from "@/store/use-monster-store";
@@ -13,6 +13,8 @@ const Monster = () => {
   const [position, setPosition] = useState("110%");
   const [display, setDisplay] = useState("default");
   const [isSpawning, setIsSpawning] = useState(false);
+
+  const hasDamaged = useRef(false);
 
   const {
     totalFrames,
@@ -53,29 +55,17 @@ const Monster = () => {
     useShallow((state) => ({ typingSpeed: state.cpm }))
   );
 
-  // const { frame } = useFrameAnimation({
-  //   totalFrames,
-  //   frameDuration,
-  //   action: monsterAction,
-  //   // onActionComplete: () => {
-  //   //   if (characterAction === "Skill") {
-  //   //     // "Skill" 상태가 끝난 후 "Idle" 상태로 전환
-  //   //     setMonsterAction("Idle");
-  //   //   }
-  //   // },
-  // });
-
   const { frame } = useFrameAnimation({
     totalFrames,
     frameDuration,
     action: characterAction,
-    onActionComplete: () => {
-      if (characterAction === "Skill") {
-        monsterReduceHp(30); // 마지막 프레임에서 한 번만 실행
-        console.log("onActionComplete: 캐릭터가 스킬을 사용했습니다.");
-        // setCharacterAction("Idle"); // 스킬 종료 후 캐릭터 상태 복구
-      }
-    },
+    // onActionComplete: () => {
+    //   if (characterAction === "Skill") {
+    //     monsterReduceHp(30); // 마지막 프레임에서 한 번만 실행
+    //     console.log("onActionComplete: 캐릭터가 스킬을 사용했습니다.");
+    //     // setCharacterAction("Idle"); // 스킬 종료 후 캐릭터 상태 복구
+    //   }
+    // },
   });
 
   useEffect(() => {
@@ -83,13 +73,22 @@ const Monster = () => {
   }, [monsterAction]);
 
   useEffect(() => {
+    if (characterAction === "Skill") {
+      hasDamaged.current = false; // 스킬 시작 시 리셋
+    }
+  }, [characterAction]);
+
+  useEffect(() => {
+    if (characterAction === "Skill" && frame === totalFrames - 1 && !hasDamaged.current) {
+      console.log("111");
+      monsterReduceHp(30);
+      hasDamaged.current = true;
+    }
+  }, [frame, characterAction]);
+
+  useEffect(() => {
     if (frame === 0 && monsterAction === "Hurt") {
       monsterReduceHp(2);
-
-      // if (characterAction === "Skill") {
-      //   monsterReduceHp(30);
-      //   console.log("캐릭터가 스킬을 사용했습니다.");
-      // }
     }
   }, [frame, monsterAction, monsterReduceHp]);
 

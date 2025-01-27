@@ -86,14 +86,19 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
     //   frameDuration: setFrameDuration,
     // });
     const currentState = get();
+
+    if (currentState.characterImage.includes(`/${characterAction}.png`)) {
+      return;
+    }
+
     if (
       currentState.characterImage !==
-        `url("game_images/character-wizard/${currentJob}/${characterAction}.png")` ||
+        `url("/game_images/character-wizard/${currentJob}/${characterAction}.png")` ||
       currentState.totalFrames !== totalFrames ||
       currentState.frameDuration !== setFrameDuration
     ) {
       set({
-        characterImage: `url("game_images/character-wizard/${currentJob}/${characterAction}.png")`,
+        characterImage: `url("/game_images/character-wizard/${currentJob}/${characterAction}.png")`,
         totalFrames,
         frameWidth: 200,
         frameHeight: 200,
@@ -104,6 +109,14 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
   characterReduceHp: (amount) => {
     set((state) => {
       const newHp = Math.max(state.characterHP - amount, 0);
+      
+      // HP 0일 때만 Dead 상태 업데이트
+      if (newHp === 0 && state.characterHP !== 0) {
+        return { 
+          characterHP: newHp,
+          // ...state.updateCharacterSettings("Dead") 
+        };
+      }
 
       return {
         characterHP: newHp,
