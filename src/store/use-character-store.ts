@@ -115,6 +115,7 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
         return { 
           characterHP: newHp,
           // ...state.updateCharacterSettings("Dead") 
+          // updateCharacterSetting("Dead")
         };
       }
 

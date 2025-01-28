@@ -131,6 +131,26 @@
   }
 }
 
+/* @keyframes sprite-animation {
+  from { background-position: 0 0; }
+  to { background-position: -${totalFrames * 100}% 0; }
+} */
+
+.sprite-animation {
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+
+/* Skill 액션 특수 효과 */
+@keyframes skill-effect {
+  0% { filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5)); }
+  100% { filter: drop-shadow(0 0 30px rgba(255, 0, 0, 1)); }
+}
+
+.skill-active {
+  animation: skill-effect 0.3s ease-in-out infinite alternate;
+}
+
 .outer-hexagon {
   clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
 }

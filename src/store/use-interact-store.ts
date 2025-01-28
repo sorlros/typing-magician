@@ -21,7 +21,16 @@ interface InteractStore {
 export const useInteractStore = create<InteractStore>((set, get) => ({
   characterAction: "Idle",
   monsterAction: "Idle",
-  setCharacterAction: (action) => set({ characterAction: action }),
+  setCharacterAction: (action) => {
+    const currentAction = get().characterAction;
+  
+    // Skill 상태 중에는 다른 액션으로 전환 방지
+    if (currentAction === "Skill" && action !== "Idle") {
+      return;
+    }
+  
+    set({ characterAction: action });
+  },
   setMonsterAction: (action) => set({ monsterAction: action }),
   useSpecial: false,
   setUseSpecial: (state) => set({ useSpecial: state }),
@@ -46,6 +55,9 @@ export const InteractEffect = () => {
 
   useEffect(() => {
     if (useSpecial) {
+      const currentTotalFrames = useCharacterStore.getState().totalFrames;
+      const currentFrameDuration = useCharacterStore.getState().frameDuration;
+
       if (appearMonster) {
         batch(() => {
           setCharacterAction("Skill");
@@ -57,7 +69,7 @@ export const InteractEffect = () => {
             setCharacterAction("Idle");
             setUseSpecial(false);
           });
-        }, totalFrames * frameDuration);
+        }, currentTotalFrames * currentFrameDuration);
 
         return () => clearTimeout(timeout);
       } else {
@@ -67,7 +79,7 @@ export const InteractEffect = () => {
         });
       }
     }
-  }, [useSpecial, appearMonster, totalFrames, frameDuration]);
+  }, [useSpecial, appearMonster]);
 
   useEffect(() => {
     const inBattle = characterHP > 0 && monsterHP > 0 && appearMonster && !useSpecial;

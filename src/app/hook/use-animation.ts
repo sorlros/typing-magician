@@ -14,79 +14,71 @@ export const useFrameAnimation = ({
   onActionComplete,
 }: FrameAnimationProps) => {
   const [frame, setFrame] = useState(0);
-  const [isLastFrame, setIsLastFrame] = useState(false);
-  const lastFrameRef = useRef(false);
-  const actionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const animationFrameRef = useRef<number>(); // 추가: 애니메이션 프레임 ID 추적용
+  const animationRef = useRef<number>();
+  const lastUpdate = useRef(performance.now());
+  const isSkillAction = useRef(false);
+
+  const updateFrame = (timestamp: number) => {
+    const elapsed = timestamp - lastUpdate.current;
+
+    if (elapsed >= frameDuration) {
+      setFrame((prev) => {
+        let nextFrame = prev + 1;
+
+        // Skill 액션 마지막 프레임 도달 시 완료 처리
+        if (isSkillAction.current && nextFrame >= totalFrames - 1) {
+          cancelAnimation();
+          onActionComplete?.();
+          return totalFrames - 1;
+        }
+
+        // 일반 프레임 순환 (Idle 상태)
+        if (action === "Idle") {
+          return nextFrame % totalFrames;
+        }
+
+        // 다른 액션의 경우 프레임 증가
+        return nextFrame;
+      });
+      lastUpdate.current = timestamp;
+    }
+
+    animationRef.current = requestAnimationFrame(updateFrame);
+  };
+
+  const cancelAnimation = () => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
+  };
 
   useEffect(() => {
-    let lastFrameTime = performance.now();
+    isSkillAction.current = action === "Skill";
+    lastUpdate.current = performance.now();
 
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - lastFrameTime;
-
-      if (elapsed >= frameDuration && action !== "Idle") {
-        setFrame((prevFrame) => {
-          // "Skill" 액션 마지막 프레임 고정
-          if (action === "Skill" && prevFrame >= totalFrames - 1) {
-            lastFrameRef.current = true;
-            setIsLastFrame(true);
-            return prevFrame;
-          }
-
-          // 일반 프레임 업데이트
-          const nextFrame = (prevFrame + 1) % totalFrames;
-          lastFrameRef.current = false;
-          setIsLastFrame(false);
-          return nextFrame;
-        });
-        lastFrameTime = currentTime;
-      }
-
-      // 애니메이션 ID 저장
-      animationFrameRef.current = requestAnimationFrame(animate);
-    };
+    // Skill 상태 초기화
+    if (action === "Skill") {
+      setFrame(0); // Skill 시작 시 프레임 초기화
+    }
 
     // 애니메이션 시작
-    animationFrameRef.current = requestAnimationFrame(animate);
+    animationRef.current = requestAnimationFrame(updateFrame);
 
     return () => {
-      // 클린업 시 애니메이션 정지
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      cancelAnimation();
     };
-  }, [totalFrames, frameDuration, action]);
+  }, [action, totalFrames, frameDuration]);
 
+  // Skill 액션 타임아웃 백업 (안전 장치)
   useEffect(() => {
     if (action === "Skill") {
-      const timeoutDuration = frameDuration * totalFrames;
-      
-      // 타임아웃 설정
-      actionTimeoutRef.current = setTimeout(() => {
-        if (onActionComplete) onActionComplete();
-      }, timeoutDuration);
+      const timeout = setTimeout(() => {
+        onActionComplete?.();
+      }, totalFrames * frameDuration);
 
-      return () => {
-        // 타임아웃 클린업
-        if (actionTimeoutRef.current) {
-          clearTimeout(actionTimeoutRef.current);
-        }
-      };
+      return () => clearTimeout(timeout);
     }
-  }, [action, frameDuration, totalFrames, onActionComplete]);
+  }, [action, totalFrames, frameDuration]);
 
-  // 추가: 프레임 체크용 효과
-  useEffect(() => {
-    if (action === "Skill" && frame === totalFrames - 1) {
-      // 마지막 프레임 도달 시 강제 종료
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      // 즉시 액션 완료 처리
-      if (onActionComplete) onActionComplete();
-    }
-  }, [frame, action, totalFrames, onActionComplete]);
-
-  return { frame, isLastFrame };
+  return { frame };
 };

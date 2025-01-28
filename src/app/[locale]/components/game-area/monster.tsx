@@ -171,10 +171,54 @@ const Monster = () => {
           backgroundImage: `${monsterImage}`,
           backgroundPosition: `-${frame * frameWidth}px 0px`,
           backgroundSize: `${frameWidth * totalFrames}px 200px`,
+          imageRendering: "pixelated"
         }}
       />
     </div>
   );
 };
+
+// const Monster = () => {
+//   const elementRef = useRef<HTMLDivElement>(null);
+//   const {
+//     totalFrames,
+//     frameWidth,
+//     frameHeight,
+//     frameDuration,
+//     monsterImage,
+//     monsterHP,
+//   } = useMonsterStore(/* 기존 선택자 유지 */);
+
+//   const { monsterAction } = useInteractStore();
+
+//   useSpriteAnimation(elementRef, {
+//     totalFrames,
+//     frameDuration,
+//     action: monsterAction
+//   });
+
+//   // ... 기존 position 및 display 상태 관리 로직 유지
+
+//   return (
+//     <div 
+//       className="flex w-full h-full"
+//       style={{ /* 기존 position 스타일 유지 */ }}
+//     >
+//       <div className="absolute top-12 left-[70px] z-50">
+//         <HpAndMp hp={monsterHP} />
+//       </div>
+//       <div
+//         ref={elementRef}
+//         className="absolute transform translate scale-x-[-1] sprite-animation"
+//         style={{
+//           width: `${frameWidth}px`,
+//           height: `${frameHeight}px`,
+//           backgroundImage: monsterImage,
+//           backgroundSize: `${frameWidth * totalFrames}px 200px`,
+//         }}
+//       />
+//     </div>
+//   );
+// };
 
 export default Monster;
