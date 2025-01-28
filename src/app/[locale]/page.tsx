@@ -1,7 +1,5 @@
-// import ClientComponentPage from "./client-page";
 import i18n from "../../../i18n";
 import LocalePageLayout from "./layout";
-import { FileContentArray, TextItem } from "../libs/types";
 import dynamic from 'next/dynamic';
 
 type LangType = {

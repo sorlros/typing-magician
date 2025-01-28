@@ -9,11 +9,6 @@ interface HeaderProps {
   lang: LangType;
 }
 
-// const sunFlower = Sunflower({
-//   weight: ["500", "700"],
-//   subsets: ["latin"],
-// });
-
 const handjet = Handjet({
   weight: ['400', '700'],
   subsets: ['latin'], // 폰트 서브셋

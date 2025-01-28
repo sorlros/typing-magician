@@ -2,14 +2,12 @@
 
 import React, { useEffect } from "react"
 import Header from "./components/header";
-import { FileContentArray, LangType, TextItem } from "../libs/types";
+import { LangType } from "../libs/types";
 import GameComponent from "./components/game-component";
 import TypingArea from "./components/typing-area/typing-area";
 import { useTextStore } from "@/store/use-text-store";
-import HpAndSkills from "./components/hp-mp-ui/hp-mp";
 import ChoiceModal from "./components/modal/choice-modal";
-import ItemList from "./components/game-area/item/item-list";
-import { useChoice } from "@/store/use-choice";
+
 
 interface PageProps {
   lang: LangType;
@@ -17,7 +15,7 @@ interface PageProps {
 }
 
 const ClientComponentPage = ({ lang, text: phrase }: PageProps) => {
-  const choiceModal = useChoice();
+  
   const separateText = (text: string) => {
     return text.split(/"\s*"/).map(item => item.replace(/"/g, "").trim());
   }
