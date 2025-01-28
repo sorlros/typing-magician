@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCharacterStore } from "@/store/use-character-store";
 import { useChoice } from "@/store/use-choice";
 import { useInteractStore } from "@/store/use-interact-store";
@@ -8,14 +9,13 @@ import useStageStore from "@/store/use-stage-store";
 import { useTypingStore } from "@/store/use-typing-store";
 import { useEffect, useReducer } from "react";
 
-
 const ChoiceModal = () => {
   const { onClose, onOpen, isOpen } = useChoice();
   const { changeJob } = useCharacterStore();
   const { resetTyping } = useTypingStore();
   const { setModalState } = useStageStore(
     (state) => ({
-      setModalState: state.setModalState
+      setModalState: state.setModalState,
     })
   );
   const sentenceNumber = useTypingStore((state) => state.sentenceNumber);
@@ -27,7 +27,7 @@ const ChoiceModal = () => {
   useEffect(() => {
     if (sentenceNumber === 1) {
       onOpen();
-    } 
+    }
     return;
   }, [sentenceNumber]);
 
@@ -41,14 +41,16 @@ const ChoiceModal = () => {
     forceUpdate();
 
     setTimeout(() => {
-      const inputElement = document.querySelector<HTMLInputElement>("#typingInput");
+      const inputElement = document.querySelector<HTMLInputElement>(
+        "#typingInput"
+      );
       inputElement?.focus();
     }, 300);
   };
 
   return (
     <div
-      className={`fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-black bg-opacity-80 z-50 transition-all duration-300 ${  
+      className={`fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-black bg-opacity-80 z-50 transition-all duration-300 ${
         isOpen ? "opacity-100 visible" : "opacity-0 invisible"
       }`}
       data-state={isOpen ? "open" : "closed"}
@@ -64,9 +66,11 @@ const ChoiceModal = () => {
           onClick={() => handleChangeJob("Fire vizard")}
         >
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-30 rounded-lg z-0"></div>
-          <img
+          <Image
             src="/game_images/skills/painterly-spell-icons-1/fireball-red-2.png"
             alt="Fireball"
+            width={96}
+            height={96}
             className="z-10 w-24 h-24 mx-auto rounded-full border-4 border-yellow-500 shadow-lg"
           />
           <h3 className="text-lg font-bold text-yellow-300 mt-4 text-center">
@@ -83,9 +87,11 @@ const ChoiceModal = () => {
           onClick={() => handleChangeJob("Wanderer Magican")}
         >
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-30 rounded-lg z-0"></div>
-          <img
+          <Image
             src="/game_images/skills/painterly-spell-icons-2/ice-blue-2.png"
             alt="Ice Blast"
+            width={96}
+            height={96}
             className="z-10 w-24 h-24 mx-auto rounded-full border-4 border-blue-300 shadow-lg"
           />
           <h3 className="text-lg font-bold text-blue-300 mt-4 text-center">
@@ -102,9 +108,11 @@ const ChoiceModal = () => {
           onClick={() => handleChangeJob("Lightning Mage")}
         >
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-30 rounded-lg z-0"></div>
-          <img
+          <Image
             src="/game_images/skills/painterly-spell-icons-2/lightning-orange-2.png"
             alt="Thunder Strike"
+            width={96}
+            height={96}
             className="z-10 w-24 h-24 mx-auto rounded-full border-4 border-purple-400 shadow-lg"
           />
           <h3 className="text-lg font-bold text-purple-300 mt-4 text-center">

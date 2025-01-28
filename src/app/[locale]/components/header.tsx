@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { LangType } from "../../libs/types";
 import Link from "next/link";
-import { Handjet, Sunflower } from 'next/font/google';
+import { Handjet } from 'next/font/google';
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
@@ -9,10 +9,10 @@ interface HeaderProps {
   lang: LangType;
 }
 
-const sunFlower = Sunflower({
-  weight: ["500", "700"],
-  subsets: ["latin"],
-});
+// const sunFlower = Sunflower({
+//   weight: ["500", "700"],
+//   subsets: ["latin"],
+// });
 
 const handjet = Handjet({
   weight: ['400', '700'],
