@@ -228,8 +228,7 @@ const TypingArea = () => {
       });
     };
 
-    const decomposedTyped = useMemo(() => typedText.split("").map(decomposeKorean), [typedText]);
-    // const decomposedTyped = typedText.split("").map(decomposeKorean);
+    const decomposedTyped = typedText.split("").map(decomposeKorean);
     const decomposedContent = decomposedText;
 
     const decomposedContentMap = decomposedContent.map((correctCharArray, index) => {
