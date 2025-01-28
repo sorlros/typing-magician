@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import LocalePage from "./[locale]/page";
 
-export default function Home() {  
+export default function Home() {
   const [locale, setLocale] = useState<string>("ko");
 
   useEffect(() => {
@@ -15,8 +15,8 @@ export default function Home() {
 
     fetchLocale();
   }, []);
-  
+
   return (
-    <LocalePage locale={locale} />
+    <LocalePage params={{ locale }} />
   );
 }
