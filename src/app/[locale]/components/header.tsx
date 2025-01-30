@@ -1,17 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { LangType } from "../../libs/types";
 import Link from "next/link";
-import { Handjet } from 'next/font/google';
+import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+
 
 interface HeaderProps {
   lang: LangType;
 }
 
-const handjet = Handjet({
-  weight: ['400', '700'],
-  subsets: ['latin'], // 폰트 서브셋
+const handjet = localFont({
+  src: "../../../../public/fonts/Handjet,New_Amsterdam/Handjet/static/Handjet-Light.ttf",
+  weight: "400",
+  display: "swap",
 });
 
 const Header = ({ lang }: HeaderProps) => {
