@@ -1,9 +1,7 @@
 import { InteractEffect } from "@/store/use-interact-store";
-import { DotsProps } from "../../libs/types";
 import Background from "./game-area/background";
 import Character from "./game-area/character";
 import Monster from "./game-area/monster";
-import HpAndSkills from "./hp-mp-ui/hp-mp";
 import React from "react";
 
 const GameComponent = () => {
