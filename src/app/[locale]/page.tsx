@@ -37,7 +37,7 @@ export default async function LocalePage({ params }: { params: { locale: string 
 
 // 서버에서 언어 데이터를 가져오는 함수
 async function fetchLangFromServer(locale: string) {
-  const response = await fetch(`http://localhost:3000/api/get-translation?locale=${locale}`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-translation?locale=${locale}`);
 
   if (!response.ok) {
     throw new Error("get-translation fetch 오류");
@@ -48,7 +48,7 @@ async function fetchLangFromServer(locale: string) {
 
 // 서버에서 텍스트 데이터를 가져오는 함수
 async function fetchTextFromPublic() {
-  const response = await fetch(`http://localhost:3000/api/get-text`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-text`);
 
   if (!response.ok) {
     throw new Error("get-text fetch 오류");

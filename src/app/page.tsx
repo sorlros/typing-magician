@@ -8,7 +8,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchLocale = async () => {
-      const response = await fetch("/api/get-locale");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-locale`);
       const data = await response.json();
       setLocale(data.locale as string);
     };
