@@ -45,14 +45,22 @@ async function fetchLangFromServer(locale: string) {
     throw new Error("get-translation fetch 오류");
   }
 
-  try {
-    const json = await response.json(); // response.json()을 한 번만 호출
-    console.log("fetchLangFromServer 응답 내용:", json);
-    return json;
-  } catch (error) {
-    console.error("JSON 파싱 오류:", error);
-    throw new Error("get-translation JSON 변환 오류");
+  // try {
+  //   const json = await response.json(); // response.json()을 한 번만 호출
+  //   console.log("fetchLangFromServer 응답 내용:", json);
+  //   return json;
+  // } catch (error) {
+  //   console.error("JSON 파싱 오류:", error);
+  //   throw new Error("get-translation JSON 변환 오류");
+  // }
+  const contentType = response.headers.get("content-type");
+  if (!contentType || !contentType.includes("application/json")) {
+    const text = await response.text();
+    console.error("get-translation 응답이 JSON이 아님:", text);
+    throw new Error("get-translation JSON 변환 오류 (응답이 JSON 형식이 아님)");
   }
+
+  return response.json();
 
   // return response.json();
 }
