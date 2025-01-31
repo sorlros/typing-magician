@@ -37,22 +37,43 @@ export default async function LocalePage({ params }: { params: { locale: string 
 
 // 서버에서 언어 데이터를 가져오는 함수
 async function fetchLangFromServer(locale: string) {
+  // const response = await fetch(`http://localhost:3000/api/get-translation?locale=${locale}`);
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-translation?locale=${locale}`);
-
+  // console.log("fetchLangFromServer 응답 상태 코드:", response.status);
+  
   if (!response.ok) {
     throw new Error("get-translation fetch 오류");
   }
 
-  return response.json();
+  try {
+    const json = await response.json(); // response.json()을 한 번만 호출
+    console.log("fetchLangFromServer 응답 내용:", json);
+    return json;
+  } catch (error) {
+    console.error("JSON 파싱 오류:", error);
+    throw new Error("get-translation JSON 변환 오류");
+  }
+
+  // return response.json();
 }
 
 // 서버에서 텍스트 데이터를 가져오는 함수
 async function fetchTextFromPublic() {
+  // const response = await fetch(`http://localhost:3000/api/get-text`);
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-text`);
+  
+  // const text = await response.text();
+  // console.log("fetchTextFromPublic 응답 상태 코드:", response.status);
+
+  // const text = await response.text(); // JSON인지 확인하기 위해 text로 받음
+  // console.log("fetchLangFromServer 응답 내용:", text); // 응답 내용 출력
 
   if (!response.ok) {
     throw new Error("get-text fetch 오류");
   }
 
+  // const json = JSON.parse(text);
+
   return response.json();
+  // return json;
 }
