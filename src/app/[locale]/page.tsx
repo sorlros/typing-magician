@@ -38,31 +38,44 @@ export default async function LocalePage({ params }: { params: { locale: string 
 // 서버에서 언어 데이터를 가져오는 함수
 async function fetchLangFromServer(locale: string) {
   // const response = await fetch(`http://localhost:3000/api/get-translation?locale=${locale}`);
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-translation?locale=${locale}`);
-  // console.log("fetchLangFromServer 응답 상태 코드:", response.status);
+  // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-translation?locale=${locale}`);
+  // // console.log("fetchLangFromServer 응답 상태 코드:", response.status);
   
+  // if (!response.ok) {
+  //   throw new Error("get-translation fetch 오류");
+  // }
+  // const contentType = response.headers.get("content-type");
+  // if (!contentType || !contentType.includes("application/json")) {
+  //   const text = await response.text();
+  //   console.error("get-translation 응답이 JSON이 아님:", text);
+  //   throw new Error("get-translation JSON 변환 오류 (응답이 JSON 형식이 아님)");
+  // }
+
+  // return response.json();
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/get-translation?locale=${locale}`;
+  console.log("Fetching:", url);
+
+  const response = await fetch(url);
+  console.log("Response status:", response.status);
+
+  const contentType = response.headers.get("content-type");
+  console.log("Content-Type:", contentType);
+
+  const text = await response.text();
+  console.log("Response text:", text);
+
   if (!response.ok) {
-    throw new Error("get-translation fetch 오류");
+    throw new Error(`get-translation fetch 오류 (상태 코드: ${response.status})`);
   }
 
-  // try {
-  //   const json = await response.json(); // response.json()을 한 번만 호출
-  //   console.log("fetchLangFromServer 응답 내용:", json);
-  //   return json;
-  // } catch (error) {
-  //   console.error("JSON 파싱 오류:", error);
-  //   throw new Error("get-translation JSON 변환 오류");
-  // }
-  const contentType = response.headers.get("content-type");
   if (!contentType || !contentType.includes("application/json")) {
-    const text = await response.text();
     console.error("get-translation 응답이 JSON이 아님:", text);
     throw new Error("get-translation JSON 변환 오류 (응답이 JSON 형식이 아님)");
   }
 
-  return response.json();
+  return JSON.parse(text);
 
-  // return response.json();
+  
 }
 
 // 서버에서 텍스트 데이터를 가져오는 함수
