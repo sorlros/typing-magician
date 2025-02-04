@@ -89,6 +89,7 @@ const Monster = () => {
   useEffect(() => {
     if (frame === 0 && monsterAction === "Hurt") {
       monsterReduceHp(2);
+      console.log("몬스터 체력 2 감소");
     }
   }, [frame, monsterAction, monsterReduceHp]);
 

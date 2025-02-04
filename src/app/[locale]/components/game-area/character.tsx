@@ -56,7 +56,9 @@ const Character = () => {
 
   useEffect(() => {
     if (characterAction === "Hurt" && frame === 0) {
+      console.log("체력 감소 전:", characterHP);
       characterReduceHp(3);
+      console.log("체력 감소 후:", useCharacterStore.getState().characterHP);
     }
   }, [characterAction, frame, characterReduceHp]);
 
