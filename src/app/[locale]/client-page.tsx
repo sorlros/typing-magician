@@ -10,11 +10,11 @@ import ChoiceModal from "./components/modal/choice-modal";
 
 
 interface PageProps {
-  lang: LangType;
+  // lang: LangType;
   text: string;
 }
 
-const ClientComponentPage = ({ lang, text: phrase }: PageProps) => {
+const ClientComponentPage = ({ text: phrase }: PageProps) => {
   
   const separateText = (text: string) => {
     return text.split(/"\s*"/).map(item => item.replace(/"/g, "").trim());
@@ -34,7 +34,7 @@ const ClientComponentPage = ({ lang, text: phrase }: PageProps) => {
 
   return (
     <div className="px-60">
-      <Header lang={lang}/>
+      <Header />
       <GameComponent />
       <TypingArea />
       <ChoiceModal />

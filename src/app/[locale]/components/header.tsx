@@ -16,8 +16,8 @@ const handjet = localFont({
   display: "swap",
 });
 
-const Header = ({ lang }: HeaderProps) => {
-  const { t } = useTranslation();
+const Header = () => {
+  // const { t } = useTranslation();
   const [isClient, setIsClient] = useState(false);
 
   // 클라이언트에서만 폰트 적용
@@ -32,21 +32,26 @@ const Header = ({ lang }: HeaderProps) => {
   return (
     <div className="flex w-full h-[120px] relative justify-between text-white items-center z-50">
       <div className={cn(`flex justify-start w-[120px] text-2xl`, handjet.className)}>
-        <Link href="/">{t("header.typing_magician")}</Link>
+        {/* <Link href="/">{t("header.typing_magician")}</Link> */}
+        <Link href="/">Typing_magician</Link>
       </div>
 
       <div className={cn(`flex justify-end space-x-6 text-xl`, handjet.className)}>
         <div className="cursor-pointer">
-          <Link href="/contact">{t("header.Contact")}</Link>
+          {/* <Link href="/contact">{t("header.Contact")}</Link> */}
+          <Link href="/contact">Contact</Link>
         </div>
         <div>
-          <Link href="/upload">{t("header.Upload")}</Link>
+          {/* <Link href="/upload">{t("header.Upload")}</Link> */}
+          <Link href="/upload">Upload</Link>
         </div>
         <div>
-          <Link href="/account">{t("header.Account")}</Link>
+          {/* <Link href="/account">{t("header.Account")}</Link> */}
+          <Link href="/account">Account</Link>
         </div>
         <div>
-          <Link href="/patch">{t("header.Patched")}</Link>
+          {/* <Link href="/patch">{t("header.Patched")}</Link> */}
+          <Link href="/patch">Patched</Link>
         </div>
       </div>
     </div>

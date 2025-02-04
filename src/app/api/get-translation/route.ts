@@ -29,32 +29,41 @@
 //   }
 // }
 
-import fs from "fs/promises";
+// import fs from "fs/promises";
+import fs from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const locale = searchParams.get("locale");
+  const locale = searchParams.get("locale") || "ko";
 
-  if (!locale) {
-    return NextResponse.json({ error: "locale 오류" }, { status: 400 });
-  }
+  // if (!locale) {
+  //   return NextResponse.json({ error: "locale 오류" }, { status: 400 });
+  // }
 
-  const filePath = path.join(process.cwd(), "public", "locales", locale, "lang.json");
+  // const filePath = path.join(process.cwd(), "public", "locales", locale, "lang.json");
 
+  // try {
+  //   const content = await fs.readFile(filePath, "utf8");
+  //   return new NextResponse(content, {
+  //     status: 200,
+  //     headers: new Headers({
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Origin": "*", // 또는 특정 도메인
+  //       "Access-Control-Allow-Methods": "GET",
+  //       "Access-Control-Allow-Headers": "Content-Type",
+  //     }),
+  //   });
+  // } catch (error) {
+  //   return NextResponse.json({ error: "locales 번역 파일 오류" }, { status: 500 });
+  // }
   try {
-    const content = await fs.readFile(filePath, "utf8");
-    return new NextResponse(content, {
-      status: 200,
-      headers: new Headers({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*", // 또는 특정 도메인
-        "Access-Control-Allow-Methods": "GET",
-        "Access-Control-Allow-Headers": "Content-Type",
-      }),
-    });
+    const filePath = path.join(process.cwd(), "public/locales", locale, "lang.json");
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    const jsonData = JSON.parse(fileContent);
+    return NextResponse.json(jsonData);
   } catch (error) {
-    return NextResponse.json({ error: "locales 번역 파일 오류" }, { status: 500 });
+    return NextResponse.json({ error: "Translation file not found" }, { status: 404 });
   }
 }

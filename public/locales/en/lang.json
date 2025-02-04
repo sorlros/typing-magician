@@ -5,9 +5,5 @@
     "Upload": "Upload",
     "Patched": "Patched",
     "Account": "Account"
-  },
-  "nav": {
-    "dashboard": "대시보드",
-    "shopping-mall": "쇼핑몰 관리"
   }
 }

@@ -6,9 +6,6 @@ export type LangType = {
   header: {
     [key: string]: string;
   };
-  nav: {
-    [key: string]: string;
-  };
 };
 
 export interface DotsProps {
