@@ -161,7 +161,7 @@ const Monster = () => {
       onTransitionEnd={handleTransitionEnd}
     >
       <div className="absolute top-12 left-[70px] z-50">
-        <HpAndMp hp={monsterHP} />
+        <HpAndMp type="monster" />
       </div>
 
       <div

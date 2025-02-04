@@ -66,7 +66,7 @@ const Character = () => {
     <>
       <div className="flex w-full h-full relative">
         <div className="absolute top-12 left-[70px] z-50">
-          <HpAndMp hp={characterHP} />
+          <HpAndMp type="character" />
         </div>
         <div
           className="absolute left-10 top-0 bottom-0 right-10"
