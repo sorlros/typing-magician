@@ -7,12 +7,23 @@ const ClientComponentPage = dynamic(() => import("./client-page"), {
 });
 
 async function fetchTextFromPublic() {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/get-text`;
+  try {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/get-text`;
 
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) throw new Error("get-text fetch 오류");
+    const response = await fetch(url, { cache: "no-store" });
 
-  return response.json();
+    if (!response.ok) throw new Error("get-text api 요청 오류");
+
+    const data = await response.json();
+    if (!data || typeof data.content !== "string") {
+      throw new Error("API 응답이 올바르지 않음");
+    }
+
+    return data.content;
+  } catch (error) {
+    console.error("fetchTextFromPublic 실패:", error);
+    return "";
+  }
 }
 
 export default async function LocalePage() {
