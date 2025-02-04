@@ -31,23 +31,13 @@ const Character = () => {
   );
 
   const { characterAction, setCharacterAction, setUseSpecial, useSpecial } = useInteractStore();
-  // const frame = useAnimation(totalFrames, frameDuration, characterAction);
-
-  // const { frame } = useFrameAnimation({
-  //   totalFrames,
-  //   frameDuration,
-  //   action: characterAction,
-  //   onActionComplete: () => {
-  //     setCharacterAction("Idle");
-  //   }
-  // });
   const { frame } = useFrameAnimation({
     totalFrames,
     frameDuration,
     action: characterAction,
     onActionComplete: () => {
       if (characterAction === "Skill") {
-        console.log("SKILLLLLLLLLLLL")
+        // console.log("SKILLLLLLLLLLLL")
         setCharacterAction("Idle"); // 스킬 실행 후 Idle로 전환
       }
     },
@@ -60,7 +50,7 @@ const Character = () => {
 
   useEffect(() => {
     if (useSpecial && characterAction !== "Skill") {
-      setCharacterAction("Skill"); // 스킬 실행
+      setCharacterAction("Skill");
     }
   }, [useSpecial, characterAction, setCharacterAction]);
 

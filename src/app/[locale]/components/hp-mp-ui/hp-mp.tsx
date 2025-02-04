@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+"use client";
+
+import React from 'react'
 import Image from 'next/image'
-import { useCharacterStore } from '@/store/use-character-store'
-import { useMonsterStore } from '@/store/use-monster-store';
 
 interface HpState {
   hp: number;
@@ -11,11 +11,6 @@ const HpAndMp = ({ hp }: HpState) => {
   const getHpWidth = (hp: number) => {
     return Math.max((hp / 100) * 100, 0); // 최소값 0
   };
-
-  // 해야 할것
-  // 캐릭터가 "Skill" 상태일 때 로직
-  // HP MP의 UI 유동적으로 변경 로직
-  // typingArea컴포넌트의 loadNextSentence시 monsterNumber값 변경
 
   return (
     <div className="flex flex-col w-full h-[100px]">
