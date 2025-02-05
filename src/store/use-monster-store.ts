@@ -64,7 +64,7 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
   totalFrames: 7,
   frameWidth: 200,
   frameHeight: 200,
-  frameDuration: 300,
+  frameDuration: 200,
   updateMonsterSettings: (monsterAction) => {
     const monsterNumber = useMonsterStore.getState().monsterNumber;
     const monsterHP = useMonsterStore.getState().monsterHP;
@@ -124,7 +124,7 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
       totalFrames,
       frameWidth: 200,
       frameHeight: 200,
-      frameDuration: 100,
+      frameDuration: 200,
     });
 
     // console.log('Updated monster settings:', { typedCharacters, monsterType, action });

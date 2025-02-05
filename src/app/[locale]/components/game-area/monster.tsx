@@ -151,7 +151,7 @@ const Monster = () => {
 
   return (
     <div
-      className="flex w-full h-full"
+      className="flex w-[254px] h-full relative"
       style={{
         position: "absolute",
         left: position,
@@ -160,12 +160,12 @@ const Monster = () => {
       }}
       onTransitionEnd={handleTransitionEnd}
     >
-      <div className="absolute top-12 left-[70px] z-50">
+      <div className="absolute top-12 left-10 right-10 z-50">
         <HpAndMp type="monster" />
       </div>
 
       <div
-        className="absolute transform translate scale-x-[-1]"
+        className="absolute transform left-5 top-0 bottom-0 right-5 translate scale-x-[-1]"
         style={{
           width: `${frameWidth}px`,
           height: `${frameHeight}px`,

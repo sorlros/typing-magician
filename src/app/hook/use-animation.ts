@@ -29,6 +29,7 @@ export const useFrameAnimation = ({
         if (isSkillAction.current && nextFrame >= totalFrames - 1) {
           cancelAnimation();
           onActionComplete?.();
+          
           return totalFrames - 1;
         }
 

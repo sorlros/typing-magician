@@ -13,15 +13,15 @@ const HpAndMp = ({ type }: { type: "character" | "monster" }) => {
     : monsterHP
 
   return (
-    <div className="flex flex-col w-full h-[100px]">
+    <div className="flex flex-col w-[98px] h-[12px]">
       <div 
-        className="relative h-[12px] inline-block overflow-hidden"
+        className="relative w-full h-full inline-block overflow-hidden"
         style={{
           width: `${Math.max((hp / 100) * 100, 0)}%`,
           transition: "width 0.3s ease-in-out"
         }}
       >
-        <Image src="/game_images/UI/hp_bar.png" alt="hp" className="absolute top-0 left-0" layout="fill"/>
+        <Image src="/game_images/UI/hp_bar.png" alt="hp" fill />
       </div>
     </div>
   );

@@ -7,8 +7,8 @@ import path from "path";
 
 export async function GET(req: NextRequest, res: NextResponse) {
   // const filePath = path.join(process.cwd(), "public", "text", "*.txt")
-  // const allowedOrigin = process.env.NEXT_PUBLIC_API_URL as string;
-  const allowedOrigin = "https://typing-magician.vercel.app";
+  const allowedOrigin = process.env.NEXT_PUBLIC_API_URL as string;
+  // const allowedOrigin = "https://typing-magician.vercel.app";
   const dirPath = path.join(process.cwd(), "public", "text");
 
   try {
