@@ -136,7 +136,5 @@ export const InteractEffect = () => {
     }
   }, [characterHP, monsterHP, appearMonster, cpm]);
 
-  
-
   return null;
 };

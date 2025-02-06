@@ -3,8 +3,10 @@ import Background from "./game-area/background";
 import Character from "./game-area/character";
 import Monster from "./game-area/monster";
 import React from "react";
+import useGameLoop from '@/app/hooks/use-loop';
 
 const GameComponent = () => {
+  useGameLoop();
 
   // const MemoizedInteractEffect = React.memo(InteractEffect);
   return (

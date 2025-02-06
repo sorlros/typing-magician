@@ -7,7 +7,7 @@ import { useMonsterStore } from "@/store/use-monster-store";
 import useStageStore from "@/store/use-stage-store";
 import { useInteractStore } from "@/store/use-interact-store";
 import { useShallow } from "zustand/react/shallow";
-import { useFrameAnimation } from "@/app/hook/use-animation";
+import { useFrameAnimation } from "@/app/hooks/use-animation";
 
 const Monster = () => {
   const [position, setPosition] = useState("110%");
@@ -86,12 +86,12 @@ const Monster = () => {
     }
   }, [frame, characterAction]);
 
-  useEffect(() => {
-    if (frame === 0 && monsterAction === "Hurt") {
-      monsterReduceHp(2);
-      console.log("몬스터 체력 2 감소");
-    }
-  }, [frame, monsterAction, monsterReduceHp]);
+  // useEffect(() => {
+  //   if (frame === 0 && monsterAction === "Hurt") {
+  //     monsterReduceHp(2);
+  //     console.log("몬스터 체력 2 감소");
+  //   }
+  // }, [frame, monsterAction, monsterReduceHp]);
 
   useEffect(() => {
     if (appearMonster && modalState === "close") {
@@ -151,7 +151,7 @@ const Monster = () => {
 
   return (
     <div
-      className="flex w-[254px] h-full relative"
+      className="flex w-full h-full relative"
       style={{
         position: "absolute",
         left: position,
@@ -160,7 +160,7 @@ const Monster = () => {
       }}
       onTransitionEnd={handleTransitionEnd}
     >
-      <div className="absolute top-12 left-10 right-10 z-50">
+      <div className="absolute top-12 left-20 right-20 z-50">
         <HpAndMp type="monster" />
       </div>
 

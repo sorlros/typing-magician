@@ -5,7 +5,7 @@ import { useCharacterStore } from "@/store/use-character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
 import { useInteractStore } from "@/store/use-interact-store";
 import { useShallow } from "zustand/react/shallow";
-import { useFrameAnimation } from "@/app/hook/use-animation";
+import { useFrameAnimation } from "@/app/hooks/use-animation";
 
 const Character = () => {
   const {
@@ -54,13 +54,13 @@ const Character = () => {
     }
   }, [useSpecial, characterAction, setCharacterAction]);
 
-  useEffect(() => {
-    if (characterAction === "Hurt" && frame === 0) {
-      console.log("체력 감소 전:", characterHP);
-      characterReduceHp(3);
-      console.log("체력 감소 후:", useCharacterStore.getState().characterHP);
-    }
-  }, [characterAction, frame, characterReduceHp]);
+  // useEffect(() => {
+  //   if (characterAction === "Hurt" && frame === 0) {
+  //     console.log("체력 감소 전:", characterHP);
+  //     characterReduceHp(3);
+  //     console.log("체력 감소 후:", useCharacterStore.getState().characterHP);
+  //   }
+  // }, [characterAction, frame, characterReduceHp]);
 
   return (
     <>
