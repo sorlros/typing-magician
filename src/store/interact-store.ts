@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { unstable_batchedUpdates as batch } from "react-dom";
-import { useTypingStore } from "./use-typing-store";
-import { useMonsterStore } from "./use-monster-store";
-import { useCharacterStore } from "./use-character-store";
+import { useTypingStore } from "./typing-store";
+import { useMonsterStore } from "./monster-store";
+import { useCharacterStore } from "./character-store";
 import { useEffect } from "react";
 
 interface InteractStore {
@@ -12,8 +12,6 @@ interface InteractStore {
   setMonsterAction: (action: InteractStore["monsterAction"]) => void;
   useSpecial: boolean;
   setUseSpecial: (state: boolean) => void;
-  // inAction: boolean;
-  // setInActionToggle: () => void;
   isLoading: boolean;
   setIsLoading: (state: boolean) => void;
 }
@@ -28,17 +26,11 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
     if (currentAction === "Skill" && action !== "Idle") {
       return;
     }
-  
     set({ characterAction: action });
   },
   setMonsterAction: (action) => set({ monsterAction: action }),
   useSpecial: false,
   setUseSpecial: (state) => set({ useSpecial: state }),
-  // inAction: false,
-  // setInActionToggle: () => {
-  //   const { inAction } = get();
-  //   set({ inAction: !inAction });
-  // },
   isLoading: false,
   setIsLoading: (state) => set({ isLoading: state }),
 }));
@@ -50,8 +42,6 @@ export const InteractEffect = () => {
   const monsterHP = useMonsterStore((state) => state.monsterHP);
   const appearMonster = useMonsterStore((state) => state.appearMonster);
   const cpm = useTypingStore((state) => state.cpm);
-  const totalFrames = useCharacterStore((state) => state.totalFrames);
-  const frameDuration = useCharacterStore((state) => state.frameDuration);
 
   useEffect(() => {
     if (useSpecial) {
@@ -66,7 +56,7 @@ export const InteractEffect = () => {
 
         const timeout = setTimeout(() => {
           batch(() => {
-            setCharacterAction("Idle");
+            // setCharacterAction("Idle");
             setUseSpecial(false);
           });
         }, currentTotalFrames * currentFrameDuration);

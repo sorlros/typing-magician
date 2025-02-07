@@ -1,32 +1,29 @@
 "use client";
 
-import { useTextStore } from "@/store/use-text-store";
-import { useTypingStore } from "@/store/use-typing-store";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTextStore } from "@/store/text-store";
+import { useTypingStore } from "@/store/typing-store";
+import { useCallback, useEffect, useRef, useState } from "react";
 import decomposeKorean from "./decompose-korean";
 import { toast } from "sonner";
-import { useMonsterStore } from "@/store/use-monster-store";
-import { useChoice } from "@/store/use-choice";
-import shallow from 'zustand/shallow'
 import { useShallow } from "zustand/react/shallow";
-import useStageStore from "@/store/use-stage-store";
-import { useInteractStore } from "@/store/use-interact-store";
+import useStageStore from "@/store/stage-store";
+import { useInteractStore } from "@/store/interact-store";
 
 const TypingArea = () => {
   const {
-    startTime,
-    lastTypedTime,
+    // startTime,
+    // lastTypedTime,
     // cpm,
     updatedTypingSpeed,
     resetTyping,
     // decreaseCPM,
     setAccuracy,
-    accuracy,
+    // accuracy,
     correctCharacters,
     setCorrectCharacters,
     setTypedCharacters,
     typedCharacters,
-    totalTypedCharacters,
+    // totalTypedCharacters,
     sentenceNumber,
     addSentenceNumber,
   } = useTypingStore(
@@ -82,23 +79,13 @@ const TypingArea = () => {
   const setCharacterAction = useInteractStore.getState().setCharacterAction;
   const setMonsterAction = useInteractStore.getState().setMonsterAction;
 
-  // const setIsLoading = useInteractStore.getState().setIsLoading;
-
-  // const setIsLoading = useInteractStore.getState().setIsLoading;
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [visibleContent, setVisibleContent] = useState<string>("");
-  // const [sentenceNumber, setSentenceNumber] = useState<number>(0);
-  // const [decomposedTyped, setDecomposedTyped] = useState<string[][]>([]);
-
   const [realTimeAccuracy, setRealTimeAccuracy] = useState<number>(0);
   const [typingSpeed, setTypingSpeed] = useState<number>(0);
 
   const [shakingIndex, setShakingIndex] = useState<number | null>(null);
-
-  // const lastTypedTime = useRef(Date.now()); // 마지막 타이핑 시간 추적
-  // const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     initializeIndex();

@@ -5,7 +5,7 @@ import Header from "./components/header";
 import { LangType } from "../libs/types";
 import GameComponent from "./components/game-component";
 import TypingArea from "./components/typing-area/typing-area";
-import { useTextStore } from "@/store/use-text-store";
+import { useTextStore } from "@/store/text-store";
 import ChoiceModal from "./components/modal/choice-modal";
 
 

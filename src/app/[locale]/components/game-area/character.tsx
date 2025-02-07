@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useCharacterStore } from "@/store/use-character-store";
+import { useCharacterStore } from "@/store/character-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
-import { useInteractStore } from "@/store/use-interact-store";
+import { useInteractStore } from "@/store/interact-store";
 import { useShallow } from "zustand/react/shallow";
 import { useFrameAnimation } from "@/app/hooks/use-animation";
 

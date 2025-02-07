@@ -1,7 +1,7 @@
 "use client";
 
-import { useCharacterStore } from "@/store/use-character-store";
-import { useMonsterStore } from "@/store/use-monster-store";
+import { useCharacterStore } from "@/store/character-store";
+import { useMonsterStore } from "@/store/monster-store";
 import Image from "next/image";
 
 const HpAndMp = ({ type }: { type: "character" | "monster" }) => {

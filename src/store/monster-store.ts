@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { useTypingStore } from "./use-typing-store";
+import { useTypingStore } from "./typing-store";
 import { subscribeWithSelector } from "zustand/middleware";
-import { useInteractStore } from "./use-interact-store";
-import useStageStore from "./use-stage-store";
+import { useInteractStore } from "./interact-store";
+import useStageStore from "./stage-store";
 
 interface MonsterState {
   monsterNumber: number;
@@ -64,7 +64,7 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
   totalFrames: 7,
   frameWidth: 200,
   frameHeight: 200,
-  frameDuration: 200,
+  frameDuration: 100,
   updateMonsterSettings: (monsterAction) => {
     const monsterNumber = useMonsterStore.getState().monsterNumber;
     const monsterHP = useMonsterStore.getState().monsterHP;
@@ -124,7 +124,7 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
       totalFrames,
       frameWidth: 200,
       frameHeight: 200,
-      frameDuration: 200,
+      frameDuration: monsterAction === "Dead" ? 300 : 100,
     });
 
     // console.log('Updated monster settings:', { typedCharacters, monsterType, action });
@@ -145,29 +145,3 @@ export const useMonsterStore = create(subscribeWithSelector<MonsterState>((set, 
     });
   }
 })));
-
-// useMonsterStore.subscribe(
-//   (state) => state.monsterHP, // monsterHP 상태 변화 감지
-//   (monsterHP) => {
-//     const monsterNumber = useMonsterStore.getState().monsterNumber;
-//     const { setNextStage } = useStageStore.getState(); // 스테이지 전환 함수
-//     const currentStage = useStageStore.getState().stage;
-
-//     // 이미 Dead 상태라면 추가 업데이트 방지
-//     if (monsterHP <= 0 && monsterNumber === 3) {
-//       if (currentStage < 4) {
-//         console.log("setNextStage")
-//         setNextStage(); // 스테이지 전환
-//       }
-
-//       // 몬스터 상태를 Dead로 업데이트 (무한 루프 방지)
-//       useMonsterStore.getState().updateMonsterSettings("Dead");
-//       return; // 이후 로직 실행 방지
-//     }
-
-//     if (monsterHP <= 0) {
-//       console.log("몬스터 사망: Dead 상태로 전환됩니다.");
-//       useMonsterStore.getState().updateMonsterSettings("Dead");
-//     }
-//   }
-// );

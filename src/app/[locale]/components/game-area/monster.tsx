@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTypingStore } from "@/store/use-typing-store";
+import { useTypingStore } from "@/store/typing-store";
 import HpAndMp from "../hp-mp-ui/hp-mp";
-import { useMonsterStore } from "@/store/use-monster-store";
-import useStageStore from "@/store/use-stage-store";
-import { useInteractStore } from "@/store/use-interact-store";
+import { useMonsterStore } from "@/store/monster-store";
+import useStageStore from "@/store/stage-store";
+import { useInteractStore } from "@/store/interact-store";
 import { useShallow } from "zustand/react/shallow";
 import { useFrameAnimation } from "@/app/hooks/use-animation";
 

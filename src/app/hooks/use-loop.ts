@@ -1,46 +1,44 @@
-import { useEffect, useRef } from 'react';
-import { useInteractStore } from "@/store/use-interact-store";
-import { useCharacterStore } from '@/store/use-character-store';
-import { useMonsterStore } from '@/store/use-monster-store';
+import { useEffect, useRef } from "react";
+import { useInteractStore } from "@/store/interact-store";
+import { useCharacterStore } from "@/store/character-store";
+import { useMonsterStore } from "@/store/monster-store";
 
 const useGameLoop = () => {
   const requestRef = useRef<number>();
-  const previousTimeRef = useRef(performance.now());
+  const previousTimeRef = useRef<number>(performance.now());
   const { characterAction, monsterAction, setCharacterAction, setMonsterAction } = useInteractStore();
-  const { characterHP, characterReduceHp } = useCharacterStore();
+  const { characterReduceHp } = useCharacterStore();
   const { monsterReduceHp } = useMonsterStore();
 
   const gameLoop = (time: number) => {
-    if (previousTimeRef.current != undefined) {
-      const deltaTime = time - previousTimeRef.current;
+    const deltaTime = time - previousTimeRef.current;
 
-      if (characterAction === 'Hurt') {
+    if (deltaTime >= 800) {
+      if (characterAction === "Hurt") {
         characterReduceHp(3);
-        setCharacterAction('Idle');
-        console.log("loop cha")
+        setCharacterAction("Idle");
+        // console.log("loop cha");
       }
 
-      if (monsterAction === 'Hurt') {
+      if (monsterAction === "Hurt") {
         monsterReduceHp(4);
-        setMonsterAction('Idle');
-        console.log("loop mon")
+        setMonsterAction("Idle");
+        // console.log("loop mon");
       }
-    }
-    previousTimeRef.current = time;
-    requestRef.current = requestAnimationFrame(gameLoop);
-  };
 
-  const cancelAnimation = () => {
-    if (requestRef.current) {
-      cancelAnimationFrame(requestRef.current);
+      previousTimeRef.current = time;
     }
+
+    requestRef.current = requestAnimationFrame(gameLoop);
   };
 
   useEffect(() => {
     requestRef.current = requestAnimationFrame(gameLoop);
     return () => {
-      cancelAnimation();
-    }
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+    };
   }, [characterAction, monsterAction]);
 };
 

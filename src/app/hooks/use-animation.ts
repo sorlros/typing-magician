@@ -16,7 +16,7 @@ export const useFrameAnimation = ({
   const [frame, setFrame] = useState(0);
   const animationRef = useRef<number>();
   const lastUpdate = useRef(performance.now());
-  const isSkillAction = useRef(false);
+  const isFiniteAction = useRef(false);
 
   const updateFrame = (timestamp: number) => {
     const elapsed = timestamp - lastUpdate.current;
@@ -26,7 +26,7 @@ export const useFrameAnimation = ({
         let nextFrame = prev + 1;
 
         // Skill 액션 마지막 프레임 도달 시 완료 처리
-        if (isSkillAction.current && nextFrame >= totalFrames - 1) {
+        if (isFiniteAction.current && nextFrame >= totalFrames - 1) {
           cancelAnimation();
           onActionComplete?.();
           
@@ -54,12 +54,12 @@ export const useFrameAnimation = ({
   };
 
   useEffect(() => {
-    isSkillAction.current = action === "Skill";
+    isFiniteAction.current = action === "Skill" || action === "Dead";
     lastUpdate.current = performance.now();
 
-    // Skill 상태 초기화
-    if (action === "Skill") {
-      setFrame(0); // Skill 시작 시 프레임 초기화
+    // Skill, Dead 상태 초기화
+    if (isFiniteAction.current) {
+      setFrame(0);
     }
 
     // 애니메이션 시작
@@ -70,9 +70,9 @@ export const useFrameAnimation = ({
     };
   }, [action, totalFrames, frameDuration]);
 
-  // Skill 액션 타임아웃 백업 (안전 장치)
+  // 액션 타임아웃 백업
   useEffect(() => {
-    if (action === "Skill") {
+    if (isFiniteAction.current) {
       const timeout = setTimeout(() => {
         onActionComplete?.();
       }, totalFrames * frameDuration);

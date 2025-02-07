@@ -1,4 +1,4 @@
-import { InteractEffect } from "@/store/use-interact-store";
+import { InteractEffect } from "@/store/interact-store";
 import Background from "./game-area/background";
 import Character from "./game-area/character";
 import Monster from "./game-area/monster";

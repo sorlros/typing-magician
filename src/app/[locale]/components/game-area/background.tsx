@@ -1,9 +1,9 @@
 import anime from 'animejs';
 import { useEffect, useRef, useState } from "react";
 import Image from 'next/image';
-import { useTypingStore } from '@/store/use-typing-store';
-import { useMonsterStore } from '@/store/use-monster-store';
-import useStageStore from '@/store/use-stage-store';
+import { useTypingStore } from '@/store/typing-store';
+import { useMonsterStore } from '@/store/monster-store';
+import useStageStore from '@/store/stage-store';
 
 const Background = () => {
   const animeRef = useRef<HTMLDivElement | null>(null);

@@ -1,8 +1,6 @@
 import { create } from "zustand";
-import { useTypingStore } from "./use-typing-store";
+import { useTypingStore } from "./typing-store";
 import { subscribeWithSelector } from "zustand/middleware";
-import { useMonsterStore } from "./use-monster-store";
-import { useInteractStore } from "./use-interact-store";
 
 type CharacterAction = "Idle" | "Walk" | "Run" | "Hurt" | "Dead" | "Attack" | "Skill";
 
@@ -78,13 +76,6 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
       console.log(`Current Action: ${characterAction}, Frame Duration: ${setFrameDuration}`);
     }
 
-    // set({
-    //   characterImage: `url("game_images/character-wizard/${currentJob}/${characterAction}.png")`,
-    //   totalFrames,
-    //   frameWidth: 200,
-    //   frameHeight: 200,
-    //   frameDuration: setFrameDuration,
-    // });
     const currentState = get();
 
     if (currentState.characterImage.includes(`/${characterAction}.png`)) {
@@ -111,13 +102,11 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
       const newHp = Math.max(state.characterHP - amount, 0);
       
       // HP 0일 때만 Dead 상태 업데이트
-      if (newHp === 0 && state.characterHP !== 0) {
-        return { 
-          characterHP: newHp,
-          // ...state.updateCharacterSettings("Dead") 
-          // updateCharacterSetting("Dead")
-        };
-      }
+      // if (newHp === 0 && state.characterHP !== 0) {
+      //   return { 
+      //     characterHP: newHp,
+      //   };
+      // }
 
       return {
         characterHP: newHp,

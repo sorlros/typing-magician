@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useCharacterStore } from "@/store/use-character-store";
+import { useCharacterStore } from "@/store/character-store";
 import { useChoice } from "@/store/use-choice";
-import { useInteractStore } from "@/store/use-interact-store";
-import { useMonsterStore } from "@/store/use-monster-store";
-import useStageStore from "@/store/use-stage-store";
-import { useTypingStore } from "@/store/use-typing-store";
+import { useInteractStore } from "@/store/interact-store";
+import { useMonsterStore } from "@/store/monster-store";
+import useStageStore from "@/store/stage-store";
+import { useTypingStore } from "@/store/typing-store";
 import { useEffect, useReducer } from "react";
 
 const ChoiceModal = () => {
