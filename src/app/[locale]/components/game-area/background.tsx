@@ -12,6 +12,9 @@ const Background = () => {
   const typingSpeed = useTypingStore(state => state.cpm);
   const appearMonster = useMonsterStore(state => state.appearMonster);
   const backgroundImage = useStageStore(state => state.stageImage);
+  const monsterNumber = useMonsterStore(state => state.monsterNumber);
+  const monsterHP = useMonsterStore(state => state.monsterHP);
+  const setNextStage = useStageStore(state => state.setNextStage);
 
   useEffect(() => {
     // console.log("appearMonster", appearMonster)
@@ -31,22 +34,30 @@ const Background = () => {
 
       if (appearMonster) {
         if (animationRef.current) {
-          // 애니메이션 일시 정지
           animationRef.current.pause();
         }
       } else {
         if (typingSpeed > 0) {
           if (animationRef.current) {
-            animationRef.current.play(); // 즉시 재개
+            animationRef.current.play();
           }
         } else {
           if (animationRef.current) {
-            animationRef.current.pause(); // 타이핑 속도가 0일 때 정지
+            animationRef.current.pause();
           }
         }
       }
     }
   }, [typingSpeed, appearMonster]);
+
+  useEffect(() => {
+    if (monsterNumber === 2 && monsterHP === 0) {
+      const timeout = setTimeout(() => {
+        setNextStage();
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [monsterNumber, monsterHP]);
 
   const backgroundImages = () => (
     <>
