@@ -6,6 +6,7 @@ import HpAndMp from "../hp-mp-ui/hp-mp";
 import { useInteractStore } from "@/store/interact-store";
 import { useShallow } from "zustand/react/shallow";
 import { useFrameAnimation } from "@/app/hooks/use-animation";
+import usePreloadImages from "@/app/hooks/use-preload";
 
 const Character = () => {
   const {
@@ -30,18 +31,25 @@ const Character = () => {
     }))
   );
 
-  const { characterAction, setCharacterAction, setUseSpecial, useSpecial } = useInteractStore();
+  const { characterAction, setCharacterAction, useSpecial } = useInteractStore();
   const { frame } = useFrameAnimation({
     totalFrames,
     frameDuration,
     action: characterAction,
     onActionComplete: () => {
       if (characterAction === "Skill") {
-        // console.log("SKILLLLLLLLLLLL")
-        setCharacterAction("Idle"); // 스킬 실행 후 Idle로 전환
+        setCharacterAction("Idle");
       }
     },
   });
+
+  // 캐릭터 이미지 preload
+  const actions = ["Idle", "Attack", "Hurt", "Skill", "Dead"];
+  const currentJob = ["Fire_vizard", "Wanderer_Magican", "Lightning_Mage"]
+  const preloadUrls = actions.map(
+    (action) => `/game_images/character-wizard/${currentJob}/${action}.png`
+  );
+  usePreloadImages(preloadUrls);
 
   useEffect(() => {
     updateCharacterSettings(characterAction);
@@ -53,14 +61,6 @@ const Character = () => {
       setCharacterAction("Skill");
     }
   }, [useSpecial, characterAction, setCharacterAction]);
-
-  // useEffect(() => {
-  //   if (characterAction === "Hurt" && frame === 0) {
-  //     console.log("체력 감소 전:", characterHP);
-  //     characterReduceHp(3);
-  //     console.log("체력 감소 후:", useCharacterStore.getState().characterHP);
-  //   }
-  // }, [characterAction, frame, characterReduceHp]);
 
   return (
     <>
@@ -77,6 +77,7 @@ const Character = () => {
             backgroundPosition: `-${frame * frameWidth}px 0px`, // 프레임에 따라 위치 변경
             backgroundSize: `${frameWidth * totalFrames}px 200px`, // 전체 스프라이트 시트 크기
             imageRendering: "pixelated"
+            
           }}
         />
       </div>
