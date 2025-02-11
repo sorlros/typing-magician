@@ -6,7 +6,6 @@ import HpAndMp from "../hp-mp-ui/hp-mp";
 import { useInteractStore } from "@/store/interact-store";
 import { useShallow } from "zustand/react/shallow";
 import { useFrameAnimation } from "@/app/hooks/use-animation";
-import usePreloadImages from "@/app/hooks/use-preload";
 
 const Character = () => {
   const {
@@ -43,14 +42,6 @@ const Character = () => {
     },
   });
 
-  // 캐릭터 이미지 preload
-  const actions = ["Idle", "Attack", "Hurt", "Skill", "Dead"];
-  const currentJob = ["Fire_vizard", "Wanderer_Magican", "Lightning_Mage"]
-  const preloadUrls = actions.map(
-    (action) => `/game_images/character-wizard/${currentJob}/${action}.png`
-  );
-  usePreloadImages(preloadUrls);
-
   useEffect(() => {
     updateCharacterSettings(characterAction);
     // console.log(characterImage);
@@ -77,7 +68,6 @@ const Character = () => {
             backgroundPosition: `-${frame * frameWidth}px 0px`, // 프레임에 따라 위치 변경
             backgroundSize: `${frameWidth * totalFrames}px 200px`, // 전체 스프라이트 시트 크기
             imageRendering: "pixelated"
-            
           }}
         />
       </div>
