@@ -37,7 +37,7 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
         if (get().characterAction === "Skill") {
           set({ characterAction: "Idle" });
         }
-      }, skillDuration + 200);
+      }, skillDuration + 800);
     }
   },
   setMonsterAction: (action) => set({ monsterAction: action }),
@@ -57,8 +57,8 @@ export const InteractEffect = () => {
 
   useEffect(() => {
     if (useSpecial) {
-      const currentTotalFrames = useCharacterStore.getState().totalFrames;
-      const currentFrameDuration = useCharacterStore.getState().frameDuration;
+      // const currentTotalFrames = useCharacterStore.getState().totalFrames;
+      // const currentFrameDuration = useCharacterStore.getState().frameDuration;
 
       if (appearMonster) {
         batch(() => {
