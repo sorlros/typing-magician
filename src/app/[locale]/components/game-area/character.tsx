@@ -43,8 +43,9 @@ const Character = () => {
   });
 
   useEffect(() => {
-    updateCharacterSettings(characterAction);
-    // console.log(characterImage);
+    setTimeout(() => {
+      updateCharacterSettings(characterAction);
+    }, 0);
   }, [characterAction, updateCharacterSettings]);
 
   useEffect(() => {

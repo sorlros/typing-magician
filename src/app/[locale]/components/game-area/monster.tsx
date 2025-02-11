@@ -62,8 +62,10 @@ const Monster = () => {
   });
 
   useEffect(() => {
-    updateMonsterSettings(monsterAction);
-  }, [monsterAction]);
+    setTimeout(() => {
+      updateMonsterSettings(monsterAction);
+    }, 0)
+  }, [monsterAction, updateMonsterSettings]);
 
   useEffect(() => {
     if (characterAction === "Skill") {
@@ -73,7 +75,7 @@ const Monster = () => {
 
   useEffect(() => {
     if (characterAction === "Skill" && frame === totalFrames - 1 && !hasDamaged.current) {
-      console.log("111");
+      // console.log("111");
       monsterReduceHp(30);
       hasDamaged.current = true;
     }

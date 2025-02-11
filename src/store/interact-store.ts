@@ -22,11 +22,23 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
   setCharacterAction: (action) => {
     const currentAction = get().characterAction;
   
-    // Skill 상태 중에는 다른 액션으로 전환 방지
+    //Skill 상태 중에는 다른 액션으로 전환 방지
     if (currentAction === "Skill" && action !== "Idle") {
       return;
     }
     set({ characterAction: action });
+
+    if (action === "Skill") {
+      const { totalFrames, frameDuration } = useCharacterStore.getState();
+      const skillDuration = totalFrames * frameDuration;
+
+      setTimeout(() => {
+        // 현재 상태가 여전히 "Skill"인 경우에만 "Idle"로 변경
+        if (get().characterAction === "Skill") {
+          set({ characterAction: "Idle" });
+        }
+      }, skillDuration + 200);
+    }
   },
   setMonsterAction: (action) => set({ monsterAction: action }),
   useSpecial: false,
@@ -59,7 +71,7 @@ export const InteractEffect = () => {
             // setCharacterAction("Idle");
             setUseSpecial(false);
           });
-        }, currentTotalFrames * currentFrameDuration);
+        }, 0);
 
         return () => clearTimeout(timeout);
       } else {

@@ -158,7 +158,7 @@ const TypingArea = () => {
         
         if (sentenceNumber > 0) {
           setUseSpecial(true);
-          console.log("useSpecial true?", useSpecial)
+          // console.log("useSpecial true?", useSpecial)
         }
       }, 0);
     } catch (error) {

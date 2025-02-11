@@ -1,5 +1,5 @@
 import anime from 'animejs';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from 'next/image';
 import { useTypingStore } from '@/store/typing-store';
 import { useMonsterStore } from '@/store/monster-store';
@@ -16,15 +16,37 @@ const Background = () => {
   const monsterHP = useMonsterStore(state => state.monsterHP);
   const setNextStage = useStageStore(state => state.setNextStage);
 
-  useEffect(() => {
-    // console.log("appearMonster", appearMonster)
+  const backgroundImages = () => (
+    <>
+      {[...Array(7)].map((_, index) => (
+        <Image
+          key={`first-${index}`}
+          src={backgroundImage}
+          alt="background-image"
+          width={700}
+          height={200}
+          className="w-[700px] h-[200px]"
+        />
+      ))}
+      {[...Array(7)].map((_, index) => (
+        <Image
+          key={`second-${index}`}
+          src={backgroundImage}
+          alt="background-image"
+          width={700}
+          height={200}
+          className="w-[700px] h-[200px]"
+        />
+      ))}
+    </>
+  );
 
+  useEffect(() => {
     if (animeRef.current) {
       if (!animationRef.current) {
-        // 애니메이션 초기화
         animationRef.current = anime({
           targets: animeRef.current,
-          translateX: ["0px", "-4200px"],
+          translateX: ["0px", "-4900px"],
           easing: "linear",
           duration: 20000,
           loop: true,
@@ -33,18 +55,12 @@ const Background = () => {
       }
 
       if (appearMonster) {
-        if (animationRef.current) {
-          animationRef.current.pause();
-        }
+        animationRef.current.pause();
       } else {
         if (typingSpeed > 0) {
-          if (animationRef.current) {
-            animationRef.current.play();
-          }
+          animationRef.current.play();
         } else {
-          if (animationRef.current) {
-            animationRef.current.pause();
-          }
+          animationRef.current.pause();
         }
       }
     }
@@ -59,24 +75,9 @@ const Background = () => {
     }
   }, [monsterNumber, monsterHP]);
 
-  const backgroundImages = () => (
-    <>
-      {[...Array(6)].map((_, index) => (
-        <Image
-          key={index}
-          src={backgroundImage}
-          alt="background-image"
-          width={700}
-          height={200}
-          className="w-[700px] h-[200px]"
-        />
-      ))}
-    </>
-  );
-
   return (
     <div className="w-full h-full overflow-hidden">
-      <div ref={animeRef} className="flex w-[4200px] h-[200px]">
+      <div ref={animeRef} className="flex w-[9800px] h-[200px]">
         {backgroundImages()}
       </div>
     </div>

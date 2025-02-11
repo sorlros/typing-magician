@@ -26,7 +26,7 @@ const GameComponent = () => {
     monsterActions.map(action => `/game_images/gorgon/${gorgonTypes}/${action}.png`)
   );
   const preloadUrls = [...skeletonUrls, ...gorgonUrls, ...chacracterUrls];
-  console.log("preloadUrls", preloadUrls);
+  // console.log("preloadUrls", preloadUrls);
 
   usePreloadImages(preloadUrls);
   // const MemoizedInteractEffect = React.memo(InteractEffect);
