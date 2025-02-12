@@ -20,7 +20,7 @@ const ChoiceModal = () => {
   );
   const sentenceNumber = useTypingStore((state) => state.sentenceNumber);
   const setAppearMonster = useMonsterStore.getState().setAppearMonster;
-  const setIsLoading = useInteractStore.getState().setIsLoading;
+  // const setIsLoading = useInteractStore.getState().setIsLoading;
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -36,7 +36,7 @@ const ChoiceModal = () => {
     // resetTyping();
     setModalState("close");
     setAppearMonster(true);
-    setIsLoading(false);
+    // setIsLoading(false);
     onClose();
     forceUpdate();
 

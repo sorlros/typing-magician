@@ -7,6 +7,7 @@ import GameComponent from "./components/game-component";
 import TypingArea from "./components/typing-area/typing-area";
 import { useTextStore } from "@/store/text-store";
 import ChoiceModal from "./components/modal/choice-modal";
+import GameEndModal from "./components/modal/game-end-modal";
 
 
 interface PageProps {
@@ -35,8 +36,11 @@ const ClientComponentPage = ({ text: phrase }: PageProps) => {
   return (
     <div className="px-60">
       <Header />
-      <GameComponent />
-      <TypingArea />
+      <div className="relative">
+        <GameComponent />
+        <TypingArea />  
+        <GameEndModal />
+      </div>
       <ChoiceModal />
       {/* <ItemList /> */}
       {/* <SelectText text={literature} /> */}

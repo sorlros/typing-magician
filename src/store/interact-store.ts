@@ -12,8 +12,8 @@ interface InteractStore {
   setMonsterAction: (action: InteractStore["monsterAction"]) => void;
   useSpecial: boolean;
   setUseSpecial: (state: boolean) => void;
-  isLoading: boolean;
-  setIsLoading: (state: boolean) => void;
+  gameOver: boolean;
+  setGameOver: () => void;
 }
 
 export const useInteractStore = create<InteractStore>((set, get) => ({
@@ -26,6 +26,10 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
     if (currentAction === "Skill" && action !== "Idle") {
       return;
     }
+    if (currentAction === "Dead") {
+      return;
+    }
+
     set({ characterAction: action });
 
     if (action === "Skill") {
@@ -34,21 +38,24 @@ export const useInteractStore = create<InteractStore>((set, get) => ({
 
       setTimeout(() => {
         // 현재 상태가 여전히 "Skill"인 경우에만 "Idle"로 변경
-        if (get().characterAction === "Skill") {
+        if (currentAction === "Skill") {
           set({ characterAction: "Idle" });
         }
       }, skillDuration + 800);
-    }
+    };
   },
   setMonsterAction: (action) => set({ monsterAction: action }),
   useSpecial: false,
   setUseSpecial: (state) => set({ useSpecial: state }),
-  isLoading: false,
-  setIsLoading: (state) => set({ isLoading: state }),
+  gameOver: false,
+  setGameOver: () => {
+    // const gameOver = get().gameOver;
+    set({ gameOver: true });
+  }
 }));
 
 export const InteractEffect = () => {
-  const { setCharacterAction, setMonsterAction, setUseSpecial, characterAction, useSpecial } = useInteractStore();
+  const { setCharacterAction, setMonsterAction, setUseSpecial, characterAction, useSpecial, setGameOver } = useInteractStore();
   const characterHP = useCharacterStore((state) => state.characterHP);
   const characterRecovery = useCharacterStore((state) => state.characterRecovery);
   const monsterHP = useMonsterStore((state) => state.monsterHP);
@@ -56,10 +63,7 @@ export const InteractEffect = () => {
   const cpm = useTypingStore((state) => state.cpm);
 
   useEffect(() => {
-    if (useSpecial) {
-      // const currentTotalFrames = useCharacterStore.getState().totalFrames;
-      // const currentFrameDuration = useCharacterStore.getState().frameDuration;
-
+    if (useSpecial) {    
       if (appearMonster) {
         batch(() => {
           setCharacterAction("Skill");
@@ -93,6 +97,9 @@ export const InteractEffect = () => {
         setCharacterAction("Dead");
         setMonsterAction("Idle");
       });
+      setTimeout(() => {
+        setGameOver();
+      }, 2000)
       return;
     }
 
