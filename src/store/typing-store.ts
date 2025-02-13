@@ -19,16 +19,21 @@ interface TypingState {
   addSentenceNumber: () => void;
 }
 
-export const useTypingStore = create<TypingState>((set, get) => ({
+const initialState = {
   startTime: null,
   lastTypedTime: Date.now(),
   typedCharacters: 0,
-  totalTypedCharacters: 0, // 초기화
-  totalElapsedTime: 0, // 초기화
+  totalTypedCharacters: 0,
+  totalElapsedTime: 0,
   cpm: 0,
   correctCharacters: 0,
   accuracy: 100,
   sentenceNumber: 0,
+};
+
+
+export const useTypingStore = create<TypingState>((set, get) => ({
+  ...initialState,
   addSentenceNumber: () => {
     set((state) => ({
       sentenceNumber: state.sentenceNumber + 1,
@@ -99,27 +104,11 @@ export const useTypingStore = create<TypingState>((set, get) => ({
 
     // return updatedCPM;
   },
-  // decreaseCPM: () => {
-  //   const { cpm } = get();
-  //   set({
-  //     cpm: Math.max(cpm - 10, 0),
-  //   });
-  // },
   resetTyping: () => {
-    const { totalTypedCharacters, totalElapsedTime, startTime } = get();
-
-    // 새로운 문장이 시작될 때 누적 데이터는 유지
-    const currentTime = Date.now();
-    const sessionElapsedTime = startTime ? (currentTime - startTime) / 1000 : 0;
-
     set({
+      ...initialState,
       startTime: Date.now(),
       lastTypedTime: Date.now(),
-      typedCharacters: 0,
-      totalElapsedTime: totalElapsedTime + sessionElapsedTime, // 누적 시간 업데이트
-      correctCharacters: 0,
-      accuracy: 100,
-      cpm: 0, // updatedTypingSpeed 호출 시 재계산됨
     });
   },
 }));
