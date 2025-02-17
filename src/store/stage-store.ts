@@ -26,7 +26,10 @@ const useStageStore = create<StageStore>((set, get) => ({
     set({ modalState: state })
   },
   resetStage: () => {
-    set({ stage: 0 })
+    set({ 
+      stage: 1,
+      stageImage: "/game_images/background/PNG/Battleground1/Bright/Battleground1.png",
+    })
   },
 }))
 

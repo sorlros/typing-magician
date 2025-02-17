@@ -37,22 +37,22 @@ const Character = () => {
     action: characterAction,
     onActionComplete: () => {
       if (characterAction === "Skill") {
-        setCharacterAction("Idle");
+        setTimeout(() => {
+          setCharacterAction("Idle");
+        }, 0);
       }
     },
   });
 
   useEffect(() => {
-    setTimeout(() => {
-      updateCharacterSettings(characterAction);
-    }, 0);
+    updateCharacterSettings(characterAction);
   }, [characterAction, updateCharacterSettings]);
 
-  useEffect(() => {
-    if (useSpecial && characterAction !== "Skill") {
-      setCharacterAction("Skill");
-    }
-  }, [useSpecial, characterAction, setCharacterAction]);
+  // useEffect(() => {
+  //   if (useSpecial && characterAction !== "Skill") {
+  //     setCharacterAction("Skill");
+  //   }
+  // }, [useSpecial, characterAction, setCharacterAction]);
 
   return (
     <>

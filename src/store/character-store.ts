@@ -18,7 +18,7 @@ interface CharacterState {
   characterRecovery: () => void;
 }
 
-export const useCharacterStore = create(subscribeWithSelector<CharacterState>((set, get) => ({
+const initialState = {
   totalFrames: 7,
   frameWidth: 200,
   frameHeight: 200,
@@ -26,8 +26,17 @@ export const useCharacterStore = create(subscribeWithSelector<CharacterState>((s
   currentJob: "Fire vizard",
   characterImage: `url("/game_images/character-wizard/Fire vizard/Idle.png")`,
   characterHP: 100,
+}
+
+export const useCharacterStore = create(subscribeWithSelector<CharacterState>((set, get) => ({
+  ...initialState,
   changeJob: (job) => {
     set({ currentJob: job })
+  },
+  resetCharacterStore : () => {
+    set({
+      ...initialState
+    })
   },
   updateCharacterSettings: (characterAction) => {
     const typingSpeed = useTypingStore.getState().cpm;
