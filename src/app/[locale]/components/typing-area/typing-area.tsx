@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 import useStageStore from "@/store/stage-store";
 import { useInteractStore } from "@/store/interact-store";
+import useNote from "@/app/hooks/use-note";
 
 const TypingArea = () => {
   const {
@@ -167,6 +168,8 @@ const TypingArea = () => {
   };
 
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
+    useNote();
+    
     const newText = e.target.value;
 
     // 커서의 현재 위치
