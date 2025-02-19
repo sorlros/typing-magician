@@ -25,8 +25,12 @@ const GameEndModal = () => {
 
   const handleButton = (href: string) => {
     setOpen(false);
-    // router.push(`${href}`)
-    router.refresh();
+  
+    if (href === "/") {
+      window.location.reload();
+    } else {
+      router.push(`${href}`)
+    }
   }
 
   return (
