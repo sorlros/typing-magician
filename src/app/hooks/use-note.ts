@@ -28,7 +28,7 @@ const useNote = () => {
     const soundFile = soundArray[randomIndex];
 
     const audio = new Audio(soundFile);
-    audio.volume = 0.3;
+    audio.volume = 0.2;
   
     // 오디오가 로드되지 않거나 에러가 날 경우
     audio.addEventListener("error", () => {
