@@ -4,6 +4,7 @@ import localFont from 'next/font/local';
 import { useInteractStore } from '@/store/interact-store';
 import { cn } from '@/lib/utils'
 import { useTypingStore } from '@/store/typing-store';
+import useBgm from '@/app/hooks/use-background-music';
 
 const neoDunggeunmo = localFont({
   src: "../../../../../public/fonts/NeoDunggeunmoPro-Regular.woff2",
@@ -14,9 +15,7 @@ const neoDunggeunmo = localFont({
 const GameStartModal = () => {
   const [open, setOpen] = useState<boolean>(true);
   const resetTyping = useTypingStore(state => state.resetTyping);
-  // const gameOver = useInteractStore((state => state.gameOver));
-  // const setGameOver = useInteractStore((state => state.setGameOver));
-  // const router = useRouter();
+  const useBackgroundMusic = useBgm();
 
   useEffect(() => {
     setOpen(true);
@@ -34,6 +33,7 @@ const GameStartModal = () => {
 
     setTimeout(() => {
       setOpen(false);
+      useBackgroundMusic.playBgmSound();
     }, 1000);
   }
 

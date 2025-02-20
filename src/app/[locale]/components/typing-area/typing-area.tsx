@@ -80,6 +80,8 @@ const TypingArea = () => {
   const setCharacterAction = useInteractStore.getState().setCharacterAction;
   const setMonsterAction = useInteractStore.getState().setMonsterAction;
 
+  const useSound = useNote();
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [visibleContent, setVisibleContent] = useState<string>("");
@@ -168,8 +170,7 @@ const TypingArea = () => {
   };
 
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
-    useNote();
-    
+
     const newText = e.target.value;
 
     // 커서의 현재 위치
@@ -274,6 +275,7 @@ const TypingArea = () => {
           type="text"
           value={typedText}
           onChange={handleTyping}
+          onKeyDown={() => useSound.handleTyping()}
           className="opacity-0 absolute inset-0 z-0"
           // autoFocus
         />
