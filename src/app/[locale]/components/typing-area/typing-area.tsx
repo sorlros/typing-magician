@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 import useStageStore from "@/store/stage-store";
 import { useInteractStore } from "@/store/interact-store";
-import useNote from "@/app/hooks/use-note";
+// import useNote from "@/app/hooks/use-note";
 
 const TypingArea = () => {
   const {
@@ -80,7 +80,7 @@ const TypingArea = () => {
   const setCharacterAction = useInteractStore.getState().setCharacterAction;
   const setMonsterAction = useInteractStore.getState().setMonsterAction;
 
-  const useSound = useNote();
+  // const useSound = useNote();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -275,7 +275,7 @@ const TypingArea = () => {
           type="text"
           value={typedText}
           onChange={handleTyping}
-          onKeyDown={() => useSound.handleTyping()}
+          // onKeyDown={() => useSound.handleTyping()}
           className="opacity-0 absolute inset-0 z-0"
           // autoFocus
         />
