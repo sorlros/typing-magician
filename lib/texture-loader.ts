@@ -19,7 +19,7 @@ interface TextureCache {
 class TextureLoader {
   private static instance: TextureLoader;
   private cache: Map<string, TextureCache> = new Map();
-  private loadingPromises: Map<string, Promise<void>> = new Map();
+  private loadingPromises: Map<string, Promise<any>> = new Map();
 
   static getInstance(): TextureLoader {
     if (!TextureLoader.instance) {
@@ -140,11 +140,11 @@ class TextureLoader {
     }
 
     // 아틀라스별로 배치 렌더링
-    for (const [atlasName, atlasDraws] of groupedDraws) {
+    groupedDraws.forEach((atlasDraws, atlasName) => {
       const cache = this.cache.get(`atlas_${atlasName}`);
       if (!cache) {
         console.warn(`Atlas ${atlasName} not found in cache during batch draw`);
-        continue;
+        return;
       }
 
       for (const draw of atlasDraws) {
@@ -158,7 +158,7 @@ class TextureLoader {
           draw.x, draw.y, width, height
         );
       }
-    }
+    });
   }
 
   preloadAtlases(atlases: string[]): Promise<void[]> {
@@ -194,11 +194,11 @@ class TextureLoader {
 
   getMemoryUsage(): number {
     let totalBytes = 0;
-    for (const cache of this.cache.values()) {
+    this.cache.forEach((cache) => {
       if (cache.image) {
         totalBytes += cache.image.width * cache.image.height * 4; // RGBA
       }
-    }
+    });
     return totalBytes;
   }
 }

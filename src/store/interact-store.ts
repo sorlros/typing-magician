@@ -85,7 +85,7 @@ export const InteractEffect = () => {
         });
       }
     }
-  }, [useSpecial, appearMonster]);
+  }, [useSpecial, appearMonster, characterRecovery, setCharacterAction, setMonsterAction, setUseSpecial]);
 
   useEffect(() => {
     const inBattle = characterHP > 0 && monsterHP > 0 && appearMonster && !useSpecial;
@@ -143,7 +143,7 @@ export const InteractEffect = () => {
       });
       return;
     }
-  }, [characterHP, monsterHP, appearMonster, cpm]);
+  }, [characterHP, monsterHP, appearMonster, cpm, setCharacterAction, setGameOver, setMonsterAction, useSpecial]);
 
   return null;
 };
