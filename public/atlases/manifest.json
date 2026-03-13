@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-03-13T00:09:29.682Z",
+  "atlases": [
+    {
+      "group": "background",
+      "image": "atlas_background.png",
+      "meta": "atlas_background.json"
+    },
+    {
+      "group": "ui",
+      "image": "atlas_ui.webp",
+      "meta": "atlas_ui.json"
+    },
+    {
+      "group": "item",
+      "image": "atlas_item.webp",
+      "meta": "atlas_item.json"
+    },
+    {
+      "group": "effect",
+      "image": "atlas_effect.webp",
+      "meta": "atlas_effect.json"
+    }
+  ],
+  "totalTextures": 380
+}

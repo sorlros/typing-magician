@@ -4,9 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run prebuild && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prebuild": "node scripts/prebuild.js",
+    "generate:atlas": "node scripts/generate-texture-atlas.js",
+    "analyze": "ANALYZE=true next build",
+    "profile": "next build --profile",
+    "clean": "rm -rf .next out dist build-info.json"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.1.1",
@@ -23,6 +28,7 @@
     "react-dom": "^18",
     "react-i18next": "^15.0.1",
     "react-spinners": "^0.14.1",
+    "sharp": "^0.33.5",
     "sonner": "^1.7.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",

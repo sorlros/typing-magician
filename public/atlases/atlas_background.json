@@ -1,0 +1,533 @@
+{
+  "image": "atlas_background.png",
+  "textures": {
+    "1": {
+      "x": 3468,
+      "y": 47200,
+      "width": 576,
+      "height": 324
+    },
+    "2": {
+      "x": 0,
+      "y": 47526,
+      "width": 576,
+      "height": 324
+    },
+    "3": {
+      "x": 578,
+      "y": 47526,
+      "width": 576,
+      "height": 324
+    },
+    "4": {
+      "x": 1156,
+      "y": 47526,
+      "width": 576,
+      "height": 324
+    },
+    "5": {
+      "x": 1734,
+      "y": 47526,
+      "width": 576,
+      "height": 324
+    },
+    "COUPON": {
+      "x": 1842,
+      "y": 2447,
+      "width": 1840,
+      "height": 2445
+    },
+    "origbig": {
+      "x": 0,
+      "y": 8788,
+      "width": 2304,
+      "height": 1296
+    },
+    "Battleground1": {
+      "x": 0,
+      "y": 14414,
+      "width": 1920,
+      "height": 1080
+    },
+    "hills&trees": {
+      "x": 1922,
+      "y": 14414,
+      "width": 1920,
+      "height": 1080
+    },
+    "ruins": {
+      "x": 0,
+      "y": 15496,
+      "width": 1920,
+      "height": 1080
+    },
+    "ruins2": {
+      "x": 1922,
+      "y": 15496,
+      "width": 1920,
+      "height": 1080
+    },
+    "ruins_bg": {
+      "x": 0,
+      "y": 16578,
+      "width": 1920,
+      "height": 1080
+    },
+    "sky": {
+      "x": 1922,
+      "y": 44710,
+      "width": 1920,
+      "height": 1080
+    },
+    "statue": {
+      "x": 0,
+      "y": 17660,
+      "width": 1920,
+      "height": 1080
+    },
+    "stones&grass": {
+      "x": 1922,
+      "y": 17660,
+      "width": 1920,
+      "height": 1080
+    },
+    "Battleground2": {
+      "x": 0,
+      "y": 23070,
+      "width": 1920,
+      "height": 1080
+    },
+    "bg": {
+      "x": 1922,
+      "y": 23070,
+      "width": 1920,
+      "height": 1080
+    },
+    "candeliar": {
+      "x": 0,
+      "y": 24152,
+      "width": 1920,
+      "height": 1080
+    },
+    "columns&falgs": {
+      "x": 1922,
+      "y": 24152,
+      "width": 1920,
+      "height": 1080
+    },
+    "dragon": {
+      "x": 0,
+      "y": 25234,
+      "width": 1920,
+      "height": 1080
+    },
+    "floor": {
+      "x": 1922,
+      "y": 25234,
+      "width": 1920,
+      "height": 1080
+    },
+    "mountaims": {
+      "x": 0,
+      "y": 26316,
+      "width": 1920,
+      "height": 1080
+    },
+    "wall@windows": {
+      "x": 1922,
+      "y": 26316,
+      "width": 1920,
+      "height": 1080
+    },
+    "Battleground3": {
+      "x": 1922,
+      "y": 31726,
+      "width": 1920,
+      "height": 1080
+    },
+    "fireflys": {
+      "x": 0,
+      "y": 32808,
+      "width": 1920,
+      "height": 1080
+    },
+    "grass&road": {
+      "x": 1922,
+      "y": 32808,
+      "width": 1920,
+      "height": 1080
+    },
+    "grasses": {
+      "x": 0,
+      "y": 33890,
+      "width": 1920,
+      "height": 1080
+    },
+    "jungle_bg": {
+      "x": 1922,
+      "y": 33890,
+      "width": 1920,
+      "height": 1080
+    },
+    "lianas": {
+      "x": 0,
+      "y": 34972,
+      "width": 1920,
+      "height": 1080
+    },
+    "tree_face": {
+      "x": 0,
+      "y": 36054,
+      "width": 1920,
+      "height": 1080
+    },
+    "trees&bushes": {
+      "x": 1922,
+      "y": 36054,
+      "width": 1920,
+      "height": 1080
+    },
+    "Battleground4": {
+      "x": 1922,
+      "y": 41464,
+      "width": 1920,
+      "height": 1080
+    },
+    "back_trees": {
+      "x": 0,
+      "y": 42546,
+      "width": 1920,
+      "height": 1080
+    },
+    "bones": {
+      "x": 1922,
+      "y": 42546,
+      "width": 1920,
+      "height": 1080
+    },
+    "crypt": {
+      "x": 0,
+      "y": 43628,
+      "width": 1920,
+      "height": 1080
+    },
+    "graves": {
+      "x": 1922,
+      "y": 43628,
+      "width": 1920,
+      "height": 1080
+    },
+    "ground": {
+      "x": 0,
+      "y": 44710,
+      "width": 1920,
+      "height": 1080
+    },
+    "tree": {
+      "x": 0,
+      "y": 45792,
+      "width": 1920,
+      "height": 1080
+    },
+    "wall": {
+      "x": 1922,
+      "y": 45792,
+      "width": 1920,
+      "height": 1080
+    },
+    "orig": {
+      "x": 2312,
+      "y": 47526,
+      "width": 576,
+      "height": 324
+    },
+    "Icon1": {
+      "x": 2890,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon10": {
+      "x": 2924,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon11": {
+      "x": 2958,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon12": {
+      "x": 2992,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon13": {
+      "x": 3026,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon14": {
+      "x": 3060,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon15": {
+      "x": 3094,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon16": {
+      "x": 3128,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon17": {
+      "x": 3162,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon18": {
+      "x": 3196,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon19": {
+      "x": 3230,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon2": {
+      "x": 3264,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon20": {
+      "x": 3298,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon21": {
+      "x": 3332,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon22": {
+      "x": 3366,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon23": {
+      "x": 3400,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon24": {
+      "x": 3434,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon25": {
+      "x": 3468,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon26": {
+      "x": 3502,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon27": {
+      "x": 3536,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon28": {
+      "x": 3570,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon29": {
+      "x": 3604,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon3": {
+      "x": 3638,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon30": {
+      "x": 3672,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon31": {
+      "x": 3706,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon32": {
+      "x": 3740,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon33": {
+      "x": 3774,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon34": {
+      "x": 3808,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon35": {
+      "x": 3842,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon36": {
+      "x": 3876,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon37": {
+      "x": 3910,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon38": {
+      "x": 3944,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon39": {
+      "x": 3978,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon4": {
+      "x": 4012,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon40": {
+      "x": 4046,
+      "y": 47526,
+      "width": 32,
+      "height": 32
+    },
+    "Icon41": {
+      "x": 0,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon42": {
+      "x": 34,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon43": {
+      "x": 68,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon44": {
+      "x": 102,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon45": {
+      "x": 136,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon46": {
+      "x": 170,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon47": {
+      "x": 204,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon48": {
+      "x": 238,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon5": {
+      "x": 272,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon6": {
+      "x": 306,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon7": {
+      "x": 340,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon8": {
+      "x": 374,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    },
+    "Icon9": {
+      "x": 408,
+      "y": 47852,
+      "width": 32,
+      "height": 32
+    }
+  }
+}

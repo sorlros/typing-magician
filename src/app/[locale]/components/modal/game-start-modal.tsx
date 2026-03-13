@@ -6,8 +6,8 @@ import { cn } from '@/lib/utils'
 import { useTypingStore } from '@/store/typing-store';
 import useBgm from '@/app/hooks/use-background-music';
 
-const neoDunggeunmo = localFont({
-  src: "../../../../../public/fonts/NeoDunggeunmoPro-Regular.woff2",
+const newAmsterdam = localFont({
+  src: "../../../../../public/fonts/Handjet,New_Amsterdam/New_Amsterdam/NewAmsterdam-Regular.ttf",
   weight: "400",
   display: "swap",
 });
@@ -45,7 +45,7 @@ const GameStartModal = () => {
         src="/game_images/modal/simple_natural_landscape_pixel_art_background/orig.png"
         fill
       />
-      <div className={cn(`flex justify-center w-full h-full transform ${open ? "items-center" : "items-start"} z-50`, neoDunggeunmo.className)}>
+      <div className={cn(`flex justify-center w-full h-full transform ${open ? "items-center" : "items-start"} z-50`, newAmsterdam.className)}>
         <div className="flex flex-col space-y-8">
         <div 
           className="text-6xl text-transparent bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-500 bg-clip-text"

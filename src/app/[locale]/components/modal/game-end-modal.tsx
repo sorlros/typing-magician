@@ -5,8 +5,8 @@ import { useInteractStore } from '@/store/interact-store';
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation';
 
-const neoDunggeunmo = localFont({
-  src: "../../../../../public/fonts/NeoDunggeunmoPro-Regular.woff2",
+const newAmsterdam = localFont({
+  src: "../../../../../public/fonts/Handjet,New_Amsterdam/New_Amsterdam/NewAmsterdam-Regular.ttf",
   weight: "400",
   display: "swap",
 });
@@ -41,7 +41,7 @@ const GameEndModal = () => {
         src="/game_images/modal/moon_and_sea_pixel_art_background/5.png"
         fill
       />
-      <div className={cn(`flex justify-center w-full h-full transform ${open ? "items-center" : "items-start"} z-50`, neoDunggeunmo.className)}>
+      <div className={cn(`flex justify-center w-full h-full transform ${open ? "items-center" : "items-start"} z-50`, newAmsterdam.className)}>
         <div className="flex flex-col space-y-8">
           <div className="text-6xl text-red-500">GAME OVER</div>
           <div className="space-x-4">

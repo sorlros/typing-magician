@@ -1,0 +1,59 @@
+{
+  "image": "atlas_ui.webp",
+  "textures": {
+    "ui": {
+      "x": 0,
+      "y": 0,
+      "width": 231,
+      "height": 92
+    },
+    "status_bar_corrected": {
+      "x": 233,
+      "y": 0,
+      "width": 60,
+      "height": 65
+    },
+    "equipment_slots": {
+      "x": 295,
+      "y": 0,
+      "width": 128,
+      "height": 42
+    },
+    "status_bar": {
+      "x": 425,
+      "y": 0,
+      "width": 128,
+      "height": 42
+    },
+    "mp_bar": {
+      "x": 555,
+      "y": 0,
+      "width": 106,
+      "height": 13
+    },
+    "hp_bar": {
+      "x": 663,
+      "y": 0,
+      "width": 106,
+      "height": 12
+    },
+    "blue_bar": {
+      "x": 771,
+      "y": 0,
+      "width": 65,
+      "height": 6
+    },
+    "green_bar": {
+      "x": 838,
+      "y": 0,
+      "width": 65,
+      "height": 6
+    },
+    "red_bar": {
+      "x": 905,
+      "y": 0,
+      "width": 65,
+      "height": 6
+    }
+  }
+}
